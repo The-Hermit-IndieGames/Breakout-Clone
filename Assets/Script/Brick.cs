@@ -15,6 +15,7 @@ public class Brick : MonoBehaviour
     private GameObject spawnedPowerUp;
     private Renderer brickRenderer;
     private GameManager gameManager;
+    private Transform bricksList;
 
     void Start()
     {
@@ -23,6 +24,8 @@ public class Brick : MonoBehaviour
 
         //調用GameManager腳本
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        bricksList = GameObject.Find("BrickList").GetComponent<Transform>();
 
         //設定HP 更新顏色
         brickHP = brickLevel;
@@ -34,13 +37,16 @@ public class Brick : MonoBehaviour
             case 0:
                 break;
             case 1:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[0], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[0], transform.position, Quaternion.identity, bricksList);
                 break;
             case 2:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[1], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[1], transform.position, Quaternion.identity, bricksList);
                 break;
             case 3:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[2], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[2], transform.position, Quaternion.identity, bricksList);
+                break;
+            case 4:
+                spawnedPowerUp = Instantiate(powerUpPrefabs[3], transform.position, Quaternion.identity, bricksList);
                 break;
             default:
                 Debug.LogWarning("未知的Item類型: " + powerUpType);

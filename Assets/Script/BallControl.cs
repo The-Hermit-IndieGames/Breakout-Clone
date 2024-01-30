@@ -40,6 +40,7 @@ public class BallControl : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             GameData.gameStarted = true;
+            GameData.startTime = Time.time;
             rb.velocity = new Vector3(UnityEngine.Random.Range(-1f, 1f), 1f, 0f).normalized * GameData.initialSpeed;
         }
     }

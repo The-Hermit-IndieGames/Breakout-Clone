@@ -9,20 +9,24 @@ public class BrickMake : MonoBehaviour
     public int pointValue;      //破壞分數
     public int brickLevel;      //磚塊等級
     public int powerUpType;     //道具類別
+    public int brickType = 0;   //磚塊類別
 
 
     private Renderer brickRenderer;
     public GameObject[] powerUpPrefabs;         // 三種不同的預製件，預設大小為3，分別代表type為1、2、3的預製件
     private GameObject spawnedPowerUp;
+    private Transform bricksList;
 
     void Start()
     {
         //取得渲染
         brickRenderer = GetComponent<Renderer>();
 
+        bricksList = GameObject.Find("BrickMakeList").GetComponent<Transform>();
+
         //更新顏色
         UpdateBrickColor();
-
+        
     }
 
 
@@ -41,7 +45,7 @@ public class BrickMake : MonoBehaviour
     {
         //更新 powerUpType
         powerUpType += 1;
-        if (powerUpType >= 4)
+        if (powerUpType >= 5)
         {
             powerUpType = 0;
         }
@@ -57,13 +61,16 @@ public class BrickMake : MonoBehaviour
             case 0:
                 break;
             case 1:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[0], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[0], transform.position, Quaternion.identity, bricksList);
                 break;
             case 2:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[1], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[1], transform.position, Quaternion.identity, bricksList);
                 break;
             case 3:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[2], transform.position, Quaternion.identity);
+                spawnedPowerUp = Instantiate(powerUpPrefabs[2], transform.position, Quaternion.identity, bricksList);
+                break;
+            case 4:
+                spawnedPowerUp = Instantiate(powerUpPrefabs[3], transform.position, Quaternion.identity, bricksList);
                 break;
             default:
                 Debug.LogWarning("未知的Item類型: " + powerUpType);

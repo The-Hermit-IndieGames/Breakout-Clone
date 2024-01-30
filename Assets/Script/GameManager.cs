@@ -1,24 +1,32 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.VirtualTexturing.Debugging;
 
 public class GameData
 {
+    public static string levelName;
+
+    public static string gameType = "Time";             //計分類型: Time / Score
+
     public static bool gameRunning = true;
     public static bool gameStarted = false;
     public static bool gameOver = false;
 
-    public static float initialSpeed = 15f;             // 初始速度
-    public static float maxSpeed = 30f;                 // 速度上限
-    public static float speedIncreaseFactor = 1.1f;     // 每次碰撞後的速度提升因子
+    public static float initialSpeed;                   //初始速度
+    public static float maxSpeed;                       //速度上限
+    public static float speedIncreaseFactor;            //每次碰撞後的速度提升因子
 
     public static float boundaryX = 21f;                // 移動邊界限制
 
     public static int score = 0;                        //記分板
+    public static float startTime = 0;                  //記時器
+    public static string timerString;
+    public static float saveTime;
+
     public static int totalBalls = 0;                   //彈珠數
 
     public static bool burstBall = false;               //爆炸彈珠
@@ -26,48 +34,47 @@ public class GameData
 
 public class GameManager : MonoBehaviour
 {
-    //序列化定義
-    [Serializable]
-    public class BricksData
-    {
-        public int xPoint;
-        public int yPoint;
-        public int pointValue;
-        public int brickLevel;
-        public int powerUpType;
-    }
+    //腳本
+    private MainManager mainManager;
 
-    [Serializable]
-    public class LevelConfig
-    {
-        public string level;
-        public List<BricksData> bricksData;
-    }
+    //磚塊
+    [SerializeField] private GameObject brickPrefab;                // 磚塊的預置體
+    [SerializeField] private Transform brickList;
 
-    [Serializable]
-    public class Root
-    {
-        public List<LevelConfig> levelConfig;
-    }
+    //UI
+    [SerializeField] private GameObject PauseButton;                // 暫停按鍵
 
+    [SerializeField] private TextMeshProUGUI scoreText;                               // 主記分板
+    [SerializeField] private TextMeshProUGUI timerText;                               // 主計時器
 
-    //預設參數
-    public TextAsset levelData;                 // JSON配置文件
-    public GameObject brickPrefab;              // 磚塊的預置體
-    public GameObject PauseButton;              // 暫停按鍵
-    public TextMeshProUGUI scoreText;           // 記分板
-    public TextMeshProUGUI pauseCanvas;         // 暫停畫面
-    public TextMeshProUGUI gameOverCanvas;      // 遊戲結束畫面
-    public TextMeshProUGUI gameClearedCanvas;   // 遊戲過關畫面
+    [SerializeField] private GameObject pauseUI;                    // 暫停畫面UI
+    [SerializeField] private TextMeshProUGUI pauseTextName;
+    [SerializeField] private TextMeshProUGUI pauseTextScore;
+    [SerializeField] private TextMeshProUGUI pauseTextTimer;
+    [SerializeField] private TextMeshProUGUI pauseTextSpeed;
+
+    [SerializeField] private GameObject gameOverUI;                 // 遊戲結束畫面UI
+    [SerializeField] private TextMeshProUGUI gameOverTextName;
+    [SerializeField] private TextMeshProUGUI gameOverTextScore;
+    [SerializeField] private TextMeshProUGUI gameOverTextTimer;
+    [SerializeField] private TextMeshProUGUI gameOverTextSpeed;
+
+    [SerializeField] private GameObject gameClearedUI;              // 遊戲過關畫面UI
+    [SerializeField] private TextMeshProUGUI gameClearedTextName;
+    [SerializeField] private TextMeshProUGUI gameClearedTextScore;
+    [SerializeField] private TextMeshProUGUI gameClearedTextTimer;
+    [SerializeField] private TextMeshProUGUI gameClearedTextSpeed;
+
 
     public GameObject paddle;                   // 滑板
     public GameObject longPaddle;               // 大滑板
 
     //寫入參數
-    public string selectedLevel;               // 指定要生成的關卡編號
+    public int selectedLevel;                   // 指定要生成的關卡編號 (主控台指定)
 
     //運行
-    LevelConfig targetLevelConfig;              //關卡資料
+    [SerializeField] private Transform bricksList;                                          //磚塊列表(坐標系)
+    MainManager.LevelConfig targetLevelConfig;              //關卡資料
     public int brickAmount;
     private Coroutine nowItem2;
     private Coroutine nowItem3;
@@ -75,40 +82,98 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        //卸載主選單
-        //SceneManager.UnloadSceneAsync("MenuScene");
-
         //初始化
+        Initialization();
+
+        //生成磚塊
+        LoadGenerate();
+    }
+
+
+    void Update()
+    {
+        if (GameData.gameStarted)
+        {
+            UpdateTimer();
+        }
+    }
+
+    //初始化
+    void Initialization()
+    {
         Time.timeScale = 1f;
+
         GameData.gameRunning = true;
         GameData.gameStarted = false;
         GameData.gameOver = false;
-        GameData.score = 0;
 
-        longPaddle.gameObject.SetActive(false);
+        //取得關卡號
+        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+        selectedLevel = mainManager.nowLevel;
+        GameData.levelName = mainManager.defaultLevelsRoot.levelConfig[mainManager.nowLevel].levelName;
+
+        //初始速度，速度上限，每次碰撞後的速度提升因子
+        GameData.initialSpeed = GameSetting.gameSpeedModifier * 15f;
+        GameData.maxSpeed = GameSetting.gameSpeedModifier * 30f;
+        GameData.speedIncreaseFactor = 1.1f;
+
+        GameData.score = 0;                         //記分板
+        GameData.startTime = 0;                     //記時器
+
+        GameData.totalBalls = 0;                    //彈珠數
+
+        GameData.burstBall = false;                 //道具: 爆炸彈珠
+
+        longPaddle.gameObject.SetActive(false);     //道具: 加長板
         paddle.gameObject.SetActive(true);
-        GameData.boundaryX = 21f;
+
+        GameData.boundaryX = 21f;                   //移動邊界限制
 
         brickAmount = 0;
 
         //初始化記分板
         scoreText.text = "Score: " + GameData.score.ToString();
 
-        //生成磚塊
-        if (levelData != null)
-        {
-            //讀取JSON檔案
-            var root = JsonUtility.FromJson<Root>(levelData.text);
+        //初始化計時器(顯示時間=目前時間-開始時間)
+        GameData.startTime = Time.time;
 
-            //提取關卡資料
-            for (int i = 0; i < root.levelConfig.Count; i++)
+        Debug.Log("已初始化關卡");
+    }
+
+
+    //載入生成器(自動呼叫->磚塊生成器)
+    void LoadGenerate()
+    {
+        if (mainManager.defaultLevelsRoot != null)
+        {
+            // 轉換 JSON 字串為對應的 Root 實例
+            var root = mainManager.defaultLevelsRoot;
+
+            //提取關卡資料(核對關卡編號)
+
+            if (root.levelConfig[selectedLevel] != null)
             {
-                if (root.levelConfig[i].level == selectedLevel)
+                if (root.levelConfig[selectedLevel].levelName != null)
                 {
-                    targetLevelConfig = root.levelConfig[i];
-                    break;
+                    GameData.levelName = root.levelConfig[selectedLevel].levelName;
                 }
+                else
+                {
+                    GameData.levelName = selectedLevel.ToString();
+                }
+
+                if (root.levelConfig[selectedLevel].gameType == "Time" || root.levelConfig[selectedLevel].gameType == "Score")
+                {
+                    GameData.gameType = root.levelConfig[selectedLevel].gameType;
+                }
+                else
+                {
+                    GameData.gameType = "Time";
+                }
+
+                targetLevelConfig = root.levelConfig[selectedLevel];
             }
+
 
             //啟動生成器
             if (targetLevelConfig != null)
@@ -128,18 +193,13 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void Update()
-    {
-
-    }
-
     //磚塊生成器
-    void GenerateBricks(List<BricksData> bricks)
+    void GenerateBricks(List<MainManager.BricksData> bricks)
     {
         foreach (var brickData in bricks)
         {
             Vector3 position = new Vector3(26 - (4 * brickData.xPoint), 24.5f - brickData.yPoint, 0);
-            GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity);
+            GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, bricksList);
 
             // 設置磚塊的屬性
             var brickScript = brick.GetComponent<Brick>();
@@ -155,6 +215,24 @@ public class GameManager : MonoBehaviour
     }
 
 
+    //計時器
+    public void UpdateTimer()
+    {
+        //計算過去的時間
+        GameData.saveTime = Time.time - GameData.startTime;
+
+        //將總秒數轉換為分鐘和秒
+        int minutes = Mathf.FloorToInt(GameData.saveTime / 60);
+        int seconds = Mathf.FloorToInt(GameData.saveTime % 60);
+
+        //將時間格式化為分：秒
+        GameData.timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        //將時間顯示在介面文本上
+        timerText.text = GameData.timerString;
+    }
+
+
     //更新分數
     public void UpdateScore(int amount)
     {
@@ -167,10 +245,15 @@ public class GameManager : MonoBehaviour
     public void PauseButtonClick()
     {
         GameData.gameRunning = false;
-        pauseCanvas.gameObject.SetActive(true);
+        pauseUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(false);
-        pauseCanvas.text = "Score: " + GameData.score.ToString();
+
+        pauseTextName.text = GameData.levelName;
+        pauseTextTimer.text = GameData.timerString;
+        pauseTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
+        pauseTextScore.text = "Score: " + GameData.score.ToString();
 
         // 遊戲暫停，將時間凍結
         Time.timeScale = 0f;
@@ -181,9 +264,21 @@ public class GameManager : MonoBehaviour
     public void ContinueButtonClick()
     {
         GameData.gameRunning = true;
-        pauseCanvas.gameObject.SetActive(false);
-        scoreText.gameObject.SetActive(true);
+        pauseUI.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(true);
+
+        switch (GameData.gameType)
+        {
+            case "Time":
+                timerText.gameObject.SetActive(true);
+                break;
+            case "Score":
+                scoreText.gameObject.SetActive(true);
+                break;
+            default:
+                Debug.LogWarning("未知的Type類型: " + GameData.gameType);
+                break;
+        }
 
         // 遊戲繼續，將時間解凍
         Time.timeScale = 1f;
@@ -208,25 +303,51 @@ public class GameManager : MonoBehaviour
     //遊戲結束
     public void GameOver()
     {
-        gameOverCanvas.gameObject.SetActive(true);
+        gameOverUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
+        timerText.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(false);
-        gameOverCanvas.text = "Score: " + GameData.score.ToString();
+
+        gameOverTextName.text = GameData.levelName;
+        gameOverTextTimer.text = GameData.timerString;
+        gameOverTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
+        gameOverTextScore.text = "Score: " + GameData.score.ToString();
+
         GameData.gameRunning = false;
         GameData.gameOver = true;
+
+        //時間凍結
+        Time.timeScale = 0f;
+    }
+
+
+    //重新開始按鈕
+    public void NextButtonClick()
+    {
+        if ((mainManager.nowLevel + 1) < mainManager.defaultLevelsRoot.levelConfig.Count)
+        {
+            mainManager.nowLevel += 1;
+        }
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
 
     //遊戲過關
     public void GameCleared()
     {
-        gameClearedCanvas.gameObject.SetActive(true);
+        gameClearedUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(false);
-        gameClearedCanvas.text = "Score: " + GameData.score.ToString();
+
+        gameClearedTextName.text = GameData.levelName;
+        gameClearedTextTimer.text = GameData.timerString;
+        gameClearedTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
+        gameClearedTextScore.text = "Score: " + GameData.score.ToString();
+
         GameData.gameRunning = false;
         GameData.gameOver = true;
         Time.timeScale = 0f;
+        mainManager.GameClearedSave();
     }
 
 
