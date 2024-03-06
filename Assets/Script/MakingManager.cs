@@ -39,6 +39,8 @@ public class MakingManager : MonoBehaviour
         public int brickType;
     }
 
+    private MainManager mainManager;
+
     //檔案
     [SerializeField] private TextAsset jsonDefaultLevels;
 
@@ -66,6 +68,7 @@ public class MakingManager : MonoBehaviour
 
     void Start()
     {
+        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
 
         GenerateBricks();
@@ -250,6 +253,7 @@ public class MakingManager : MonoBehaviour
     //重新開始按鈕
     public void RestartButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -265,6 +269,7 @@ public class MakingManager : MonoBehaviour
     //匯出 JSON 按鈕
     public void ExportLevelConfigToJson()
     {
+        mainManager.soundEffectUiTrue.Play();
         // 創建一個新的Root對象
         Root root = new Root();
         root.levelConfig = new List<LevelConfig>();
@@ -429,6 +434,7 @@ public class MakingManager : MonoBehaviour
     //退出按鈕
     public void BackButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         // 載入 MenuScene
         SceneManager.LoadScene("MenuScene");
     }

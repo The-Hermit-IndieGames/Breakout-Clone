@@ -9,26 +9,6 @@ using Unity.VisualScripting;
 using System.Runtime.InteropServices.ComTypes;
 using UnityEditor;
 
-public class GameSetting
-{
-    //音樂 ON/OFF + 滑動條
-    public static bool gameMusic;
-    public static float gameMusicF;
-
-    //音效 ON/OFF + 滑動條
-    public static bool gameSoundEffect;
-    public static float gameSoundEffectF;
-
-    //VFX效果
-    public static float effectsVFX;
-
-    //VFX背景
-    public static float backgroundVFX;
-
-    //速度倍率
-    public static float gameSpeedModifier;
-
-}
 
 public class MainManager : MonoBehaviour
 {
@@ -43,8 +23,8 @@ public class MainManager : MonoBehaviour
         public bool gameSoundEffect;
         public float gameSoundEffectF;
 
-        public float effectsVFX;
-        public float backgroundVFX;
+        public int effectsVFX;
+        public int backgroundVFX;
 
         public float gameSpeedModifier;
     }
@@ -80,12 +60,12 @@ public class MainManager : MonoBehaviour
         public List<LevelConfig> levelConfig;
     }
 
-    //menuX menuY menuStyle 未使用
     [Serializable]
     public class LevelConfig
     {
         public string levelName;
         public string gameType;
+        //menuX menuY menuStyle 未使用
         public float menuX;
         public float menuY;
         public int menuStyle;
@@ -123,6 +103,11 @@ public class MainManager : MonoBehaviour
     [SerializeField] private Transform previewBrickList;
     private int brickAmount;
 
+    //音訊
+    public AudioSource soundEffectUiTrue;
+    public AudioSource soundEffectUiFalse;
+    public AudioSource soundEffectUiPage;
+
     //運行
     public int nowLevel = 0;
 
@@ -134,6 +119,8 @@ public class MainManager : MonoBehaviour
         LoadDefaultLevels();
         LoadSettingsFromFile();
         LoadPlayerDataFromFile();
+
+        UpdateAudio();
     }
 
 
@@ -155,8 +142,8 @@ public class MainManager : MonoBehaviour
         settings.gameSoundEffect = true;
         settings.gameSoundEffectF = 1.0f;
 
-        settings.effectsVFX = 1.0f;
-        settings.backgroundVFX = 1.0f;
+        settings.effectsVFX = 20;
+        settings.backgroundVFX = 500;
 
         settings.gameSpeedModifier = 1.0f;
 
@@ -170,31 +157,7 @@ public class MainManager : MonoBehaviour
         if (jsonSetting != null)
         {
             settings = JsonUtility.FromJson<SettingRoot>(jsonSetting.text);
-
-            if (settings != null)
-            {
-                //音樂 ON/OFF + 滑動條
-                GameSetting.gameMusic = settings.gameMusic;
-                GameSetting.gameMusicF = settings.gameMusicF;
-
-                //音效 ON/OFF + 滑動條
-                GameSetting.gameSoundEffect = settings.gameSoundEffect;
-                GameSetting.gameSoundEffectF = settings.gameSoundEffectF;
-
-                //VFX效果
-                GameSetting.effectsVFX = settings.effectsVFX;
-
-                //VFX背景
-                GameSetting.backgroundVFX = settings.backgroundVFX;
-
-                //速度倍率
-                GameSetting.gameSpeedModifier = settings.gameSpeedModifier;
-                Debug.Log("[初始化]已成功載入設定參數");
-            }
-            else
-            {
-                Debug.LogWarning("[初始化]無法載入設定參數");
-            }
+            Debug.Log("[初始化]已成功載入設定參數");
         }
         else
         {
@@ -234,39 +197,8 @@ public class MainManager : MonoBehaviour
         }
         finally
         {
-            SetGameSetting();
-        }
-    }
-
-
-    //按照實例指定參數
-    public void SetGameSetting()
-    {
-        settings = JsonUtility.FromJson<SettingRoot>(jsonSetting.text);
-
-        if (settings != null)
-        {
-            //音樂 ON/OFF + 滑動條
-            GameSetting.gameMusic = settings.gameMusic;
-            GameSetting.gameMusicF = settings.gameMusicF;
-
-            //音效 ON/OFF + 滑動條
-            GameSetting.gameSoundEffect = settings.gameSoundEffect;
-            GameSetting.gameSoundEffectF = settings.gameSoundEffectF;
-
-            //VFX效果
-            GameSetting.effectsVFX = settings.effectsVFX;
-
-            //VFX背景
-            GameSetting.backgroundVFX = settings.backgroundVFX;
-
-            //速度倍率
-            GameSetting.gameSpeedModifier = settings.gameSpeedModifier;
+            settings = JsonUtility.FromJson<SettingRoot>(jsonSetting.text);
             Debug.Log("已解析設定參數");
-        }
-        else
-        {
-            Debug.LogWarning("無法解析設定參數");
         }
     }
 
@@ -285,6 +217,15 @@ public class MainManager : MonoBehaviour
         File.WriteAllText(exportFileName, settingsjson);
 
         Debug.Log("設定參數已保存到 " + exportFileName);
+    }
+
+
+    //更新音量大小
+    public void UpdateAudio()
+    {
+        soundEffectUiTrue.volume = settings.gameSoundEffectF * 1.0f;
+        soundEffectUiFalse.volume = settings.gameSoundEffectF * 2.0f;
+        soundEffectUiPage.volume = settings.gameSoundEffectF * 1.0f;
     }
 
 
@@ -352,7 +293,7 @@ public class MainManager : MonoBehaviour
         try
         {
             string json = File.ReadAllText(path);
-            jsonSetting = new TextAsset(json);
+            jsonPlayerData = new TextAsset(json);
         }
         catch (DirectoryNotFoundException)
         {
@@ -374,6 +315,7 @@ public class MainManager : MonoBehaviour
         }
         finally
         {
+            Debug.Log("解析通關資訊...");
             SetPlayerData();
         }
     }
@@ -482,11 +424,11 @@ public class MainManager : MonoBehaviour
         menuManager.previewNameText.text = targetLevelConfig.levelName;
         menuManager.previewBrickAmountText.text = targetLevelConfig.bricksData.Count.ToString();
 
-        if (nowLevel < playerData.clearLevel.Count)
+        if (nowLevel + 1 < playerData.clearLevel.Count)
         {
             menuManager.previewScoreText.text = playerData.clearLevel[nowLevel].clearData.score.ToString();
             menuManager.previewTimerText.text = playerData.clearLevel[nowLevel].clearData.time.ToString();
-            menuManager.previewSpeedText.text = playerData.clearLevel[nowLevel].clearData.speed.ToString();
+            menuManager.previewSpeedText.text = playerData.clearLevel[nowLevel].clearData.speed.ToString("F2");
             menuManager.previewClearTF.gameObject.SetActive(playerData.clearLevel[nowLevel].clearData.clear);
         }
         else
@@ -592,9 +534,11 @@ public class MainManager : MonoBehaviour
     //過關保存
     public void GameClearedSave()
     {
+        Debug.Log("開始保存 第" + nowLevel + "關 通關資訊...");
         //已存在通關資訊
         if (playerData.clearLevel[nowLevel].clearData.clear == true)
         {
+            Debug.Log("已存在該關卡通關資訊");
             //分數擇優
             if (GameData.score > playerData.clearLevel[nowLevel].clearData.score)
             {
@@ -610,6 +554,7 @@ public class MainManager : MonoBehaviour
         //未通關
         else if (playerData.clearLevel[nowLevel].clearData.clear == false)
         {
+            Debug.Log("未存在該關卡通關資訊(未通關)");
             if (defaultLevelsRoot.levelConfig[nowLevel].levelName != "Level.DeBug")
             {
                 playerData.clearLevelAmount += 1;
@@ -625,6 +570,7 @@ public class MainManager : MonoBehaviour
         //無通關資訊
         else
         {
+            Debug.Log("未存在該關卡通關資訊(無通關資訊)");
             if (defaultLevelsRoot.levelConfig[nowLevel].levelName != "Level.DeBug")
             {
                 playerData.clearLevelAmount += 1;
@@ -685,6 +631,10 @@ public class MainManager : MonoBehaviour
     }
 
     //設定介面==========================================================================================================================
+
+
+    //音訊==========================================================================================================================
+    
 
 
     //其他==========================================================================================================================

@@ -3,7 +3,7 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PowerUPPaddle : MonoBehaviour
 {
-    public GameObject ballPrefabs;  // ExtraBall預製件
+    [SerializeField] private GameObject ballPrefabs;  // ExtraBall預製件
 
     private GameManager gameManager;
 
@@ -19,6 +19,8 @@ public class PowerUPPaddle : MonoBehaviour
         // 檢查碰撞的物件是否帶有Item標籤
         if (collision.gameObject.CompareTag("Item"))
         {
+            gameManager.soundEffectGetItem.Play();
+
             // 從碰撞物件中獲取Item腳本
             Item item = collision.gameObject.GetComponent<Item>();
 
@@ -31,18 +33,28 @@ public class PowerUPPaddle : MonoBehaviour
                 switch (itemType)
                 {
                     case 1:
+                        gameManager.UpdateScore(20);
                         PowerUP_1();
                         break;
                     case 2:
+                        gameManager.UpdateScore(100);
                         PowerUP_2();
                         break;
                     case 3:
+                        gameManager.UpdateScore(100);
+                        PowerUP_3();
+                        break;
+                    case 4:
+                        gameManager.UpdateScore(1000);
                         PowerUP_3();
                         break;
                     default:
                         Debug.LogWarning("未知的Item類型: " + itemType);
                         break;
                 }
+
+                //粒子效果
+                item.GetItem();
 
                 // 銷毀Item物件
                 Destroy(collision.gameObject);

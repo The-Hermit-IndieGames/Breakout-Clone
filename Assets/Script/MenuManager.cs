@@ -78,6 +78,7 @@ public class MenuManager : MonoBehaviour
     //通用-返回標題畫面
     public void ReturnTitleButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         titleScreen.gameObject.SetActive(true);
         levelMenu.gameObject.SetActive(false);
         other.gameObject.SetActive(false);
@@ -87,6 +88,7 @@ public class MenuManager : MonoBehaviour
     //主畫面-結束遊戲
     public void QuitGame()
     {
+        mainManager.soundEffectUiTrue.Play();
         // 在這裡放置結束遊戲的邏輯
         if (true)
         {
@@ -103,6 +105,7 @@ public class MenuManager : MonoBehaviour
     //標題畫面-開始
     public void TitlePlayButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         titleScreen.gameObject.SetActive(false);
         levelMenu.gameObject.SetActive(true);
 
@@ -115,6 +118,7 @@ public class MenuManager : MonoBehaviour
     //標題畫面-製作
     public void TitleMakingButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         // 載入 LevelMaking
         SceneManager.LoadScene("LevelMaking");
     }
@@ -122,6 +126,7 @@ public class MenuManager : MonoBehaviour
     //標題畫面-自訂
     public void TitleCustomizeButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         titleScreen.gameObject.SetActive(false);
         other.gameObject.SetActive(true);
     }
@@ -129,6 +134,7 @@ public class MenuManager : MonoBehaviour
     //標題畫面-設定
     public void TitleSettingButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         titleScreen.gameObject.SetActive(false);
         settingsMenu.gameObject.SetActive(true);
 
@@ -171,6 +177,7 @@ public class MenuManager : MonoBehaviour
     //關卡-翻頁+
     public void PageAdd()
     {
+        mainManager.soundEffectUiPage.Play();
         float allPage = (mainManager.defaultLevelsRoot.levelConfig.Count - 1) / 10.0f;
         if (nowPage < allPage)
         {
@@ -182,6 +189,7 @@ public class MenuManager : MonoBehaviour
     //關卡-翻頁-
     public void PageDown()
     {
+        mainManager.soundEffectUiPage.Play();
         if (nowPage >= 2)
         {
             nowPage--;
@@ -193,6 +201,7 @@ public class MenuManager : MonoBehaviour
     //關卡-預覽關卡
     public void PreviewLevel(int levelid)
     {
+        mainManager.soundEffectUiTrue.Play();
         selectedLevel = levelid;
         //顯示預覽畫面
         previewCanvas.gameObject.SetActive(true);
@@ -204,6 +213,7 @@ public class MenuManager : MonoBehaviour
     //關卡-預覽關卡返回
     public void PreviewLevelBack()
     {
+        mainManager.soundEffectUiTrue.Play();
         selectedLevel = 0;
         //關閉預覽畫面
         previewCanvas.gameObject.SetActive(false);
@@ -213,6 +223,7 @@ public class MenuManager : MonoBehaviour
     //預覽畫面-進入關卡
     public void EnterLevelButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         mainManager.EnterGameScene();
     }
 
@@ -222,9 +233,11 @@ public class MenuManager : MonoBehaviour
     //設定-返回標題畫面
     public void SettingReturnTitleButton()
     {
+        mainManager.soundEffectUiTrue.Play();
         titleScreen.gameObject.SetActive(true);
         settingsMenu.gameObject.SetActive(false);
         mainManager.SaveSettingsToJson();
+        mainManager.UpdateAudio();
     }
 
     //設定-初始化
@@ -244,43 +257,41 @@ public class MenuManager : MonoBehaviour
     }
 
 
-    //設定-音樂
+    //設定數字顯示-音樂
     void HandleMusicChange(float volume)
     {
-        GameSetting.gameMusicF = volume;
         mainManager.settings.gameMusicF = volume;
-        musicSliderValue.text = GameSetting.gameMusicF.ToString("F3");
+        mainManager.settings.gameMusicF = volume;
+        musicSliderValue.text = mainManager.settings.gameMusicF.ToString("F3");
     }
 
-    //設定-音效
+    //設定數字顯示-音效
     void HandleSoundEffectChange(float volume)
     {
-        GameSetting.gameSoundEffectF = volume;
         mainManager.settings.gameSoundEffectF = volume;
-        soundEffectSliderValue.text = GameSetting.gameSoundEffectF.ToString("F3");
+        mainManager.settings.gameSoundEffectF = volume;
+        soundEffectSliderValue.text = mainManager.settings.gameSoundEffectF.ToString("F3");
     }
 
-    //設定-VFX特效
+    //設定數字顯示-VFX特效
     void HandleEffectsVFXChange(float volume)
     {
-        GameSetting.effectsVFX = volume;
-        mainManager.settings.effectsVFX = volume;
-        effectsVFXSliderValue.text = GameSetting.effectsVFX.ToString("F0");
+        mainManager.settings.effectsVFX = ((int)volume);
+        effectsVFXSliderValue.text = mainManager.settings.effectsVFX.ToString();
     }
 
-    //設定-VFX背景
+    //設定數字顯示-VFX背景
     void HandleBackgroundVFXChange(float volume)
     {
-        GameSetting.backgroundVFX = volume;
-        mainManager.settings.backgroundVFX = volume;
-        backgroundVFXSliderValue.text = GameSetting.backgroundVFX.ToString("F0");
+        mainManager.settings.backgroundVFX = ((int)volume);
+        backgroundVFXSliderValue.text = mainManager.settings.backgroundVFX.ToString();
     }
 
-    //設定-速度
+    //設定數字顯示-速度
     void HandleSpeedModifierChange(float volume)
     {
-        GameSetting.gameSpeedModifier = volume;
         mainManager.settings.gameSpeedModifier = volume;
-        speedModifierSliderValue.text = GameSetting.gameSpeedModifier.ToString("F2");
+        mainManager.settings.gameSpeedModifier = volume;
+        speedModifierSliderValue.text = mainManager.settings.gameSpeedModifier.ToString("F2");
     }
 }

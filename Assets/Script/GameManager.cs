@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,6 +39,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject brickPrefab;                // 磚塊的預置體
     [SerializeField] private Transform brickList;
 
+    //VFX
+    [SerializeField] private GameObject vfxStardustScore;
+
     //UI
     [SerializeField] private GameObject PauseButton;                // 暫停按鍵
 
@@ -64,6 +65,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameClearedTextScore;
     [SerializeField] private TextMeshProUGUI gameClearedTextTimer;
     [SerializeField] private TextMeshProUGUI gameClearedTextSpeed;
+
+
+    //音訊
+    public AudioSource soundEffectGetItem;
+    [SerializeField] private AudioSource soundEffectGameOver;
+    [SerializeField] private AudioSource soundEffectGameCleared;
+    [SerializeField] private AudioSource soundEffectGameClearedPlus;
 
 
     public GameObject paddle;                   // 滑板
@@ -103,18 +111,14 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        GameData.gameRunning = true;
-        GameData.gameStarted = false;
-        GameData.gameOver = false;
-
         //取得關卡號
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         selectedLevel = mainManager.nowLevel;
         GameData.levelName = mainManager.defaultLevelsRoot.levelConfig[mainManager.nowLevel].levelName;
 
         //初始速度，速度上限，每次碰撞後的速度提升因子
-        GameData.initialSpeed = GameSetting.gameSpeedModifier * 15f;
-        GameData.maxSpeed = GameSetting.gameSpeedModifier * 30f;
+        GameData.initialSpeed = mainManager.settings.gameSpeedModifier * 15f;
+        GameData.maxSpeed = mainManager.settings.gameSpeedModifier * 30f;
         GameData.speedIncreaseFactor = 1.1f;
 
         GameData.score = 0;                         //記分板
@@ -136,6 +140,15 @@ public class GameManager : MonoBehaviour
 
         //初始化計時器(顯示時間=目前時間-開始時間)
         GameData.startTime = Time.time;
+
+        GameData.gameRunning = true;
+        GameData.gameStarted = false;
+        GameData.gameOver = false;
+
+        soundEffectGetItem.volume = mainManager.settings.gameSoundEffectF * 1.0f;
+        soundEffectGameOver.volume = mainManager.settings.gameSoundEffectF * 1.0f;
+        soundEffectGameCleared.volume = mainManager.settings.gameSoundEffectF * 1.0f;
+        soundEffectGameClearedPlus.volume = mainManager.settings.gameSoundEffectF * 1.0f;
 
         Debug.Log("已初始化關卡");
     }
@@ -244,6 +257,7 @@ public class GameManager : MonoBehaviour
     //暫停按鈕
     public void PauseButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         GameData.gameRunning = false;
         pauseUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
@@ -252,8 +266,8 @@ public class GameManager : MonoBehaviour
 
         pauseTextName.text = GameData.levelName;
         pauseTextTimer.text = GameData.timerString;
-        pauseTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
-        pauseTextScore.text = "Score: " + GameData.score.ToString();
+        pauseTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        pauseTextScore.text = GameData.score.ToString();
 
         // 遊戲暫停，將時間凍結
         Time.timeScale = 0f;
@@ -263,24 +277,15 @@ public class GameManager : MonoBehaviour
     //繼續按鈕
     public void ContinueButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         GameData.gameRunning = true;
         pauseUI.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(true);
 
-        switch (GameData.gameType)
-        {
-            case "Time":
-                timerText.gameObject.SetActive(true);
-                break;
-            case "Score":
-                scoreText.gameObject.SetActive(true);
-                break;
-            default:
-                Debug.LogWarning("未知的Type類型: " + GameData.gameType);
-                break;
-        }
+        timerText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
 
-        // 遊戲繼續，將時間解凍
+        //遊戲繼續，將時間解凍
         Time.timeScale = 1f;
     }
 
@@ -288,6 +293,7 @@ public class GameManager : MonoBehaviour
     //重新開始按鈕
     public void RestartButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -295,6 +301,7 @@ public class GameManager : MonoBehaviour
     //退出按鈕
     public void BackButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         // 載入 MenuScene
         SceneManager.LoadScene("MenuScene");
     }
@@ -310,20 +317,24 @@ public class GameManager : MonoBehaviour
 
         gameOverTextName.text = GameData.levelName;
         gameOverTextTimer.text = GameData.timerString;
-        gameOverTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
-        gameOverTextScore.text = "Score: " + GameData.score.ToString();
+        gameOverTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        gameOverTextScore.text = GameData.score.ToString();
 
         GameData.gameRunning = false;
         GameData.gameOver = true;
 
         //時間凍結
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
+
+        //
+        soundEffectGameOver.Play();
     }
 
 
     //重新開始按鈕
     public void NextButtonClick()
     {
+        mainManager.soundEffectUiTrue.Play();
         if ((mainManager.nowLevel + 1) < mainManager.defaultLevelsRoot.levelConfig.Count)
         {
             mainManager.nowLevel += 1;
@@ -335,18 +346,153 @@ public class GameManager : MonoBehaviour
     //遊戲過關
     public void GameCleared()
     {
+        GameData.gameRunning = false;
+        GameData.gameOver = true;
+
+        GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // 找到所有標籤為"Ball"的物件
+        foreach (GameObject ball in balls)
+        {
+            Rigidbody rb = ball.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero; // 設置速度為零
+            }
+        }
+
+        Debug.Log("開始結算...");
+        StartCoroutine(DestroyBalls());
+    }
+
+    //結算-消除彈珠
+    IEnumerator DestroyBalls()
+    {
+        while (true)
+        {
+            GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // 找到所有標籤為"Ball"的物件
+
+            if (balls.Length > 0)
+            {
+                // 隨機選擇一個球進行消除
+                int randomIndex = Random.Range(0, balls.Length);
+                GameObject ballToDestroy = balls[randomIndex];
+
+                // 增加分數
+                UpdateScore(200);
+
+                //音訊
+                soundEffectGetItem.Play();
+
+                //VFX
+                GameObject vfx = Instantiate(vfxStardustScore, ballToDestroy.transform.position, Quaternion.identity);
+                var particleSystem = vfx.GetComponent<ParticleSystem>();
+                if (particleSystem != null)
+                {
+                    //設置粒子發射數量
+                    ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
+                    bursts[0].time = 0.0f; // 從運行開始時立即發射
+                    bursts[0].count = (short)mainManager.settings.effectsVFX * 0.5f; //粒子數量
+                    particleSystem.emission.SetBursts(bursts);
+
+                    //設置子物件的 Force Over Lifetime 值
+                    Transform subToScore = vfx.transform.Find("SubToScore");
+                    if (subToScore != null)
+                    {
+                        var subParticleSystem = subToScore.GetComponent<ParticleSystem>();
+                        var forceModule = subParticleSystem.forceOverLifetime;
+                        forceModule.x = (-21 - transform.position.x);
+                        forceModule.y = (25 - transform.position.y);
+                    }
+                    else
+                    {
+                        Debug.LogError("未找到名為 'subToScore' 的子物件！");
+                    }
+                }
+
+                // 消除物件
+                Destroy(ballToDestroy);
+
+                yield return new WaitForSeconds(0.25f);
+            }
+            else
+            {
+                StartCoroutine(DestroyItems());
+                break; // 如果場景中沒有符合條件的物件，則結束
+            }
+        }
+    }
+
+    //結算-消除道具
+    IEnumerator DestroyItems()
+    {
+        while (true)
+        {
+            GameObject[] items = GameObject.FindGameObjectsWithTag("Item"); // 找到所有標籤為"Ball"的物件
+
+            if (items.Length > 0)
+            {
+                // 隨機選擇一個球進行消除
+                int randomIndex = Random.Range(0, items.Length);
+                GameObject itemToDestroy = items[randomIndex];
+
+                // 增加分數
+                UpdateScore(60);
+
+                //音訊
+                soundEffectGetItem.Play();
+
+                //VFX
+                GameObject vfx = Instantiate(vfxStardustScore, itemToDestroy.transform.position, Quaternion.identity);
+                var particleSystem = vfx.GetComponent<ParticleSystem>();
+                if (particleSystem != null)
+                {
+                    //設置粒子發射數量
+                    ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
+                    bursts[0].time = 0.0f; // 從運行開始時立即發射
+                    bursts[0].count = (short)mainManager.settings.effectsVFX * 0.5f; //粒子數量
+                    particleSystem.emission.SetBursts(bursts);
+
+                    //設置子物件的 Force Over Lifetime 值
+                    Transform subToScore = vfx.transform.Find("SubToScore");
+                    if (subToScore != null)
+                    {
+                        var subParticleSystem = subToScore.GetComponent<ParticleSystem>();
+                        var forceModule = subParticleSystem.forceOverLifetime;
+                        forceModule.x = (-21 - transform.position.x);
+                        forceModule.y = (25 - transform.position.y);
+                    }
+                    else
+                    {
+                        Debug.LogError("未找到名為 'subToScore' 的子物件！");
+                    }
+                }
+
+                // 消除物件
+                Destroy(itemToDestroy);
+
+                yield return new WaitForSeconds(0.25f);
+            }
+            else
+            {
+                GameClearedEnd();
+                break; // 如果場景中沒有符合條件的物件，則結束
+            }
+        }
+    }
+
+    //結算
+    void GameClearedEnd()
+    {
         gameClearedUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
         PauseButton.gameObject.SetActive(false);
 
         gameClearedTextName.text = GameData.levelName;
         gameClearedTextTimer.text = GameData.timerString;
-        gameClearedTextSpeed.text = GameSetting.gameSpeedModifier.ToString();
-        gameClearedTextScore.text = "Score: " + GameData.score.ToString();
+        gameClearedTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        gameClearedTextScore.text = GameData.score.ToString();
 
-        GameData.gameRunning = false;
-        GameData.gameOver = true;
-        Time.timeScale = 0f;
+        soundEffectGameCleared.Play();
+
         mainManager.GameClearedSave();
     }
 
@@ -411,4 +557,22 @@ public class GameManager : MonoBehaviour
 
         GameData.burstBall = false;
     }
+
+
+    //道具計時器
+    IEnumerator ItemsTimer()
+    {
+        while (true)
+        {           
+            if (true)
+            {
+                yield return new WaitForSeconds(1.0f);
+            }
+            else
+            {
+
+            }
+        }
+    }
+
 }

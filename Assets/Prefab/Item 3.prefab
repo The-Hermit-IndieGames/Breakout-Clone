@@ -176,3 +176,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   inBrick: 1
+  vfxStardustScore: {fileID: 6570630510257888672, guid: 01b1e151a6cd3e34c841a065ba94d747, type: 3}
