@@ -279,6 +279,8 @@ MonoBehaviour:
   vfxExplode: {fileID: 7742193216436824282, guid: 67e84cc7becef314b82e2f0f74ae0313, type: 3}
   soundEffectCollision: {fileID: -8515750469536604586}
   soundEffectBurstBall: {fileID: 8074027379150113725}
+  blackHole: {fileID: 0}
+  forceStrength: 7.5
 --- !u!82 &-8515750469536604586
 AudioSource:
   m_ObjectHideFlags: 0

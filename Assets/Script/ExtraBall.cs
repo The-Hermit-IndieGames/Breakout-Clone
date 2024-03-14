@@ -6,13 +6,18 @@ using UnityEngine;
 
 public class ExtraBall : MonoBehaviour
 {
+    private int collisionTimes = 1;
     private MainManager mainManager;
+    private Rigidbody rb;
 
     [SerializeField] private GameObject vfxExplode;
-    private Rigidbody rb;
 
     [SerializeField] private AudioSource soundEffectCollision;
     [SerializeField] private AudioSource soundEffectBurstBall;
+
+    [SerializeField] private Transform blackHole;
+    public float forceStrength = 7.5f; // 作用力的強度
+
 
     private void Start()
     {
@@ -26,9 +31,14 @@ public class ExtraBall : MonoBehaviour
 
     private void Update()
     {
-        if (GameData.gameOver)
+        if (GameData.gameOver == true)
         {
             rb.velocity = Vector3.zero; // 設置速度為零
+        }
+
+        if (GameData.blackHole == true)
+        {
+            BlackHole();
         }
     }
 
@@ -47,12 +57,13 @@ public class ExtraBall : MonoBehaviour
         {
             velocity.y *= 0.5f;
             velocity *= 2.0f;
-            Debug.Log("向量修正");
-            if (velocity.x == 0f)
+            Debug.Log("向量修正" + velocity.normalized);
+            if (Math.Abs(velocity.x) <= 0.01f)
             {
-                Debug.Log("垂直卡死 修正向量");
                 float speed = velocity.y;
-                velocity = new Vector3(0.1f, 1.0f, 0f).normalized * speed;
+                velocity = new Vector3(0.1f * collisionTimes, 1.0f, 0f).normalized * speed;
+                Debug.Log("垂直卡死 修正向量" + velocity.normalized);
+                collisionTimes *= -1;
             }
         }
 
@@ -61,12 +72,13 @@ public class ExtraBall : MonoBehaviour
         {
             velocity.x *= 0.5f;
             velocity *= 2.0f;
-            Debug.Log("向量修正");
-            if (velocity.y == 0f)
+            Debug.Log("向量修正" + velocity.normalized);
+            if (Math.Abs(velocity.y) <= 0.01f)
             {
-                Debug.Log("水平卡死 修正向量");
                 float speed = velocity.x;
-                velocity = new Vector3(1.0f, 0.11f, 0f).normalized * speed;
+                velocity = new Vector3(1.0f, 0.1f * collisionTimes, 0f).normalized * speed;
+                Debug.Log("水平卡死 修正向量" + velocity.normalized);
+                collisionTimes *= -1;
             }
         }
 
@@ -102,7 +114,7 @@ public class ExtraBall : MonoBehaviour
     void BurstBall()
     {
         // 在半徑為4的範圍內檢查其他物件
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 4f);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
 
         foreach (Collider col in colliders)
         {
@@ -114,6 +126,23 @@ public class ExtraBall : MonoBehaviour
                     brick.BrickCollision();
                 }
             }
+        }
+    }
+
+    void BlackHole()
+    {
+        if (blackHole != null && rb != null)
+        {
+            //計算方向向量
+            Vector3 direction = (blackHole.position - transform.position).normalized;
+            direction.z = 0;
+
+            //施加力
+            rb.AddForce(direction * forceStrength, ForceMode.Force);
+        }
+        else if (blackHole == null)
+        {
+            blackHole = GameObject.Find("Black Hole").transform;
         }
     }
 }

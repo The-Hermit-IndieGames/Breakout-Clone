@@ -66,6 +66,9 @@ public class Brick : MonoBehaviour
             case 4:
                 spawnedPowerUp = Instantiate(powerUpPrefabs[3], transform.position, Quaternion.identity, bricksList);
                 break;
+            case 5:
+                spawnedPowerUp = Instantiate(powerUpPrefabs[4], transform.position, Quaternion.identity, bricksList);
+                break;
             default:
                 Debug.LogWarning("未知的Item類型: " + powerUpType);
                 break;
@@ -79,6 +82,7 @@ public class Brick : MonoBehaviour
         if (collision.gameObject.CompareTag("Ball"))
         {
             BrickCollision();
+            GameData.noBreakTimer = 0;
         }
     }
 

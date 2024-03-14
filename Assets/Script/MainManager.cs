@@ -111,6 +111,7 @@ public class MainManager : MonoBehaviour
     //¹B¦æ
     public int nowLevel = 0;
 
+
     void Start()
     {
         //ÀÉ®×

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7571891663571788992}
   - component: {fileID: -1446012581240403471}
   m_Layer: 0
-  m_Name: Brick
+  m_Name: BrickUnbreakable
   m_TagString: Brick
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -65,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: fdc84f0094c5d45409760ee9bce4069f, type: 2}
+  - {fileID: 2100000, guid: 4f8eca2aa3277d847a7c98e74dc8178e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5730544888656513026}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5b66e9a12703e7a4087ef7dfe90fc8c6, type: 3}
   m_Name: 

@@ -25,9 +25,18 @@ public class GameData
     public static string timerString;
     public static float saveTime;
 
-    public static int totalBalls = 0;                   //彈珠數
+    //Item: 1=彈珠+  2=加長版  3=爆炸彈珠 4=黑洞 5=移動平台
+    public static int timerLongPaddle = 0;
+    public static int timerBurstBall = 0;
+    public static int timerBlackHole = 0;
 
-    public static bool burstBall = false;               //爆炸彈珠
+    public static int noBreakTimer = 0;
+
+    public static int totalBalls = 0;                //彈珠數
+
+    public static bool longPaddle = false;
+    public static bool burstBall = false;
+    public static bool blackHole = false;
 }
 
 public class GameManager : MonoBehaviour
@@ -74,19 +83,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource soundEffectGameClearedPlus;
 
 
-    public GameObject paddle;                   // 滑板
-    public GameObject longPaddle;               // 大滑板
+    //道具
+    public GameObject paddle;                   //滑板
+    public GameObject longPaddle;               //大滑板
+    public GameObject blackHole;                //黑洞
+    [SerializeField] private GameObject burstPaddlePrefab;
 
     //寫入參數
-    public int selectedLevel;                   // 指定要生成的關卡編號 (主控台指定)
+    public int selectedLevel;                   //指定要生成的關卡編號 (主控台指定)
 
     //運行
     [SerializeField] private Transform bricksList;                                          //磚塊列表(坐標系)
     MainManager.LevelConfig targetLevelConfig;              //關卡資料
     public int brickAmount;
-    private Coroutine nowItem2;
-    private Coroutine nowItem3;
-
 
     void Start()
     {
@@ -95,6 +104,8 @@ public class GameManager : MonoBehaviour
 
         //生成磚塊
         LoadGenerate();
+
+        StartCoroutine(ItemsTimer());
     }
 
 
@@ -135,8 +146,18 @@ public class GameManager : MonoBehaviour
 
         brickAmount = 0;
 
-        //初始化記分板
-        scoreText.text = "Score: " + GameData.score.ToString();
+        GameData.timerLongPaddle = 0;
+        GameData.timerBurstBall = 0;
+        GameData.timerBlackHole = 0;
+
+        GameData.noBreakTimer = 0;
+
+        GameData.longPaddle = false;
+        GameData.burstBall = false;
+        GameData.blackHole = false;
+
+    //初始化記分板
+    scoreText.text = "Score: " + GameData.score.ToString();
 
         //初始化計時器(顯示時間=目前時間-開始時間)
         GameData.startTime = Time.time;
@@ -496,83 +517,140 @@ public class GameManager : MonoBehaviour
         mainManager.GameClearedSave();
     }
 
+    //道具======================================================================================================================
 
-    //道具2
-    public void ItemLongPaddle()
+    //道具計時器
+    IEnumerator ItemsTimer()
+    {
+        while (true)
+        {
+            if (GameData.gameRunning && !GameData.gameOver && GameData.gameStarted)
+            {
+                if (GameData.timerLongPaddle >= 1)
+                {
+                    GameData.timerLongPaddle--;
+                    if (GameData.timerLongPaddle == 0)
+                    {
+                        ItemLongPaddleOFF();
+                    }
+                }
+
+                if (GameData.timerBurstBall >= 1)
+                {
+                    GameData.timerBurstBall--;
+                    if (GameData.timerBurstBall == 0)
+                    {
+                        ItemBurstBallOFF();
+                    }
+                }
+
+                if (GameData.timerBlackHole >= 1)
+                {
+                    GameData.timerBlackHole--;
+                    if (GameData.timerBlackHole == 0)
+                    {
+                        ItemBlackHoleOFF();
+                    }
+                }
+
+                //防卡關機制
+                GameData.noBreakTimer++;
+                if (GameData.noBreakTimer >= 30)
+                {
+                    BurstPaddle();
+                    GameData.noBreakTimer = 0;
+                }
+            }
+
+
+            Debug.Log("道具: 延長/爆炸/黑洞 剩餘 " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " 秒\n" + "防卡關道具發放 累積 " + GameData.noBreakTimer + "/30 秒");
+
+            yield return new WaitForSeconds(1.0f);
+        }
+    }
+
+    //道具觸發器
+    public void ItemPowerUP(int type)
+    {
+        //Item: 1=彈珠+  2=加長版  3=爆炸彈珠 4=黑洞 5=移動平台
+        switch (type)
+        {
+            case 1:
+                UpdateScore(50);
+                //由PowerUPPaddle觸發
+                break;
+            case 2:
+                UpdateScore(100);
+                ItemLongPaddle();
+                GameData.timerLongPaddle = 30;
+                break;
+            case 3:
+                UpdateScore(100);
+                ItemBurstBall();
+                GameData.timerBurstBall = 20;
+                break;
+            case 4:
+                UpdateScore(200);
+                ItemBlackHole();
+                GameData.timerBlackHole = 10;
+                break;
+            case 5:
+                UpdateScore(20);
+                BurstPaddle();
+                break;
+            default:
+                Debug.LogWarning("未知的Item類型: " + type);
+                break;
+        }
+    }
+
+
+    //道具2 加長版
+    void ItemLongPaddle()
     {
         paddle.gameObject.SetActive(false);
         longPaddle.gameObject.SetActive(true);
         GameData.boundaryX = 18f;
-        if (nowItem2 != null)
-        {
-            StopCoroutine(nowItem2);
-            nowItem2 = null;
-        }
-        nowItem2 = StartCoroutine(Item2());
     }
 
-    IEnumerator Item2()
+    void ItemLongPaddleOFF()
     {
-        yield return new WaitForSeconds(27f);
-
-        Debug.Log("ItemLongPaddle 3s");
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("ItemLongPaddle 2s");
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("ItemLongPaddle 1s");
-        yield return new WaitForSeconds(1f);
-
         longPaddle.gameObject.SetActive(false);
         paddle.gameObject.SetActive(true);
         GameData.boundaryX = 21f;
     }
 
 
-    //道具3
-    public void ItemBurstBall()
+    //道具3 爆炸彈珠
+    void ItemBurstBall()
     {
         GameData.burstBall = true;
-        if (nowItem3 != null)
-        {
-            StopCoroutine(nowItem3);
-            nowItem3 = null;
-        }
-        nowItem3 = StartCoroutine(Item3());
     }
 
-    IEnumerator Item3()
+    void ItemBurstBallOFF()
     {
-        yield return new WaitForSeconds(7f);
-
-        Debug.Log("ItemBurstBall 3s");
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("ItemBurstBall 2s");
-        yield return new WaitForSeconds(1f);
-
-        Debug.Log("ItemBurstBall 1s");
-        yield return new WaitForSeconds(1f);
-
         GameData.burstBall = false;
     }
 
 
-    //道具計時器
-    IEnumerator ItemsTimer()
+    //道具4 黑洞
+    void ItemBlackHole()
     {
-        while (true)
-        {           
-            if (true)
-            {
-                yield return new WaitForSeconds(1.0f);
-            }
-            else
-            {
-
-            }
-        }
+        GameData.blackHole = true;
+        blackHole.gameObject.SetActive(true);
     }
 
+    void ItemBlackHoleOFF()
+    {
+        GameData.blackHole = false;
+        blackHole.gameObject.SetActive(false);
+    }
+
+
+    //道具5 移動平台
+    void BurstPaddle()
+    {
+        Vector3 spawnPosition = new Vector3(0f, -1f, 0f);
+        GameObject burstPaddle = Instantiate(burstPaddlePrefab, spawnPosition, Quaternion.identity);
+    }
 }

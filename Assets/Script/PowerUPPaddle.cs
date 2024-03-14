@@ -30,28 +30,8 @@ public class PowerUPPaddle : MonoBehaviour
                 int itemType = item.type;
 
                 // 根據type值執行相應的PowerUP
-                switch (itemType)
-                {
-                    case 1:
-                        gameManager.UpdateScore(20);
-                        PowerUP_1();
-                        break;
-                    case 2:
-                        gameManager.UpdateScore(100);
-                        PowerUP_2();
-                        break;
-                    case 3:
-                        gameManager.UpdateScore(100);
-                        PowerUP_3();
-                        break;
-                    case 4:
-                        gameManager.UpdateScore(1000);
-                        PowerUP_3();
-                        break;
-                    default:
-                        Debug.LogWarning("未知的Item類型: " + itemType);
-                        break;
-                }
+                if (itemType == 1) { addBall(); }
+                gameManager.ItemPowerUP(itemType);
 
                 //粒子效果
                 item.GetItem();
@@ -63,8 +43,8 @@ public class PowerUPPaddle : MonoBehaviour
     }
 
 
-    // 道具效果
-    private void PowerUP_1()
+    //道具效果
+    void addBall()
     {
         // 在自身位置向上偏移 (0, 0.5, 0) 的位置
         Vector3 spawnPosition = transform.position + new Vector3(0f, 1.5f, 0f);
@@ -80,13 +60,4 @@ public class PowerUPPaddle : MonoBehaviour
         rb.velocity = Vector3.up * GameData.initialSpeed;
     }
 
-    private void PowerUP_2()
-    {
-        gameManager.ItemLongPaddle();
-    }
-
-    private void PowerUP_3()
-    {
-        gameManager.ItemBurstBall();
-    }
 }

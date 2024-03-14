@@ -9,21 +9,27 @@ using static MainManager;
 
 public class MakingManager : MonoBehaviour
 {
-    //序列化定義
+    //序列化定義-關卡資料
     [Serializable]
     public class Root
     {
+        //根目錄: 目錄名稱、製作者、版本號、描述、關卡列表(LevelConfig)
+        public string name;
+        public string maker;
+        public string version;
+        public string description;
         public List<LevelConfig> levelConfig;
     }
 
     [Serializable]
     public class LevelConfig
     {
+        //單一關卡資料: 關卡名稱、前置關卡名稱(NEW)、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格(?)、磚塊列表(BricksData)
         public string levelName;
+        public string preLevelName;
         public string gameType;
         public float menuX;
         public float menuY;
-        //menuX menuY menuStyle 未使用
         public int menuStyle;
         public List<BricksData> bricksData;
     }
@@ -31,12 +37,24 @@ public class MakingManager : MonoBehaviour
     [Serializable]
     public class BricksData
     {
+        //單一磚塊資料: 磚塊座標(x、y)、磚塊類型(Normal、Unbreakable)、磚塊類型特有資料
         public int xPoint;
         public int yPoint;
+        public string brickType;
+        public NormalBricks normalBricks;
+
+        //刪
         public int pointValue;
         public int brickLevel;
         public int powerUpType;
-        public int brickType;
+    }
+
+    [Serializable]
+    public class NormalBricks
+    {
+        //普通磚塊資料: 級別、道具
+        public int brickLevel;
+        public int powerUpType;
     }
 
     private MainManager mainManager;
@@ -101,24 +119,34 @@ public class MakingManager : MonoBehaviour
             BrickMake brick = hit.collider.GetComponent<BrickMake>();
             if (brick != null)
             {
-                //指定nowBrick用於後續更改
-                nowBrick = brick;
-
-                //更新 brickLevel
-                brick.brickLevel += 1;
-                if (brick.brickLevel >= 6)
+                if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
                 {
-                    brick.brickLevel = 0;
+                    // 在這裡觸發你想要執行的操作
+                    Debug.Log("Shift + 左鍵被按下！");
+
+                    // 舉例：可以在這裡呼叫其他方法或執行其他代碼
                 }
-                brick.UpdateLevel();
+                else
+                {
+                    //指定nowBrick用於後續更改
+                    nowBrick = brick;
 
-                //輸入條
-                textBrickLevel.text = brick.brickLevel.ToString();
-                textPointValue.text = brick.pointValue.ToString();
-                inputBrickLevel.text = "";
-                inputPointValue.text = "";
+                    //更新 brickLevel
+                    brick.brickLevel += 1;
+                    if (brick.brickLevel >= 6)
+                    {
+                        brick.brickLevel = 0;
+                    }
+                    brick.UpdateLevel();
 
-                ItemButtonUpdate();
+                    //輸入條
+                    textBrickLevel.text = brick.brickLevel.ToString();
+                    textPointValue.text = brick.pointValue.ToString();
+                    inputBrickLevel.text = "";
+                    inputPointValue.text = "";
+
+                    ItemButtonUpdate();
+                }               
             }
         }
     }
@@ -297,7 +325,7 @@ public class MakingManager : MonoBehaviour
                 brickData.pointValue = brickScript.pointValue;
                 brickData.brickLevel = brickScript.brickLevel;
                 brickData.powerUpType = brickScript.powerUpType;
-                brickData.brickType = brickScript.brickType;
+                //brickData.brickType = brickScript.brickType;
 
                 levelConfig.bricksData.Add(brickData);
             }
