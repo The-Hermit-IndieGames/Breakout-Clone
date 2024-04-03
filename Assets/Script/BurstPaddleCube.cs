@@ -35,7 +35,7 @@ public class BurstPaddleCube : MonoBehaviour
             particleSystem.emission.SetBursts(bursts);
 
 
-            // 在半徑為4的範圍內檢查其他物件
+            // 在範圍內檢查其他物件
             Vector3 box = new Vector3(50f, 1.5f, 1.5f);
             Collider[] colliders = Physics.OverlapBox(transform.position, box);
             foreach (Collider col in colliders)

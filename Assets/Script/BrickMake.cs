@@ -6,14 +6,18 @@ using UnityEngine;
 
 public class BrickMake : MonoBehaviour
 {
-    public int pointValue;      //破壞分數
+    public int brickType;       //磚塊類別
+
     public int brickLevel;      //磚塊等級
     public int powerUpType;     //道具類別
-    public int brickType = 0;   //磚塊類別
 
+    public int xPoint;
+    public int yPoint;
+
+
+    public GameObject[] powerUpPrefabs;         //不同道具的預製件
 
     private Renderer brickRenderer;
-    public GameObject[] powerUpPrefabs;         // 三種不同的預製件，預設大小為3，分別代表type為1、2、3的預製件
     private GameObject spawnedPowerUp;
     private Transform bricksList;
 
@@ -26,17 +30,7 @@ public class BrickMake : MonoBehaviour
 
         //更新顏色
         UpdateBrickColor();
-        
-    }
-
-
-    //更新 brickLevel
-    public void UpdateLevel()
-    {
-        UpdateBrickColor();
-
-        //自動指定分數
-        pointValue=(brickLevel * 20);
+        PowerUpType();
     }
 
 
@@ -83,33 +77,46 @@ public class BrickMake : MonoBehaviour
 
 
     //色彩更新器
-    private void UpdateBrickColor()
+    public void UpdateBrickColor()
     {
         Color brickColor = Color.white;
 
-        switch (brickLevel)
+        if (brickType == 0)
         {
-            case 0:
-                brickColor = new Color(0.1f, 0.1f, 0.1f, 0.001f);   // 近透明
-                break;
-            case 1:
-                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // 半透明淡藍
-                break;
-            case 2:
-                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // 半透明淡綠
-                break;
-            case 3:
-                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // 半透明黃
-                break;
-            case 4:
-                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // 半透明橙
-                break;
-            case 5:
-                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // 半透明紅
-                break;
-            default:
-                brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // 紫色
-                break;
+            // 設置 Metallic 和 Smoothness 屬性
+            brickRenderer.material.SetFloat("_Metallic", 0.2f);
+            brickRenderer.material.SetFloat("_Glossiness", 1.0f);
+            switch (brickLevel)
+            {
+                case 0:
+                    brickColor = new Color(0.1f, 0.1f, 0.1f, 0.001f);   // 近透明
+                    break;
+                case 1:
+                    brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // 半透明淡藍
+                    break;
+                case 2:
+                    brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // 半透明淡綠
+                    break;
+                case 3:
+                    brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // 半透明黃
+                    break;
+                case 4:
+                    brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // 半透明橙
+                    break;
+                case 5:
+                    brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // 半透明紅
+                    break;
+                default:
+                    brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // 紫色
+                    break;
+            }
+        }
+        else if (brickType == 1)
+        {
+            // 設置 Metallic 和 Smoothness 屬性
+            brickRenderer.material.SetFloat("_Metallic", 0.6f);
+            brickRenderer.material.SetFloat("_Glossiness", 0.6f);
+            brickColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);   // 灰色
         }
 
         brickRenderer.material.color = brickColor;

@@ -7,7 +7,7 @@ using static UnityEngine.ParticleSystem;
 
 public class Brick : MonoBehaviour
 {
-    public int pointValue;      //瘆胊だ计(ネΘ糶)
+    public int pointValue;      //瘆胊だ计
     public int brickLevel;      //縥遏单(ネΘ糶)
     public int powerUpType;     //笵ㄣ摸(ネΘ糶)
 
@@ -40,12 +40,13 @@ public class Brick : MonoBehaviour
 
         bricksList = GameObject.Find("BrickList").GetComponent<Transform>();
 
-        //砞﹚HP 穝肅︹
+        //砞﹚だ计 HP 穝肅︹
+        pointValue = brickLevel *= 20;
         brickHP = brickLevel;
         UpdateBrickColor();
 
 
-        //
+        //
         soundEffectCollision.volume = mainManager.settings.gameSoundEffectF * 1.0f;
         soundEffectDestroy.volume = mainManager.settings.gameSoundEffectF * 1.0f;
 
