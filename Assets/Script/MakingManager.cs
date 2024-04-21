@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
+using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCounters;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class MakingManager : MonoBehaviour
 {
@@ -19,12 +22,14 @@ public class MakingManager : MonoBehaviour
         public string version;
         public string description;
         public List<LevelConfig> levelConfig;
+        public int idCounter;
     }
 
     [Serializable]
     public class LevelConfig
     {
         //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
+        public string levelID;
         public string levelName;
         public int[] preLevelID;
         public string gameType;
@@ -57,54 +62,34 @@ public class MakingManager : MonoBehaviour
     //檔案
     [SerializeField] private TextAsset jsonDefaultLevels;
 
-    //參數
-    public TMP_InputField inputLevelsName;                                  //輸入格-關卡名
-    public string levelsName = "Null";                                      //關卡名
-    public string exportFileName;                                           //保存的JSON文件名
-    public GameObject brickPrefab;                                          //磚塊的預置體
-    public TMP_InputField inputBrickLevel;                                  //輸入格-磚塊等級
-    public TMP_InputField inputPointValue;                                  //輸入格-破壞分數
-    public TextMeshProUGUI textBrickLevel;                                  //數值-磚塊等級
-    public TextMeshProUGUI textPointValue;                                  //數值-破壞分數
-
-    //運行
-    private List<GameObject> bricksInScene = new List<GameObject>();                        //場景中的磚塊列表
-    [SerializeField] private Transform bricksList;                                          //磚塊列表(坐標系)
-
-    private BrickMake nowBrick;
-
-    //icon
-    [SerializeField] private GameObject[] powerUpIcons;
-
     //舊版 需清理!!!  DefaultLevels JSON配置文件
     [SerializeField] private Root defaultLevelsData;
+
+
+    //預置體
+    [SerializeField] private GameObject buttonPrefab;
+    [SerializeField] private GameObject brickPrefab;
 
     //JSON配置文件
     [SerializeField] private Root rootLevelsData;
     [SerializeField] private LevelConfig nowLevelsData;
     [SerializeField] private List<BricksData> bricksDataList;
 
-    //輸入項目
-    public TMP_InputField inputFileName;
-    private string fileName;
-    public TMP_InputField inputMakerName;
-    private string makerName;
-    public TMP_InputField inputVersion;
-    private string version;
-    public TMP_InputField inputDescription;
-    private string description;
-
-    public TMP_InputField inputSearchFileName;
-    private string searchFileName;
-
-    public TMP_InputField inputNowLevelName;
-    private string nowLevelName;
-    public TMP_InputField inputPrerequisitesLevel;
-    private string prerequisitesLevel;
-
     [SerializeField] private GameObject warningCanva;
     [SerializeField] private TextMeshProUGUI warningTextEN;
     [SerializeField] private TextMeshProUGUI warningTextCH;
+
+    //運行
+    private List<GameObject> buttonInMap = new List<GameObject>();                          //地圖中的按鈕列表
+    private List<GameObject> bricksInScene = new List<GameObject>();                        //場景中的磚塊列表
+
+    [SerializeField] private Transform buttonsMap;                                          //按鈕列表(坐標系)
+    [SerializeField] private Transform bricksList;                                          //磚塊列表(坐標系)
+
+    private BrickMake nowBrick;
+
+    //icon
+    [SerializeField] private GameObject[] powerUpIcons;
 
 
     void Start()
@@ -162,13 +147,6 @@ public class MakingManager : MonoBehaviour
                         brick.brickLevel = 0;
                     }
                     brick.UpdateBrickColor();
-
-                    //輸入條
-                    textBrickLevel.text = brick.brickLevel.ToString();
-                    inputBrickLevel.text = "";
-                    inputPointValue.text = "";
-
-                    ItemButtonUpdate();
                 }
             }
         }
@@ -191,344 +169,13 @@ public class MakingManager : MonoBehaviour
                 nowBrick = brick;
 
                 brick.UpdateItem();     //更新 powerUpType
-                ItemButtonUpdate();
             }
         }
     }
-
-    //道具按鈕-修改圖示
-    void ItemButtonUpdate()
-    {
-        //修改圖示
-        if (nowBrick.powerUpType > 5 || nowBrick.powerUpType < 0)
-        {
-            Debug.LogWarning("未知的Item類型: " + nowBrick.powerUpType);
-        }
-        else
-        {
-            powerUpIcons[0].gameObject.SetActive(false);
-            powerUpIcons[1].gameObject.SetActive(false);
-            powerUpIcons[2].gameObject.SetActive(false);
-            powerUpIcons[3].gameObject.SetActive(false);
-            powerUpIcons[4].gameObject.SetActive(false);
-            powerUpIcons[5].gameObject.SetActive(false);
-
-            powerUpIcons[nowBrick.powerUpType].gameObject.SetActive(true);
-        }
-    }
-
-
-    ////匯出 JSON 按鈕(預設關卡專用!!)
-    //public void ExportDefaultLevels()
-    //{
-    //    if (defaultLevelsData.levelConfig.Count == 0)
-    //    {
-    //        Debug.Log("實例為空 呼叫LoadDefaultLevels");
-    //        LoadDefaultLevels();
-    //    }
-
-
-    //    // 創建一個新的LevelConfig對象
-    //    LevelConfig levelConfig = new LevelConfig();
-
-    //    levelConfig.levelName = "Level." + levelsName;
-    //    levelConfig.gameType = "Time";
-    //    levelConfig.menuX = -1.0f;
-    //    levelConfig.menuY = -1.0f;
-    //    levelConfig.menuStyle = -1;
-    //    levelConfig.bricksData = new List<BricksData>();
-
-    //    // 收集場景中的磚塊數據
-    //    foreach (GameObject brick in bricksInScene)
-    //    {
-    //        // 獲取磚塊腳本
-    //        var brickScript = brick.GetComponent<BrickMake>();
-    //        if (brickScript.brickLevel != 0)
-    //        {
-    //            BricksData brickData = new BricksData();
-    //            brickData.xPoint = Mathf.RoundToInt((26 - brick.transform.position.x) / 4);
-    //            brickData.yPoint = Mathf.RoundToInt(24.5f - brick.transform.position.y);
-    //            brickData.normalBricks.brickLevel = brickScript.brickLevel;
-    //            brickData.normalBricks.powerUpType = brickScript.powerUpType;
-
-    //            levelConfig.bricksData.Add(brickData);
-    //        }
-    //    }
-
-    //    //比較 levelName 檢測是否出現重複
-    //    for (int i = 0; i < defaultLevelsData.levelConfig.Count; i++)
-    //    {
-    //        if (defaultLevelsData.levelConfig[i].levelName == ("Level." + levelsName))
-    //        {
-    //            //出現重複 --> 取代
-    //            defaultLevelsData.levelConfig[i] = levelConfig;
-    //            break;
-    //        }
-    //        else if (i == (defaultLevelsData.levelConfig.Count - 1))
-    //        {
-    //            //無重複 --> 添加LevelConfig到Root
-    //            defaultLevelsData.levelConfig.Add(levelConfig);
-    //        }
-    //    }
-
-    //    if (defaultLevelsData.levelConfig.Count == 0)
-    //    {
-    //        //空集合時 --> 添加LevelConfig到Root
-    //        defaultLevelsData.levelConfig.Add(levelConfig);
-    //    }
-
-    //    // 轉換為JSON字符串
-    //    string defaultLevelsDataJson = JsonUtility.ToJson(defaultLevelsData, true);
-
-    //    // 確保目錄存在
-    //    string directoryPath = Application.dataPath + "/Resources/Data/";
-    //    Directory.CreateDirectory(directoryPath);
-
-    //    // 寫入 JSON 到檔案
-    //    string filePath = directoryPath + "DefaultLevels.json";
-    //    File.WriteAllText(filePath, defaultLevelsDataJson);
-
-    //    Debug.Log("關卡配置已保存到 " + filePath);
-
-    //    // 重新載入資源
-    //    Resources.UnloadAsset(Resources.Load("Data/DefaultLevels"));
-
-    //    // 載入新的資源
-    //    TextAsset newJsonFile = Resources.Load<TextAsset>("Data/example");
-    //}
-
-
-    ////匯入 JSON 按鈕(預設關卡專用!!)
-    //public void LoadDefaultLevels()
-    //{
-    //    if (jsonDefaultLevels != null)
-    //    {
-    //        // 轉換 JSON 字串為對應的 Root 實例
-    //        defaultLevelsData = JsonUtility.FromJson<Root>(jsonDefaultLevels.text);
-
-    //        if (defaultLevelsData != null)
-    //        {
-    //            Debug.Log("已成功載入設定");
-    //        }
-    //        else
-    //        {
-    //            Debug.LogWarning("無法載入 JSON 配置文件，重新建立");
-    //            // 創建一個新的Root對象
-    //            defaultLevelsData = new Root();
-    //            defaultLevelsData.levelConfig = new List<LevelConfig>();
-    //        }
-    //    }
-    //    else
-    //    {
-    //        Debug.LogWarning("未找到 JSON 配置文件，重新建立");
-    //        // 創建一個新的Root對象
-    //        defaultLevelsData = new Root();
-    //        defaultLevelsData.levelConfig = new List<LevelConfig>();
-    //    }
-    //}
 
 
 
     //新版UI ==============================================================================================================================
-
-
-    //主板塊-退出按鈕 ---------------------------------------------------------------------------------------------------------
-    public void BackButtonClick()
-    {
-        mainManager.soundEffectUiTrue.Play();
-        // 載入 MenuScene
-        SceneManager.LoadScene("MenuScene");
-    }
-
-
-
-    //檔案配置板塊-新增 JSON 按鈕 ---------------------------------------------------------------------------------------------
-    public void NewLevelsJson()
-    {
-        rootLevelsData = new Root();
-    }
-
-
-    //檔案配置板塊-更新 JSON 資料
-    public void UpdateLevelsJson()
-    {
-        //資料階層-檔案資訊
-        rootLevelsData.name = fileName;
-        rootLevelsData.maker = makerName;
-        rootLevelsData.version = version;
-        rootLevelsData.description = description;
-    }
-
-
-    //檔案配置板塊-匯出 JSON 按鈕
-    public void ExportLevelsJson()
-    {
-        UpdateLevelsJson();
-
-        // 轉換為JSON字符串
-        string rootLevelsDataJson = JsonUtility.ToJson(rootLevelsData, true);
-
-        // 確保目錄存在
-        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
-        Directory.CreateDirectory(directoryPath);
-
-        // 寫入 JSON 到檔案
-        string filePath = Path.Combine(directoryPath, fileName + ".json");
-        File.WriteAllText(filePath, rootLevelsDataJson);
-
-        Debug.Log("關卡配置已保存到 " + filePath);
-    }
-
-
-    //檔案配置板塊-搜尋 JSON 按鈕
-    public void SearchLevelsJson()
-    {
-        if (jsonDefaultLevels != null)
-        {
-            // 轉換 JSON 字串為對應的 Root 實例
-            defaultLevelsData = JsonUtility.FromJson<Root>(jsonDefaultLevels.text);
-
-            if (defaultLevelsData != null)
-            {
-                Debug.Log("已成功載入設定");
-            }
-            else
-            {
-                Debug.LogWarning("無法載入 JSON 配置文件，重新建立");
-                // 創建一個新的Root對象
-                defaultLevelsData = new Root();
-                defaultLevelsData.levelConfig = new List<LevelConfig>();
-            }
-        }
-        else
-        {
-            Debug.LogWarning("未找到 JSON 配置文件，重新建立");
-            // 創建一個新的Root對象
-            defaultLevelsData = new Root();
-            defaultLevelsData.levelConfig = new List<LevelConfig>();
-        }
-    }
-
-
-    //檔案配置板塊-輸入條
-    public void OnInputFileName()
-    {
-        fileName = inputFileName.text;
-    }
-
-    public void OnInputMakerName()
-    {
-        makerName = inputMakerName.text;
-    }
-
-    public void OnInputVersion()
-    {
-        version = inputVersion.text;
-    }
-
-    public void OnInputDescription()
-    {
-        description = inputDescription.text;
-    }
-
-    public void OnInputSearchFileName()
-    {
-        searchFileName = inputSearchFileName.text;
-    }
-
-
-
-    //關卡配置板塊-新增-----------------------------------------------------------------------------------------------------
-    public void MapAddLevel()
-    {
-
-    }
-
-    //關卡配置板塊-讀取
-    public void MapLoadLevel()
-    {
-
-    }
-
-    //關卡配置板塊-保存
-    public void MapSaveLevel()
-    {
-
-    }
-
-    //關卡配置板塊-刪除
-    public void MapDeleteLevel()
-    {
-
-    }
-
-
-    //關卡配置板塊-輸入關卡名稱
-    public void MapLevelNameInput()
-    {
-        nowLevelName = inputNowLevelName.text;
-    }
-
-
-    //關卡配置板塊-按鈕樣式
-    public void MapButtonType()
-    {
-
-    }
-
-
-    //關卡配置板塊-前置關卡-輸入-------------------------------------------------------------------------------------------
-    public void PrerequisitesInput()
-    {
-
-    }
-
-    //關卡配置板塊-前置關卡-加入
-    public void PrerequisitesAdd()
-    {
-
-    }
-
-    //關卡配置板塊-前置關卡-選擇
-    public void PrerequisitesDropdown()
-    {
-
-    }
-
-    //關卡配置板塊-前置關卡-刪除
-    public void PrerequisitesDelete()
-    {
-
-    }
-
-
-
-
-
-    //磚塊配置板塊-重製磚塊-------------------------------------------------------------------------------------------
-    public void BricksRestart()
-    {
-        nextAction = BricksRestartNext;
-        ShowWarningCanva("BricksRestart", "OOOOO");
-    }
-    public void BricksRestartNext()
-    {
-        BricksDelete();
-        BricksGenerateNew();
-    }
-
-    //磚塊配置板塊-載入磚塊
-    public void BricksLoad()
-    {
-        BricksDelete();
-        BricksGenerate();
-    }
-
-    //磚塊配置板塊-儲存磚塊
-    public void BricksSave()
-    {
-        BricksAnalyze();
-    }
 
     //警告畫面--------------------------------------------------------------------------------------------------------------
 
@@ -561,15 +208,454 @@ public class MakingManager : MonoBehaviour
     {
         warningCanva.SetActive(false);
         nextAction = null;
+    }
 
+
+
+    //主板塊-退出按鈕 ---------------------------------------------------------------------------------------------------------
+    public void BackButtonClick()
+    {
+        mainManager.soundEffectUiTrue.Play();
+        // 載入 MenuScene
+        SceneManager.LoadScene("MenuScene");
+    }
+
+
+
+    //檔案配置板塊-新增 JSON 按鈕 ---------------------------------------------------------------------------------------------
+    public void NewLevelsJson()
+    {
+        rootLevelsData = new Root();
+    }
+
+
+    //檔案配置板塊-更新 JSON 資料
+    public void UpdateLevelsJson()
+    {
+        //資料階層-檔案資訊
+        OnInputFileName();
+        OnInputMakerName();
+        OnInputVersion();
+        OnInputDescription();
+    }
+
+    //關卡配置比對保存(rootLevelsData.levelConfig << nowLevelsData)
+    public void SaveLevelToRoot()
+    {
+        if (nowLevelsData.levelID != null)
+        {
+            bool haveData = false;
+
+            foreach (var levelConfig in rootLevelsData.levelConfig)
+            {
+                if (nowLevelsData.levelID == levelConfig.levelID)
+                {
+                    haveData = true;
+                    levelConfig.levelName = nowLevelsData.levelName;
+                    levelConfig.preLevelID = nowLevelsData.preLevelID;
+                    levelConfig.gameType = nowLevelsData.gameType;
+                    levelConfig.menuX = nowLevelsData.menuX;
+                    levelConfig.menuY = nowLevelsData.menuY;
+                    levelConfig.menuStyle = nowLevelsData.menuStyle;
+                }
+            }
+
+            if (haveData == false)
+            {
+                rootLevelsData.levelConfig.Add(nowLevelsData);
+            }
+        }
+    }
+
+    //關卡配置比對載入(rootLevelsData.levelConfig >> nowLevelsData)
+    public void LoadRootToLevel(string id)
+    {
+        foreach (var levelConfig in rootLevelsData.levelConfig)
+        {
+            if (levelConfig.levelID == id)
+            {
+                nowLevelsData = levelConfig;
+            }
+        }
+    }
+
+
+    //檔案配置板塊-匯出 JSON 按鈕
+    public void ExportLevelsJson()
+    {
+        UpdateLevelsJson();
+
+        // 轉換為JSON字符串
+        string rootLevelsDataJson = JsonUtility.ToJson(rootLevelsData, true);
+
+        // 確保目錄存在
+        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
+        Directory.CreateDirectory(directoryPath);
+
+        // 寫入 JSON 到檔案
+        string filePath = Path.Combine(directoryPath, rootLevelsData.name + ".json");
+        File.WriteAllText(filePath, rootLevelsDataJson);
+
+        Debug.Log("關卡配置已保存到 " + filePath);
+    }
+
+
+    //檔案配置板塊-搜尋 JSON 按鈕
+    public void SearchLevelsJson()
+    {
+        string filePath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels", searchFileName + ".json");
+
+        try
+        {
+            if (File.Exists(filePath))
+            {
+                string jsonContent = File.ReadAllText(filePath);
+                rootLevelsData = JsonUtility.FromJson<Root>(jsonContent);
+
+                LoadJsonToMap();
+                Debug.Log("Successfully loaded JSON file: " + jsonContent);
+            }
+            else
+            {
+                Debug.LogWarning("File not found: " + filePath);
+            }
+        }
+        catch (IOException e)
+        {
+            Debug.LogError("Error loading JSON file: " + e.Message);
+        }
+    }
+
+
+    //檔案配置板塊-解析 JSON 至UI
+    private void LoadJsonToMap()
+    {
+        if (rootLevelsData != null)
+        {
+            inputFileName.text = rootLevelsData.name;
+            inputMakerName.text = rootLevelsData.maker;
+            inputVersion.text = rootLevelsData.version;
+            inputDescription.text = rootLevelsData.description;
+
+            foreach (var button in buttonInMap)
+            {
+                Destroy(button.gameObject);
+            }
+            buttonInMap.Clear();
+
+            foreach (var levelConfig in rootLevelsData.levelConfig)
+            {
+                GameObject button = Instantiate(buttonPrefab, Vector2.zero, Quaternion.identity, buttonsMap);
+                buttonInMap.Add(button);
+
+                Vector2 buttonPosition = new Vector2(levelConfig.menuX, levelConfig.menuY);
+                button.transform.localPosition = buttonPosition;
+
+                var buttonScript = button.GetComponent<MapLevelButton>();
+                if (buttonScript != null)
+                {
+                    buttonScript.levelID = levelConfig.levelID;
+                }
+            }
+
+            nowButton = buttonInMap[0];
+            nowLevelsData = rootLevelsData.levelConfig[0];
+
+            Debug.Log("檔案: " + rootLevelsData.name + ".json 載入完成!");
+        }
+    }
+
+
+
+    //輸入項目
+    public TMP_InputField inputFileName;
+    public TMP_InputField inputMakerName;
+    public TMP_InputField inputVersion;
+    public TMP_InputField inputDescription;
+
+    public TMP_InputField inputSearchFileName;
+    private string searchFileName;
+
+
+    //檔案配置板塊-輸入條
+    public void OnInputFileName()
+    {
+        rootLevelsData.name = inputFileName.text;
+    }
+
+    public void OnInputMakerName()
+    {
+        rootLevelsData.maker = inputMakerName.text;
+    }
+
+    public void OnInputVersion()
+    {
+        rootLevelsData.version = inputVersion.text;
+    }
+
+    public void OnInputDescription()
+    {
+        rootLevelsData.description = inputDescription.text;
+    }
+
+    public void OnInputSearchFileName()
+    {
+        searchFileName = inputSearchFileName.text;
+    }
+
+
+
+    //關卡配置板塊----------------------------------------------------------------------------------------------------------
+
+    public GameObject nowButton;
+
+    public TMP_InputField inputNowLevelName;
+    public TMP_InputField inputPrerequisitesLevel;
+    private string prerequisitesLevel;
+
+    //關卡配置板塊-新增
+    public void MapAddLevel()
+    {
+        Vector2 buttonPosition = new Vector2(0, 0);
+        GameObject button = Instantiate(buttonPrefab, buttonPosition, Quaternion.identity, buttonsMap);
+        buttonInMap.Add(button);
+        nowButton = button;
+
+        nowLevelsData = new LevelConfig();
+        nowLevelsData.levelID = GenerateID(rootLevelsData.idCounter);
+        rootLevelsData.idCounter++;
+
+        nowLevelsData.levelName = "Null";
+        nowLevelsData.gameType = "Normal";
+        nowLevelsData.menuStyle = 0;
+
+        var buttonScript = button.GetComponent<MapLevelButton>();
+        if (buttonScript != null)
+        {
+            buttonScript.levelID = nowLevelsData.levelID;
+        }
+
+        SaveLevelToRoot();
+        LoadRootToLevel(nowLevelsData.levelID);
+        UpDataMapLevel();
+    }
+
+    private string GenerateID(int id)
+    {
+        // 使用字串格式化將整數 ID 轉換為帶有固定位數的 ID 字串
+        return $"ID_{id:D4}";
+    }
+
+    public string GetLevelName(string id)
+    {
+        string name = "Null";
+
+        foreach (var levelConfig in rootLevelsData.levelConfig)
+        {
+            if (id == levelConfig.levelID)
+            {
+                name = levelConfig.levelName;
+            }
+        }
+        return name;
+    }
+
+    [SerializeField] private TextMeshProUGUI idText;
+    [SerializeField] private TextMeshProUGUI saveBricksText;
+
+    [SerializeField] private TextMeshProUGUI bricksLoadName;
+
+    //更新畫面資訊
+    public void UpDataMapLevel()
+    {
+        idText.text = nowLevelsData.levelID;
+        saveBricksText.text = ("<< " + bricksDataList.Count + " Bricks");
+        inputNowLevelName.text = nowLevelsData.levelName;
+
+        int bricksCount;
+        if (nowLevelsData.bricksData == null)
+        {
+            bricksCount = 0;
+        }
+        else
+        {
+            var bricks = nowLevelsData.bricksData;
+            bricksCount = bricks.Count;
+        }
+
+        bricksLoadName.text = (nowLevelsData.levelName + "  (" + bricksCount + " Bricks)");
+
+        var buttonScript = nowButton.GetComponent<MapLevelButton>();
+        if (buttonScript != null)
+        {
+            buttonScript.UpdateButtonName();
+        }
+    }
+
+    //關卡配置板塊-讀取
+    public void MapLoadLevel(string id)
+    {
+        SaveLevelToRoot();
+        LoadRootToLevel(id);
+
+        //更新畫面資訊
+        UpDataMapLevel();
+    }
+
+    //關卡配置板塊-保存
+    public void MapSaveLevel()
+    {
+        nextAction = MapSaveLevelNext;
+        ShowWarningCanva("Save " + bricksDataList.Count + " Bricks To The Level ?", "OOOOO");
+    }
+
+    public void MapSaveLevelNext()
+    {
+        //避免發生傳址呼叫
+        nowLevelsData.bricksData = new List<BricksData>(bricksDataList);
+
+        foreach (var levelConfig in rootLevelsData.levelConfig)
+        {
+            if (nowLevelsData.levelID == levelConfig.levelID)
+            {
+                levelConfig.bricksData = nowLevelsData.bricksData;
+            }
+        }
+
+        Debug.Log("MapSaveLevelNext: 保存磚塊至 nowLevelsData = rootLevelsData");
+
+        nextAction = null;
+    }
+
+    //關卡配置板塊-刪除
+    public void MapDeleteLevel()
+    {
+        nextAction = MapDeleteLevelNext;
+        ShowWarningCanva("Delete The Level ?", "OOOOO");
+    }
+
+    public void MapDeleteLevelNext()
+    {
+        string id = nowLevelsData.levelID;
+        Destroy(nowButton);
+        nowButton = buttonInMap[0];
+        nowLevelsData = rootLevelsData.levelConfig[0];
+        rootLevelsData.levelConfig.RemoveAll(config => config.levelID == id);
+
+        nextAction = null;
+    }
+
+    //關卡配置板塊-輸入關卡名稱
+    public void MapLevelNameInput()
+    {
+        nowLevelsData.levelName = inputNowLevelName.text;
+
+        SaveLevelToRoot();
+        UpDataMapLevel();
+    }
+
+
+    //關卡配置板塊-按鈕樣式
+    public void MapButtonType()
+    {
+
+    }
+
+
+    //關卡配置板塊-地圖-更新座標
+    public void UpDataPosition(string id, Vector2 position)
+    {
+        MapLoadLevel(id);
+        nowLevelsData.menuX = position.x;
+        nowLevelsData.menuY = position.y;
+
+        SaveLevelToRoot();
+    }
+
+
+    //關卡配置板塊-前置關卡-輸入---------------------------
+    public void PrerequisitesInput()
+    {
+
+    }
+
+    //關卡配置板塊-前置關卡-加入
+    public void PrerequisitesAdd()
+    {
+
+    }
+
+    //關卡配置板塊-前置關卡-選擇
+    public void PrerequisitesDropdown()
+    {
+
+    }
+
+    //關卡配置板塊-前置關卡-刪除
+    public void PrerequisitesDelete()
+    {
+
+    }
+
+
+
+
+
+    //磚塊配置板塊-重製磚塊-------------------------------------------------------------------------------------------
+    public void BricksRestart()
+    {
+        nextAction = BricksRestartNext;
+        ShowWarningCanva("Restart Bricks ?", "OOOOO");
+    }
+
+    public void BricksRestartNext()
+    {
+        BricksDelete();
+        BricksGenerateNew();
+
+        nextAction = null;
+    }
+
+    //磚塊配置板塊-載入磚塊
+    public void BricksLoad()
+    {
+        nextAction = BricksLoadNext;
+
+        int bricksCount;
+        if (nowLevelsData.bricksData == null)
+        {
+            bricksCount = 0;
+        }
+        else
+        {
+            var bricks = nowLevelsData.bricksData;
+            bricksCount = bricks.Count;
+        }
+
+        ShowWarningCanva("Load " + nowLevelsData.levelName + "'s " + bricksCount + " Bricks To The Scenes ?", "OOOOO");
+    }
+
+    public void BricksLoadNext()
+    {
+        BricksDelete();
+        BricksGenerate(nowLevelsData.bricksData);
+
+        nextAction = null;
+    }
+
+    //磚塊配置板塊-儲存磚塊
+    public void BricksSave()
+    {
+        BricksAnalyze();
+        Debug.Log("BricksSave: 解析磚塊並保存至 bricksDataList");
     }
 
     //新版操作 ==============================================================================================================================
 
-    //磚塊生成器
-    void BricksGenerate()
+    //磚塊生成器(讀取)
+    void BricksGenerate(List<BricksData> bricksDatas)
     {
-        if (bricksDataList.Count == 0)
+        if (bricksDatas == null)
         {
             for (int x = 1; x <= 12; x++)
             {
@@ -603,7 +689,7 @@ public class MakingManager : MonoBehaviour
                 }
             }
 
-            foreach (var brickData in bricksDataList)
+            foreach (var brickData in bricksDatas)
             {
                 Vector3 brickPosition = new Vector3(26 - (4 * brickData.xPoint), 24.5f - brickData.yPoint, 0);
                 GameObject brick = Instantiate(brickPrefab, brickPosition, Quaternion.identity, bricksList);
@@ -718,10 +804,6 @@ public class MakingManager : MonoBehaviour
 
                         bricksDataList.Add(brickData);
                     }
-                    else
-                    {
-                        brickData.brickType = "Null";
-                    }
                     break;
                 case 1:
                     brickData.brickType = "Unbreakable";
@@ -730,7 +812,6 @@ public class MakingManager : MonoBehaviour
                     break;
                 default:
                     Debug.LogWarning("未知的磚塊類型:" + brickScript.brickType + "  ( " + brickScript.xPoint + " , " + brickScript.yPoint + " )");
-                    brickData.brickType = "Null";
                     break;
             }
 
@@ -754,4 +835,6 @@ public class MakingManager : MonoBehaviour
             bricksInScene.Clear();
         }
     }
+
+
 }
