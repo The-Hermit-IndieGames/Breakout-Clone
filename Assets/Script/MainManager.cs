@@ -5,9 +5,6 @@ using TMPro;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
-using System.Runtime.InteropServices.ComTypes;
-using UnityEditor;
 
 
 public class MainManager : MonoBehaviour
@@ -53,19 +50,27 @@ public class MainManager : MonoBehaviour
         public float speed;
     }
 
-    //序列化定義(預設關卡)
+    //序列化定義-關卡資料
     [Serializable]
     public class Root
     {
+        //根目錄: 目錄名稱、製作者、版本號、描述、關卡列表(LevelConfig)
+        public string name;
+        public string maker;
+        public string version;
+        public string description;
         public List<LevelConfig> levelConfig;
+        public int idCounter;
     }
 
     [Serializable]
     public class LevelConfig
     {
+        //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
+        public string levelID;
         public string levelName;
+        public int[] preLevelID;
         public string gameType;
-        //menuX menuY menuStyle 未使用
         public float menuX;
         public float menuY;
         public int menuStyle;
@@ -75,12 +80,78 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class BricksData
     {
+        //單一磚塊資料: 磚塊座標(x、y)、磚塊類型(Null、Normal、Unbreakable)、磚塊類型特有資料
         public int xPoint;
         public int yPoint;
-        public int pointValue;
+        public string brickType;
+        public NormalBricks normalBricks;
+    }
+
+    [Serializable]
+    public class NormalBricks
+    {
+        //普通磚塊資料: 級別、道具
         public int brickLevel;
         public int powerUpType;
-        public int brickType;
+    }
+
+    //靜態==========================================================================================================================
+
+    //檔案
+    public static Root[] levelConfigFiles;
+    [SerializeField] private Root[] levelConfigFilesOnGUI;
+
+    //檔案ID (用於星圖生成)
+    public static int nowFileId;
+
+    //關卡ID (用於關卡生成)
+    public static string nowLevelId;
+
+    //讀檔用
+    public void LoadLevelConfigFiles()
+    {
+        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
+
+        if (!Directory.Exists(directoryPath))
+        {
+            Debug.LogError($"Directory not found: {directoryPath}");
+            return;
+        }
+
+        string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
+
+        // i = 0  =>  預設關卡
+        levelConfigFiles = new Root[jsonFiles.Length + 1];
+
+        try
+        {
+            Root levelConfig = JsonUtility.FromJson<Root>(jsonDefaultLevels.text);
+            levelConfigFiles[0] = levelConfig;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to parse JSON file at jsonDefaultLevels : {e.Message}");
+        }
+
+        for (int i = 1; i <= jsonFiles.Length; i++)
+        {
+            string jsonContent = File.ReadAllText(jsonFiles[i - 1]);
+
+            try
+            {
+                Root levelConfig = JsonUtility.FromJson<Root>(jsonContent);
+                levelConfigFiles[i] = levelConfig;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to parse JSON file at {jsonFiles[i - 1]}: {e.Message}");
+            }
+        }
+
+        Debug.Log($"Loaded {levelConfigFiles.Length} level configuration files.");
+
+        //該項僅用於開發預覽
+        levelConfigFilesOnGUI = levelConfigFiles;
     }
 
     //變數==========================================================================================================================
@@ -117,6 +188,10 @@ public class MainManager : MonoBehaviour
         //檔案
         jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
 
+        //新版
+        LoadLevelConfigFiles();
+
+        //舊版
         LoadDefaultLevels();
         LoadSettingsFromFile();
         LoadPlayerDataFromFile();
@@ -455,10 +530,10 @@ public class MainManager : MonoBehaviour
             var brickScript = brick.GetComponent<BrickPreview>();
             if (brickScript != null)
             {
-                brickScript.pointValue = brickData.pointValue;
-                brickScript.brickLevel = brickData.brickLevel;
-                brickScript.powerUpType = brickData.powerUpType;
-                PreviewGeneratePowerUp(position, brickData.powerUpType);
+                brickScript.pointValue = brickData.normalBricks.brickLevel * 10;
+                brickScript.brickLevel = brickData.normalBricks.brickLevel;
+                brickScript.powerUpType = brickData.normalBricks.powerUpType;
+                PreviewGeneratePowerUp(position, brickData.normalBricks.powerUpType);
             }
 
             brickAmount += 1;

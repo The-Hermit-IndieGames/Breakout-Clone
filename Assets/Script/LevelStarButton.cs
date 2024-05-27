@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LevelStarButton : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public string levelId;
+    public string levelName;
+    public TextMeshProUGUI levelNameTMP;
+
+
+    private void Start()
     {
-        
+        levelNameTMP.text = levelName;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseDown()
     {
-        
+        MainManager.nowLevelId = levelId;
+        Debug.Log("nowLevelId = " + MainManager.nowLevelId);
     }
 }
