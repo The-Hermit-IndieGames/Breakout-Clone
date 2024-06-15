@@ -39,7 +39,7 @@ public class BrickMake : MonoBehaviour
     {
         //§ó·s powerUpType
         powerUpType += 1;
-        if (powerUpType >= 5)
+        if (powerUpType >= 6)
         {
             powerUpType = 0;
         }

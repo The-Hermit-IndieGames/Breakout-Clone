@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class GameData
@@ -46,6 +47,7 @@ public class GameManager : MonoBehaviour
 
     //磚塊
     [SerializeField] private GameObject brickPrefab;                // 磚塊的預置體
+    [SerializeField] private GameObject brickUnbreakablePrefab;
     [SerializeField] private Transform brickList;
 
     //VFX
@@ -75,6 +77,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameClearedTextTimer;
     [SerializeField] private TextMeshProUGUI gameClearedTextSpeed;
 
+    [SerializeField] private Image progressBarImage;
+    [SerializeField] private TextMeshProUGUI progressBarMinScore;
+    [SerializeField] private TextMeshProUGUI progressBarMiddleScore;
+    [SerializeField] private TextMeshProUGUI progressBarMaxScore;
+
+    [SerializeField] private List<GameObject> iconMedals;
+
 
     //音訊
     public AudioSource soundEffectGetItem;
@@ -89,13 +98,10 @@ public class GameManager : MonoBehaviour
     public GameObject blackHole;                //黑洞
     [SerializeField] private GameObject burstPaddlePrefab;
 
-    //寫入參數
-    public int selectedLevel;                   //指定要生成的關卡編號 (主控台指定)
-
     //運行
-    [SerializeField] private Transform bricksList;                                          //磚塊列表(坐標系)
-    MainManager.LevelConfig targetLevelConfig;              //關卡資料
-    public int brickAmount;
+    public static int brickAmount;
+    private int minTotalScore = 150;
+    private int maxTotalScore = 150;
 
     void Start()
     {
@@ -124,8 +130,7 @@ public class GameManager : MonoBehaviour
 
         //取得關卡號
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        selectedLevel = mainManager.nowLevel;
-        GameData.levelName = mainManager.defaultLevelsRoot.levelConfig[mainManager.nowLevel].levelName;
+        GameData.levelName = MainManager.nowLevelData.levelName;
 
         //初始速度，速度上限，每次碰撞後的速度提升因子
         GameData.initialSpeed = mainManager.settings.gameSpeedModifier * 15f;
@@ -156,8 +161,8 @@ public class GameManager : MonoBehaviour
         GameData.burstBall = false;
         GameData.blackHole = false;
 
-    //初始化記分板
-    scoreText.text = "Score: " + GameData.score.ToString();
+        //初始化記分板
+        scoreText.text = "Score: " + GameData.score.ToString();
 
         //初始化計時器(顯示時間=目前時間-開始時間)
         GameData.startTime = Time.time;
@@ -178,73 +183,68 @@ public class GameManager : MonoBehaviour
     //載入生成器(自動呼叫->磚塊生成器)
     void LoadGenerate()
     {
-        if (mainManager.defaultLevelsRoot != null)
+        //提取關卡資料
+        if (MainManager.nowLevelData != null)
         {
-            // 轉換 JSON 字串為對應的 Root 實例
-            var root = mainManager.defaultLevelsRoot;
+            GameData.levelName = MainManager.nowLevelData.levelName;
 
-            //提取關卡資料(核對關卡編號)
-
-            if (root.levelConfig[selectedLevel] != null)
+            if (MainManager.nowLevelData.gameType == "Time" || MainManager.nowLevelData.gameType == "Score")
             {
-                if (root.levelConfig[selectedLevel].levelName != null)
-                {
-                    GameData.levelName = root.levelConfig[selectedLevel].levelName;
-                }
-                else
-                {
-                    GameData.levelName = selectedLevel.ToString();
-                }
-
-                if (root.levelConfig[selectedLevel].gameType == "Time" || root.levelConfig[selectedLevel].gameType == "Score")
-                {
-                    GameData.gameType = root.levelConfig[selectedLevel].gameType;
-                }
-                else
-                {
-                    GameData.gameType = "Time";
-                }
-
-                targetLevelConfig = root.levelConfig[selectedLevel];
+                GameData.gameType = MainManager.nowLevelData.gameType;
             }
-
-
-            //啟動生成器
-            if (targetLevelConfig != null)
-            {
-                GenerateBricks(targetLevelConfig.bricksData);
-            }
-
             else
             {
-                Debug.LogWarning("指定的關卡編號不存在");
+                GameData.gameType = "Time";
             }
+        }
+
+
+        //啟動生成器
+        if (MainManager.nowLevelData.bricksData != null)
+        {
+            GenerateBricks();
         }
         else
         {
-            Debug.LogError("未提供 JSON 配置文件");
+            Debug.LogWarning("指定的關卡編號不存在");
         }
+
     }
 
 
     //磚塊生成器
-    void GenerateBricks(List<MainManager.BricksData> bricks)
+    void GenerateBricks()
     {
+        List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
+
         foreach (var brickData in bricks)
         {
             Vector3 position = new Vector3(26 - (4 * brickData.xPoint), 24.5f - brickData.yPoint, 0);
-            GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, bricksList);
 
-            // 設置磚塊的屬性
-            var brickScript = brick.GetComponent<Brick>();
-            if (brickScript != null)
+            if (brickData.brickType == "Normal")
             {
-                brickScript.pointValue = brickData.normalBricks.brickLevel * 10;
-                brickScript.brickLevel = brickData.normalBricks.brickLevel;
-                brickScript.powerUpType = brickData.normalBricks.powerUpType;
-            }
+                GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, brickList);
 
-            brickAmount += 1;
+                // 設置磚塊的屬性
+                var brickScript = brick.GetComponent<Brick>();
+                if (brickScript != null)
+                {
+                    brickScript.brickLevel = brickData.normalBricks.brickLevel;
+                    brickScript.powerUpType = brickData.normalBricks.powerUpType;
+                }
+                //記分計算
+                brickAmount += 1;
+                minTotalScore += brickData.normalBricks.brickLevel * 20;
+                maxTotalScore += brickData.normalBricks.brickLevel * 20;
+                if (brickData.normalBricks.powerUpType >= 1)
+                {
+                    maxTotalScore += 200;
+                }
+            }
+            else if (brickData.brickType == "Unbreakable")
+            {
+                GameObject brick = Instantiate(brickUnbreakablePrefab, position, Quaternion.identity, brickList);
+            }
         }
     }
 
@@ -323,6 +323,8 @@ public class GameManager : MonoBehaviour
     public void BackButtonClick()
     {
         mainManager.soundEffectUiTrue.Play();
+        Time.timeScale = 1f;
+
         // 載入 MenuScene
         SceneManager.LoadScene("MenuScene");
     }
@@ -344,22 +346,18 @@ public class GameManager : MonoBehaviour
         GameData.gameRunning = false;
         GameData.gameOver = true;
 
-        //時間凍結
-        //Time.timeScale = 0f;
-
-        //
         soundEffectGameOver.Play();
     }
 
 
-    //重新開始按鈕
+    //下一關按鈕
     public void NextButtonClick()
     {
         mainManager.soundEffectUiTrue.Play();
-        if ((mainManager.nowLevel + 1) < mainManager.defaultLevelsRoot.levelConfig.Count)
-        {
-            mainManager.nowLevel += 1;
-        }
+        //if ((mainManager.nowLevel + 1) < mainManager.defaultLevelsRoot.levelConfig.Count)
+        //{
+        //    mainManager.nowLevel += 1;
+        //}
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -369,6 +367,7 @@ public class GameManager : MonoBehaviour
     {
         GameData.gameRunning = false;
         GameData.gameOver = true;
+        PauseButton.gameObject.SetActive(false);
 
         GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // 找到所有標籤為"Ball"的物件
         foreach (GameObject ball in balls)
@@ -398,7 +397,7 @@ public class GameManager : MonoBehaviour
                 GameObject ballToDestroy = balls[randomIndex];
 
                 // 增加分數
-                UpdateScore(200);
+                UpdateScore(150);
 
                 //音訊
                 soundEffectGetItem.Play();
@@ -456,7 +455,7 @@ public class GameManager : MonoBehaviour
                 GameObject itemToDestroy = items[randomIndex];
 
                 // 增加分數
-                UpdateScore(60);
+                UpdateScore(200);
 
                 //音訊
                 soundEffectGetItem.Play();
@@ -512,9 +511,35 @@ public class GameManager : MonoBehaviour
         gameClearedTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
         gameClearedTextScore.text = GameData.score.ToString();
 
+        int middleScore = (int)(minTotalScore + (maxTotalScore - minTotalScore) * 0.6f);
+        float scoreRatio = (float)(GameData.score - minTotalScore) / (float)(maxTotalScore - minTotalScore);
+        progressBarMinScore.text = minTotalScore.ToString();
+        progressBarMiddleScore.text = middleScore.ToString();
+        progressBarMaxScore.text = maxTotalScore.ToString();
+        progressBarImage.fillAmount = scoreRatio;
+
+        Debug.Log("scoreRatio = " + scoreRatio);
+
+        if (GameData.score >= minTotalScore)
+        {
+            iconMedals[0].gameObject.SetActive(true);
+
+            if (GameData.score >= middleScore)
+            {
+                iconMedals[0].gameObject.SetActive(false);
+                iconMedals[1].gameObject.SetActive(true);
+
+                if (GameData.score >= maxTotalScore)
+                {
+                    iconMedals[0].gameObject.SetActive(false);
+                    iconMedals[1].gameObject.SetActive(false);
+                    iconMedals[2].gameObject.SetActive(true);
+                }
+            }
+        }
+
         soundEffectGameCleared.Play();
 
-        mainManager.GameClearedSave();
     }
 
     //道具======================================================================================================================
@@ -577,15 +602,15 @@ public class GameManager : MonoBehaviour
         {
             case 1:
                 UpdateScore(50);
-                //由PowerUPPaddle觸發
+                //由PowerUPPaddle來源直接觸發
                 break;
             case 2:
-                UpdateScore(100);
+                UpdateScore(200);
                 ItemLongPaddle();
                 GameData.timerLongPaddle = 30;
                 break;
             case 3:
-                UpdateScore(100);
+                UpdateScore(200);
                 ItemBurstBall();
                 GameData.timerBurstBall = 20;
                 break;
@@ -595,7 +620,7 @@ public class GameManager : MonoBehaviour
                 GameData.timerBlackHole = 10;
                 break;
             case 5:
-                UpdateScore(20);
+                UpdateScore(200);
                 BurstPaddle();
                 break;
             default:

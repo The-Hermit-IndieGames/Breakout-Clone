@@ -5,21 +5,21 @@ using UnityEngine;
 public class BasicTransformControl : MonoBehaviour
 {
     //移動
-    [SerializeField] private bool isMove;
+    [SerializeField] public bool isMove;
     [SerializeField] private float xMoveSpeed;
     [SerializeField] private float yMoveSpeed;
     [SerializeField] private float zMoveSpeed;
 
 
     //旋轉
-    [SerializeField] private bool isRotation;
+    [SerializeField] public bool isRotation;
     [SerializeField] private float xRotationSpeed;      //軸:水平
     [SerializeField] private float yRotationSpeed;      //軸:垂直
     [SerializeField] private float zRotationSpeed;      //軸:中心
 
 
     //縮放
-    [SerializeField] private bool isScale;
+    [SerializeField] public bool isScale;
     [SerializeField] private float xScaleSpeed;
     [SerializeField] private float yScaleSpeed;
     [SerializeField] private float zScaleSpeed;

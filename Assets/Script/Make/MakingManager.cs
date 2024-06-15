@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class MakingManager : MonoBehaviour
 {
@@ -27,7 +28,8 @@ public class MakingManager : MonoBehaviour
         //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
         public string levelID;
         public string levelName;
-        public int[] preLevelID;
+        public string[] preLevelID;
+        public string nextLevelID;
         public string gameType;
         public float menuX;
         public float menuY;
@@ -55,16 +57,10 @@ public class MakingManager : MonoBehaviour
 
     private MainManager mainManager;
 
-    //檔案
-    [SerializeField] private TextAsset jsonDefaultLevels;
-
-    //舊版 需清理!!!  DefaultLevels JSON配置文件
-    [SerializeField] private Root defaultLevelsData;
-
-
     //預置體
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject brickUnbreakablePrefab;
 
     //JSON配置文件
     [SerializeField] private Root rootLevelsData;
@@ -84,14 +80,10 @@ public class MakingManager : MonoBehaviour
 
     private BrickMake nowBrick;
 
-    //icon
-    [SerializeField] private GameObject[] powerUpIcons;
-
 
     void Start()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
     }
 
 
@@ -409,10 +401,10 @@ public class MakingManager : MonoBehaviour
     public TMP_InputField inputPrerequisitesLevel;
     private string prerequisitesLevel;
 
-    //關卡配置板塊-新增
+    //Map-新增關卡
     public void MapAddLevel()
     {
-        Vector2 buttonPosition = new Vector2(0, 0);
+        Vector2 buttonPosition = new Vector2(0, 10);
         GameObject button = Instantiate(buttonPrefab, buttonPosition, Quaternion.identity, buttonsMap);
         buttonInMap.Add(button);
         nowButton = button;
@@ -457,15 +449,19 @@ public class MakingManager : MonoBehaviour
     }
 
     [SerializeField] private TextMeshProUGUI idText;
-    [SerializeField] private TextMeshProUGUI saveBricksText;
-
-    [SerializeField] private TextMeshProUGUI bricksLoadName;
+    [SerializeField] private TextMeshProUGUI nextIdText;
+    [SerializeField] private TMP_InputField inputCoordinateX;
+    [SerializeField] private TMP_InputField inputCoordinateY;
+    [SerializeField] private TextMeshProUGUI tempBricksText;
 
     //更新畫面資訊
     public void UpDataMapLevel()
     {
         idText.text = nowLevelsData.levelID;
-        saveBricksText.text = ("<< " + bricksDataList.Count + " Bricks");
+        nextIdText.text = nowLevelsData.nextLevelID;
+        inputCoordinateX.text = nowLevelsData.menuX.ToString();
+        inputCoordinateY.text = nowLevelsData.menuY.ToString();
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
         inputNowLevelName.text = nowLevelsData.levelName;
 
         int bricksCount;
@@ -478,8 +474,6 @@ public class MakingManager : MonoBehaviour
             var bricks = nowLevelsData.bricksData;
             bricksCount = bricks.Count;
         }
-
-        bricksLoadName.text = (nowLevelsData.levelName + "  (" + bricksCount + " Bricks)");
 
         var buttonScript = nowButton.GetComponent<MapLevelButton>();
         if (buttonScript != null)
@@ -498,32 +492,23 @@ public class MakingManager : MonoBehaviour
         UpDataMapLevel();
     }
 
-    //關卡配置板塊-保存
-    public void MapSaveLevel()
+    //關卡配置板塊-複製ID
+    public void CopyId()
     {
-        nextAction = MapSaveLevelNext;
-        ShowWarningCanva("Save " + bricksDataList.Count + " Bricks To The Level ?", "OOOOO");
+        GUIUtility.systemCopyBuffer = nowLevelsData.levelID;
+        Debug.Log("Copy ID : " + nowLevelsData.levelID);
     }
 
-    public void MapSaveLevelNext()
+    //關卡配置板塊-貼上ID (下一關)
+    public void PasteId()
     {
-        //避免發生傳址呼叫
-        nowLevelsData.bricksData = new List<BricksData>(bricksDataList);
+        nowLevelsData.nextLevelID = GUIUtility.systemCopyBuffer;
+        nextIdText.text = nowLevelsData.nextLevelID;
 
-        foreach (var levelConfig in rootLevelsData.levelConfig)
-        {
-            if (nowLevelsData.levelID == levelConfig.levelID)
-            {
-                levelConfig.bricksData = nowLevelsData.bricksData;
-            }
-        }
-
-        Debug.Log("MapSaveLevelNext: 保存磚塊至 nowLevelsData = rootLevelsData");
-
-        nextAction = null;
+        SaveLevelToRoot();
     }
 
-    //關卡配置板塊-刪除
+    //關卡配置板塊-刪除關卡
     public void MapDeleteLevel()
     {
         nextAction = MapDeleteLevelNext;
@@ -557,6 +542,31 @@ public class MakingManager : MonoBehaviour
 
     }
 
+    //關卡配置板塊-輸入座標
+    public void CoordinateXInput()
+    {
+        float value;
+        float.TryParse(inputCoordinateX.text, out value);
+        nowLevelsData.menuX = value;
+
+        var script = nowButton.GetComponent<MapLevelButton>();
+        script.UpDataCoordinate(new Vector2(nowLevelsData.menuX, nowLevelsData.menuY));
+
+        SaveLevelToRoot();
+    }
+
+    public void CoordinateYInput()
+    {
+        float value;
+        float.TryParse(inputCoordinateY.text, out value);
+        nowLevelsData.menuY = value;
+
+        var script = nowButton.GetComponent<MapLevelButton>();
+        script.UpDataCoordinate(new Vector2(nowLevelsData.menuX, nowLevelsData.menuY));
+
+        SaveLevelToRoot();
+    }
+
 
     //關卡配置板塊-地圖-更新座標
     public void UpDataPosition(string id, Vector2 position)
@@ -564,6 +574,9 @@ public class MakingManager : MonoBehaviour
         MapLoadLevel(id);
         nowLevelsData.menuX = position.x;
         nowLevelsData.menuY = position.y;
+
+        inputCoordinateX.text = nowLevelsData.menuX.ToString();
+        inputCoordinateY.text = nowLevelsData.menuY.ToString();
 
         SaveLevelToRoot();
     }
@@ -601,7 +614,7 @@ public class MakingManager : MonoBehaviour
     public void BricksRestart()
     {
         nextAction = BricksRestartNext;
-        ShowWarningCanva("Restart Bricks ?", "OOOOO");
+        ShowWarningCanva("Restart Bricks ?", "確定要重置畫面中的磚塊嗎?");
     }
 
     public void BricksRestartNext()
@@ -613,37 +626,55 @@ public class MakingManager : MonoBehaviour
     }
 
     //磚塊配置板塊-載入磚塊
-    public void BricksLoad()
+    public void BricksLoadByTemp()
     {
-        nextAction = BricksLoadNext;
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
 
-        int bricksCount;
-        if (nowLevelsData.bricksData == null)
-        {
-            bricksCount = 0;
-        }
-        else
-        {
-            var bricks = nowLevelsData.bricksData;
-            bricksCount = bricks.Count;
-        }
-
-        ShowWarningCanva("Load " + nowLevelsData.levelName + "'s " + bricksCount + " Bricks To The Scenes ?", "OOOOO");
-    }
-
-    public void BricksLoadNext()
-    {
         BricksDelete();
-        BricksGenerate(nowLevelsData.bricksData);
-
-        nextAction = null;
+        BricksGenerate(bricksDataList);
     }
 
     //磚塊配置板塊-儲存磚塊
-    public void BricksSave()
+    public void BricksSaveToTemp()
     {
         BricksAnalyze();
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
         Debug.Log("BricksSave: 解析磚塊並保存至 bricksDataList");
+    }
+
+
+
+    //磚塊配置板塊-載入磚塊
+    public void TempLoadByLevel()
+    {
+        //避免發生傳址呼叫
+        if (nowLevelsData.bricksData == null)
+        {
+            bricksDataList = new List<BricksData>();
+        }
+        else
+        {
+            bricksDataList = new List<BricksData>(nowLevelsData.bricksData);
+        }
+
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
+    }
+
+    //磚塊配置板塊-儲存磚塊
+    public void TempSaveToLevel()
+    {
+        //避免發生傳址呼叫
+        nowLevelsData.bricksData = new List<BricksData>(bricksDataList);
+
+        foreach (var levelConfig in rootLevelsData.levelConfig)
+        {
+            if (nowLevelsData.levelID == levelConfig.levelID)
+            {
+                levelConfig.bricksData = nowLevelsData.bricksData;
+            }
+        }
+
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
     }
 
     //新版操作 ==============================================================================================================================

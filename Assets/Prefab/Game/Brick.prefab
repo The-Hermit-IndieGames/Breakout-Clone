@@ -124,11 +124,11 @@ MonoBehaviour:
   brickLevel: 0
   powerUpType: 0
   powerUpPrefabs:
-  - {fileID: 4152142466286311695, guid: b3c3a2c33714ba04f9bf1195ff94b830, type: 3}
-  - {fileID: 2555511193828994592, guid: a45fd530e1039ba4595d4d1699b70bd2, type: 3}
-  - {fileID: 860704769498919062, guid: cf8e27f6c0af2954d8218915559bc3b9, type: 3}
-  - {fileID: 860704769498919062, guid: a2ff468c29c929c46b41e2580e27e71f, type: 3}
-  - {fileID: 2555511193828994592, guid: a2874f8f97e1a4146a6ece9885ffbae3, type: 3}
+  - {fileID: 4152142466286311695, guid: 5f9dd346b6886f54cb2732627e87a9ff, type: 3}
+  - {fileID: 4152142466286311695, guid: 29e2ead6f7ee33a43a81da8454c5e3e9, type: 3}
+  - {fileID: 4152142466286311695, guid: 8e5f02d498bff314cb93d180ccfc444b, type: 3}
+  - {fileID: 4152142466286311695, guid: 2eee61b28600e1a498f6b1017c360fa5, type: 3}
+  - {fileID: 4152142466286311695, guid: a73879815692dc4468b700fa51c91c80, type: 3}
   vfxStardust: {fileID: 6570630510257888672, guid: a303003c48c431b4bbffb28d1c9a0105, type: 3}
   soundEffectCollision: {fileID: -7571891663571788992}
   soundEffectDestroy: {fileID: -1446012581240403471}

@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
 {
+    private RectTransform objectRectTransform;
     private MakingManager makingManager;
     public string levelID;
     public string levelName;
@@ -14,6 +15,7 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         // 獲取物件的 RectTransform
         objectRectTransform = GetComponent<RectTransform>();
+
         makingManager = GameObject.Find("MakingManager").GetComponent<MakingManager>();
 
         UpdateButtonName();
@@ -35,16 +37,22 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
         makingManager.MapLoadLevel(levelID);
     }
 
+
     //拖曳部分----------------------------------------------------------------------------------
     [SerializeField] private RectTransform canvasRectTransform;
-    private RectTransform objectRectTransform;
-    private Vector2 oldPosition = Vector2.zero;
+    public float dragSpeed = 2f;
 
-    public Vector2 minPosition; // 最小座標限制
-    public Vector2 maxPosition; // 最大座標限制
+    [SerializeField] private Vector2 minPosition; // 最小座標限制
+    [SerializeField] private Vector2 maxPosition; // 最大座標限制
+
+    private Vector2 oldPosition = Vector2.zero;
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!canvasRectTransform)
+            return;
+
+
         if (oldPosition != Vector2.zero)
         {
             Vector2 positionFix;
@@ -52,11 +60,17 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
             //計算變化量
             positionFix = eventData.position - oldPosition;
 
+            if (positionFix.magnitude > 32)
+            {
+                Debug.Log("positionFix: " + positionFix + " magnitude=" + positionFix.magnitude);
+                positionFix = Vector2.zero;
+            }
+
             //計算物件的新位置
-            Vector2 newPosition = ClampToCanvas(objectRectTransform.anchoredPosition + positionFix);
+            Vector2 newPosition = ClampToCanvas(canvasRectTransform.anchoredPosition + (positionFix * dragSpeed));
 
             //更新物件的座標
-            objectRectTransform.anchoredPosition = newPosition;
+            canvasRectTransform.anchoredPosition = newPosition;
         }
 
         oldPosition = eventData.position;
@@ -78,5 +92,15 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
         position.x = Mathf.Clamp(position.x, minPosition.x, maxPosition.x);
         position.y = Mathf.Clamp(position.y, minPosition.y, maxPosition.y);
         return position;
+    }
+
+    // 更新物件的座標(調用)
+    public void UpDataCoordinate(Vector2 position)
+    {
+        //計算物件的新位置
+        Vector2 newPosition = ClampToCanvas(position);
+
+        //更新物件的座標
+        objectRectTransform.anchoredPosition = newPosition;
     }
 }

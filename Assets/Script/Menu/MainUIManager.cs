@@ -5,29 +5,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Text;
 
 public class MainUIManager : MonoBehaviour
 {
     private MainManager mainManager;
 
-    //星圖頁面相關:
-    [SerializeField] private GameObject selectLevelButtonPrefab;        //選關按鈕(預製件)    
-    [SerializeField] private Transform selectLevelMenu;                 //選關畫面(坐標系)
-
-    [SerializeField] private GameObject previewCanvas;                  //預覽畫面
-
-
-    //預覽-UI
-    public TextMeshProUGUI previewNameText;
-    public TextMeshProUGUI previewBrickAmountText;
-    public TextMeshProUGUI previewScoreText;
-    public TextMeshProUGUI previewTimerText;
-    public TextMeshProUGUI previewSpeedText;
-    public GameObject previewClearTF;
-
 
     //設定頁面
+    [SerializeField] private string inspectorSettings = "設定頁面";
     public Slider musicSlider;
     [SerializeField] private TextMeshProUGUI musicSliderValue;
     public Slider soundEffectSlider;
@@ -45,7 +30,6 @@ public class MainUIManager : MonoBehaviour
     {
         //調用腳本
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        mainManager.FindGameObject();
 
         //訂閱 設定事件
         musicSlider.onValueChanged.AddListener(HandleMusicChange);
@@ -80,7 +64,7 @@ public class MainUIManager : MonoBehaviour
     //標題畫面-實驗性內容
     public void TitleExperimentalButton()
     {
-        
+
     }
 
     //標題畫面-設定
@@ -106,21 +90,21 @@ public class MainUIManager : MonoBehaviour
 
     //關卡星圖==========================================================================================================================
 
-    [SerializeField] private GameObject canvas;
-    [SerializeField] private GameObject levelsStarMap;
+    [SerializeField] private string inspectorStarMap = "關卡星圖";
 
-    [SerializeField] private GameObject levelsStarButton;
-    [SerializeField] private Transform buttonsList;
-
-
+    [SerializeField] private GameObject canvas;             //主畫布
+    [SerializeField] private GameObject levelsStarMap;      //星圖頁面
     [SerializeField] private TextMeshProUGUI starMapNameText;
+
+    [SerializeField] private GameObject levelsStarButton;           //選關按鈕(預製件)    
+    [SerializeField] private Transform buttonsList;                 //選關畫面(坐標系)
 
 
 
     //展開星圖
     public void OpenLevelsStarMap()
     {
-        canvas.gameObject.SetActive(false) ;
+        canvas.gameObject.SetActive(false);
         levelsStarMap.SetActive(true);
 
         LoadJsonToMap();
@@ -131,6 +115,7 @@ public class MainUIManager : MonoBehaviour
     {
         canvas.gameObject.SetActive(true);
         levelsStarMap.SetActive(false);
+        previewCanvas.SetActive(false);
     }
 
 
@@ -140,10 +125,12 @@ public class MainUIManager : MonoBehaviour
     private void LoadJsonToMap()
     {
         var rootLevelsData = MainManager.levelConfigFiles[MainManager.nowFileId];
+        MainManager.FindClearDataFileById();
 
         if (rootLevelsData != null)
         {
-            starMapNameText.text = rootLevelsData.name + "    Ver." + rootLevelsData.version;
+            var mapNameText = rootLevelsData.name + "    <size=36>Ver." + rootLevelsData.version + "</size>";
+            starMapNameText.text = mapNameText;
 
             foreach (var button in buttonInMap)
             {
@@ -164,25 +151,114 @@ public class MainUIManager : MonoBehaviour
                 var buttonScript = button.GetComponent<LevelStarButton>();
                 if (buttonScript != null)
                 {
+                    MainManager.nowLevelId = levelConfig.levelID;
+                    MainManager.FindLevelConfigById();
+                    MainManager.FindClearLevelById();
+
                     buttonScript.levelId = levelConfig.levelID;
                     buttonScript.levelName = levelConfig.levelName;
+
+                    buttonScript.usable = MainManager.CheckPreconditionById();
+                    buttonScript.clear = MainManager.nowClearLevel.clear;
+                    buttonScript.medalLevel = MainManager.nowClearLevel.clearData.medalLevel;
                 }
             }
-
-            //nowButton = buttonInMap[0];
-            //nowLevelsData = rootLevelsData.levelConfig[0];
         }
     }
 
+    //預覽畫面
+    [SerializeField] private string inspectorPreview = "預覽畫面";
+
+    [SerializeField] private Transform bricksList;                  //磚塊列表(坐標系)
+    [SerializeField] private GameObject brickPrefab;
+    [SerializeField] private GameObject brickUnbreakablePrefab;
+    private int brickAmount;
+
+    [SerializeField] private GameObject previewCanvas;
+
+    [SerializeField] private TextMeshProUGUI previewNameText;
+    [SerializeField] private TextMeshProUGUI previewBrickAmountText;
+
+    [SerializeField] private TextMeshProUGUI previewScoreText;
+    [SerializeField] private TextMeshProUGUI previewTimerAndSpeedText;
+
+    [SerializeField] private GameObject previewClearTF;
 
     //星圖-預覽關卡
+    public void PreviewTheLevel()
+    {
+        previewCanvas.SetActive(true);
+        MainManager.FindLevelConfigById();
 
+        PreviewGenerateBricks();
+
+        previewNameText.text = MainManager.nowLevelData.levelName;
+        previewBrickAmountText.text = brickAmount.ToString();
+
+        previewScoreText.text = "8888";
+        previewTimerAndSpeedText.text = ("[00:00]" + " (x" + "[1.00]" + ")");
+    }
+
+    //預覽-磚塊生成器
+    private void PreviewGenerateBricks()
+    {
+        List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
+
+        foreach (var brickData in bricks)
+        {
+            Vector3 position = new Vector3(16 - (4 * brickData.xPoint), 16.5f - brickData.yPoint, -6);
+
+            if (brickData.brickType == "Normal")
+            {
+                GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, bricksList);
+
+                // 設置磚塊的屬性
+                var brickScript = brick.GetComponent<Brick>();
+                if (brickScript != null)
+                {
+                    brickScript.brickLevel = brickData.normalBricks.brickLevel;
+                    brickScript.powerUpType = brickData.normalBricks.powerUpType;
+                }
+            }
+            else if (brickData.brickType == "Unbreakable")
+            {
+                GameObject brick = Instantiate(brickUnbreakablePrefab, position, Quaternion.identity, bricksList);
+            }
+
+            brickAmount += 1;
+        }
+    }
 
     //星圖-預覽關卡返回
+    public void PreviewBack()
+    {
+        BricksDelete();
+    }
 
+    //磚塊清除器
+    public void BricksDelete()
+    {
+        // 遍歷 Transform 中的每個子物件
+        for (int i = 0; i < bricksList.childCount; i++)
+        {
+            //獲取子物件的 Transform
+            Transform childTransform = bricksList.GetChild(i);
+
+            //獲取子物件的 GameObject
+            GameObject childGameObject = childTransform.gameObject;
+
+            Destroy(childGameObject);
+        }
+        brickAmount = 0;
+    }
 
     //預覽畫面-進入關卡
-
+    public void EnterTheLevel()
+    {
+        mainManager.soundEffectUiTrue.Play();
+        // 載入 GameScene
+        SceneManager.LoadScene("GameScene");
+    }
 
 
     //設定介面==========================================================================================================================

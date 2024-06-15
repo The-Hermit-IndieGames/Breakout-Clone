@@ -53,7 +53,6 @@ public class MapControl : MonoBehaviour, IDragHandler, IScrollHandler
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("OnEndDrag");
         oldPosition = Vector2.zero;
     }
 

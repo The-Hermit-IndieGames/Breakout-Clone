@@ -28,25 +28,27 @@ public class MainManager : MonoBehaviour
 
     //序列化定義(通關資訊)
     [Serializable]
-    public class PlayerDataRoot
+    public class ClearDataRoot
     {
-        public int clearLevelAmount;
+        public string name;
+        public string version;
         public List<ClearLevel> clearLevel;
     }
 
     [Serializable]
     public class ClearLevel
     {
-        public string level;
+        public string levelID;
+        public bool clear;
         public ClearData clearData;
     }
 
     [Serializable]
     public class ClearData
     {
-        public bool clear;
-        public int time;
+        public int medalLevel;
         public int score;
+        public int time;
         public float speed;
     }
 
@@ -69,7 +71,8 @@ public class MainManager : MonoBehaviour
         //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
         public string levelID;
         public string levelName;
-        public int[] preLevelID;
+        public string[] preLevelID;
+        public string nextLevelID;
         public string gameType;
         public float menuX;
         public float menuY;
@@ -98,16 +101,23 @@ public class MainManager : MonoBehaviour
     //靜態==========================================================================================================================
 
     //檔案
+    [SerializeField] private TextAsset jsonDefaultLevels;
     public static Root[] levelConfigFiles;
-    [SerializeField] private Root[] levelConfigFilesOnGUI;
+    [SerializeField] private Root[] levelConfigFilesOnGUI;  //DeBug - 用於GUI預覽
+
+    public static ClearDataRoot[] clearDataFiles;
+    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;  //DeBug - 用於GUI預覽
 
     //檔案ID (用於星圖生成)
     public static int nowFileId;
+    public static ClearDataRoot nowClearDataFile;
 
     //關卡ID (用於關卡生成)
     public static string nowLevelId;
+    public static LevelConfig nowLevelData;
+    public static ClearLevel nowClearLevel;
 
-    //讀檔用
+    //讀檔用(關卡)
     public void LoadLevelConfigFiles()
     {
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
@@ -154,17 +164,278 @@ public class MainManager : MonoBehaviour
         levelConfigFilesOnGUI = levelConfigFiles;
     }
 
+    //讀檔用(過關資料)
+    public void LoadClearDataFiles()
+    {
+        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
+
+        if (!Directory.Exists(directoryPath))
+        {
+            Debug.LogWarning($"Directory not found: {directoryPath}");
+            Directory.CreateDirectory(directoryPath);
+        }
+
+
+        string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
+
+        // i = 0  =>  預設關卡
+        clearDataFiles = new ClearDataRoot[jsonFiles.Length + 1];
+
+        try
+        {
+            // 預設關卡存放於 PlayerData/ClearLevelData.json
+            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+            string defaultClearJson = File.ReadAllText(defaultDirectoryPath);
+            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
+            clearDataFiles[0] = defaultClearDataRoot;
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Debug.LogWarning("異常: 未找到目錄");
+
+            Debug.Log("建立目錄 " + "PlayerData");
+            string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
+            Directory.CreateDirectory(folderPath);
+            CreateClearDataFile("ClearLevelData");
+
+            // 重新讀取
+            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+            string defaultClearJson = File.ReadAllText(defaultDirectoryPath);
+            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
+            clearDataFiles[0] = defaultClearDataRoot;
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.LogWarning("異常: 未找到文件");
+            CreateClearDataFile("ClearLevelData");
+
+            // 重新讀取
+            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+            string defaultClearJson = File.ReadAllText(defaultDirectoryPath);
+            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
+            clearDataFiles[0] = defaultClearDataRoot;
+        }
+        finally
+        {
+            Debug.Log("已解析預設關卡紀錄");
+        }
+
+        for (int i = 1; i <= jsonFiles.Length; i++)
+        {
+            string jsonContent = File.ReadAllText(jsonFiles[i - 1]);
+
+            try
+            {
+                ClearDataRoot clearDataRoot = JsonUtility.FromJson<ClearDataRoot>(jsonContent);
+                clearDataFiles[i] = clearDataRoot;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to parse JSON file at {jsonFiles[i - 1]}: {e.Message}");
+            }
+        }
+
+        Debug.Log($"Loaded {clearDataFiles.Length} level configuration files.");
+
+        //該項僅用於開發預覽
+        clearDataFilesOnGUI = clearDataFiles;
+    }
+
+    //建立 ClearData 檔案
+    private void CreateClearDataFile(string fileName)
+    {
+        Debug.Log("建立文件 " + "ClearLevelData.json");
+        var newClearDataRoot = new ClearDataRoot();
+
+        // 檔案路徑
+        string exportFileName;
+        if (fileName == "ClearLevelData")
+        {
+            //預設關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+            newClearDataRoot.name = levelConfigFiles[0].name;
+        }
+        else
+        {
+            //其他關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + fileName + ".json");
+            newClearDataRoot.name = fileName;
+        }
+
+        // 將Root轉換為JSON字符串
+        string newClearDataJson = JsonUtility.ToJson(newClearDataRoot, true);
+
+        // 將 JSON 字串寫入檔案
+        File.WriteAllText(exportFileName, newClearDataJson);
+    }
+
+    //比對所有 ClearData 及 LevelConfig
+    private void CompareAllClearData()
+    {
+        //比對"存在"
+        for (int i = 1; i < levelConfigFiles.Length; i++)
+        {
+            bool haveClearData = false;
+            for (int j = 1; i < clearDataFiles.Length; j++)
+            {
+                if (levelConfigFiles[i].name == clearDataFiles[j].name)
+                {
+                    haveClearData = true;
+                    break;
+                }
+            }
+
+            if (!haveClearData)
+            {
+                CreateClearDataFile(levelConfigFiles[i].name);
+            }
+        }
+
+        //比對"版本"
+        for (int i = 0; i < levelConfigFiles.Length; i++)
+        {
+            for (int j = 0; i < clearDataFiles.Length; j++)
+            {
+                if (levelConfigFiles[i].name == clearDataFiles[j].name)
+                {
+                    if (levelConfigFiles[i].version != clearDataFiles[j].version)
+                    {
+                        UpdateVersionClearData(i,j);
+                    }
+
+                    break;
+                }
+            }
+        }
+    }
+
+    //比對單一 ClearData 版本
+    private void UpdateVersionClearData(int levelID, int clearID)
+    {
+        clearDataFiles[clearID].version = levelConfigFiles[levelID].version;
+        var levelConfig = levelConfigFiles[levelID].levelConfig;
+        var clearLevel = clearDataFiles[clearID].clearLevel;
+
+        foreach (var level in levelConfig)
+        {
+            bool haveData = false;
+            foreach (var data in clearLevel)
+            {
+                if (level.levelID==data.levelID)
+                {
+                    haveData = true;
+                }
+            }
+
+            if (!haveData)
+            {
+                var newClearLevel = new ClearLevel();
+                newClearLevel.levelID = level.levelID;
+                newClearLevel.clear = false;
+
+                var newClearData = new ClearData();
+                newClearData.medalLevel = 0;
+                newClearLevel.clearData = newClearData;
+
+                clearDataFiles[clearID].clearLevel.Add(newClearLevel);
+            }
+        }
+
+        // 轉換為JSON字符串
+        string clearDataFilesJson = JsonUtility.ToJson(clearDataFiles[clearID], true);
+
+        // 確保目錄存在
+        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
+        Directory.CreateDirectory(directoryPath);
+
+        // 檔案路徑
+        string exportFileName;
+        if (clearID == 0)
+        {
+            //預設關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+        }
+        else
+        {
+            //其他關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + clearDataFiles[clearID].name + ".json");
+        }
+
+        // 寫入 JSON 到檔案
+        File.WriteAllText(exportFileName, clearDataFilesJson);
+
+        Debug.Log("通關資訊版本已更新並保存到 " + exportFileName);
+    }
+
+
+    //以 nowLevelId 尋找關卡
+    public static void FindLevelConfigById()
+    {
+        foreach (var levelConfig in MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig)
+        {
+            if (levelConfig.levelID == nowLevelId)
+            {
+                MainManager.nowLevelData = levelConfig;
+            }
+        }
+    }
+
+    //以 nowFileId 尋找過關檔案
+    public static void FindClearDataFileById()
+    {
+        foreach (var clearDataFile in MainManager.clearDataFiles)
+        {
+            if (clearDataFile.name == MainManager.levelConfigFiles[MainManager.nowFileId].name)
+            {
+                MainManager.nowClearDataFile = clearDataFile;
+            }
+        }
+    }
+
+    //以 nowLevelId 尋找過關資料
+    public static void FindClearLevelById()
+    {
+        foreach (var clearLevel in MainManager.nowClearDataFile.clearLevel)
+        {
+            if (clearLevel.levelID == nowLevelId)
+            {
+                MainManager.nowClearLevel = clearLevel;
+            }
+        }
+    }
+
+    //以 nowLevelData 及 nowClearLevel 檢查是否完成前置關卡
+    public static bool CheckPreconditionById()
+    {
+        int preNumber = 0;
+        for (int i = 0; i < nowLevelData.preLevelID.Length; i++)
+        {
+            foreach (var clearLevel in nowClearDataFile.clearLevel)
+            {
+                if (nowLevelData.preLevelID[i] == clearLevel.levelID && clearLevel.clear == true)
+                {
+                    preNumber++;
+                }
+            }
+        }
+
+        if (preNumber == nowLevelData.preLevelID.Length)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     //變數==========================================================================================================================
 
     //檔案
-    [SerializeField] private TextAsset jsonDefaultLevels;
-    [SerializeField] private TextAsset jsonPlayerData;
     [SerializeField] private TextAsset jsonSetting;
 
     //實例
-    public SettingRoot settings;                                //設定    
-    public Root defaultLevelsRoot;                              //預設關卡
-    [SerializeField] private PlayerDataRoot playerData;         //通關資訊
+    public SettingRoot settings;                                //設定  
 
     //腳本
 
@@ -190,11 +461,11 @@ public class MainManager : MonoBehaviour
 
         //新版
         LoadLevelConfigFiles();
+        LoadClearDataFiles();
+        CompareAllClearData();
 
         //舊版
-        LoadDefaultLevels();
         LoadSettingsFromFile();
-        LoadPlayerDataFromFile();
 
         UpdateAudio();
     }
@@ -305,281 +576,6 @@ public class MainManager : MonoBehaviour
     }
 
 
-    //資料操作-通關資訊----------------------------------------------
-
-    //初始化通關資訊(並匯出)
-    public void InitializationPlayerData()
-    {
-        Debug.LogWarning("初始化通關資訊...");
-        playerData = new PlayerDataRoot();
-
-        playerData.clearLevelAmount = 0;
-        playerData.clearLevel = new List<ClearLevel>();
-
-        //設置Level.0 Level.1基礎檔案
-        for (int i = 0; i < 2; i++)
-        {
-            ClearLevel clearLevel = new ClearLevel();
-            clearLevel.level = defaultLevelsRoot.levelConfig[i].levelName;
-
-            ClearData clearData = new ClearData();
-            clearData.clear = false;
-            clearData.score = -1;
-            clearData.time = -1;
-            clearData.speed = -1;
-
-            clearLevel.clearData = clearData;
-
-            playerData.clearLevel.Add(clearLevel);
-        }
-
-        SavePlayerDataToJson();
-        Debug.Log("通關資訊已初始化");
-        Debug.Log("重新讀取通關資訊...");
-        string path = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
-        string json = File.ReadAllText(path);
-        jsonPlayerData = new TextAsset(json);
-
-        if (jsonPlayerData != null)
-        {
-            playerData = JsonUtility.FromJson<PlayerDataRoot>(jsonPlayerData.text);
-
-            if (playerData != null)
-            {
-                Debug.Log("[初始化]已成功載入通關資訊");
-            }
-            else
-            {
-                Debug.LogWarning("[初始化]無法載入通關資訊");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[初始化]未找到通關資訊檔");
-        }
-    }
-
-
-    //讀取通關資訊
-    public void LoadPlayerDataFromFile()
-    {
-        Debug.Log("讀取通關資訊...");
-        string path = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
-
-        try
-        {
-            string json = File.ReadAllText(path);
-            jsonPlayerData = new TextAsset(json);
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Debug.LogWarning("異常: 未找到目錄");
-
-            Debug.Log("建立目錄 " + "PlayerData");
-            string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
-            Directory.CreateDirectory(folderPath);
-
-            Debug.Log("建立文件 " + "ClearLevelData.json");
-            InitializationPlayerData();
-        }
-        catch (FileNotFoundException)
-        {
-            Debug.LogWarning("異常: 未找到文件");
-
-            Debug.Log("建立文件 " + "ClearLevelData.json");
-            InitializationPlayerData();
-        }
-        finally
-        {
-            Debug.Log("解析通關資訊...");
-            SetPlayerData();
-        }
-    }
-
-
-    //按照實例指定通關資訊
-    public void SetPlayerData()
-    {
-        if (jsonPlayerData != null)
-        {
-            playerData = JsonUtility.FromJson<PlayerDataRoot>(jsonPlayerData.text);
-
-            if (playerData != null)
-            {
-                Debug.Log("已解析通關資訊");
-            }
-            else
-            {
-                Debug.LogWarning("無法解析通關資訊");
-            }
-        }
-    }
-
-
-    //匯出通關資訊 JSON
-    public void SavePlayerDataToJson()
-    {
-        // 將SettingRoot轉換為JSON字符串
-        string playerDatajson = JsonUtility.ToJson(playerData, true);
-
-        // 檔案路徑
-        string exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
-
-        // 將 JSON 字串寫入檔案
-        File.WriteAllText(exportFileName, playerDatajson);
-
-        Debug.Log("通關資訊已保存到 " + exportFileName);
-    }
-
-
-    //資料操作-預設關卡----------------------------------------------
-
-    //讀取預設關卡資訊
-    public void LoadDefaultLevels()
-    {
-        if (jsonDefaultLevels != null)
-        {
-            // 使用 JsonUtility 解析 JSON
-            defaultLevelsRoot = JsonUtility.FromJson<Root>(jsonDefaultLevels.text);
-
-            if (defaultLevelsRoot != null)
-            {
-                Debug.Log("已成功載入預設關卡");
-            }
-            else
-            {
-                Debug.LogWarning("無法載入預設關卡");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("未找到預設關卡檔");
-        }
-    }
-
-    //預覽關卡==========================================================================================================================
-
-    //預覽-指定容器
-    public void FindGameObject()
-    {
-        //指定容器
-        previewBrickList = GameObject.Find("GamePreviewList").GetComponent<Transform>();
-    }
-
-    //預覽-解析部分
-    public void PreviewGenerate()
-    {
-        LevelConfig targetLevelConfig;
-
-        if (defaultLevelsRoot != null)
-        {
-            targetLevelConfig = defaultLevelsRoot.levelConfig[nowLevel];
-
-            //啟動生成器
-            if (targetLevelConfig != null)
-            {
-                PreviewUI(targetLevelConfig);
-                FindGameObject();
-                PreviewGenerateBricks(targetLevelConfig.bricksData);
-            }
-            else
-            {
-                Debug.LogWarning("指定的關卡編號不存在");
-            }
-        }
-        else
-        {
-            Debug.LogError("未提供 JSON 配置文件");
-        }
-    }
-
-    //預覽-U.I.部分
-    void PreviewUI(LevelConfig targetLevelConfig)
-    {
-        MenuManager menuManager = GameObject.Find("Canvas").GetComponent<MenuManager>();
-        menuManager.previewNameText.text = targetLevelConfig.levelName;
-        menuManager.previewBrickAmountText.text = targetLevelConfig.bricksData.Count.ToString();
-
-        if (nowLevel + 1 < playerData.clearLevel.Count)
-        {
-            menuManager.previewScoreText.text = playerData.clearLevel[nowLevel].clearData.score.ToString();
-            menuManager.previewTimerText.text = playerData.clearLevel[nowLevel].clearData.time.ToString();
-            menuManager.previewSpeedText.text = playerData.clearLevel[nowLevel].clearData.speed.ToString("F2");
-            menuManager.previewClearTF.gameObject.SetActive(playerData.clearLevel[nowLevel].clearData.clear);
-        }
-        else
-        {
-            menuManager.previewScoreText.text = "Null";
-            menuManager.previewTimerText.text = "Null";
-            menuManager.previewSpeedText.text = "Null";
-            menuManager.previewClearTF.gameObject.SetActive(false);
-        }
-    }
-
-    //預覽-生成部分
-    void PreviewGenerateBricks(List<BricksData> bricks)
-    {
-        brickAmount = 0;
-
-        foreach (var brickData in bricks)
-        {
-            Vector3 position = new Vector3(16.25f - (2.5f * brickData.xPoint), 6.5f - (0.5f * brickData.yPoint), -1);
-            GameObject brick = Instantiate(previewBrickPrefab, position, Quaternion.identity, previewBrickList);
-
-            // 設置磚塊的屬性
-            var brickScript = brick.GetComponent<BrickPreview>();
-            if (brickScript != null)
-            {
-                brickScript.pointValue = brickData.normalBricks.brickLevel * 10;
-                brickScript.brickLevel = brickData.normalBricks.brickLevel;
-                brickScript.powerUpType = brickData.normalBricks.powerUpType;
-                PreviewGeneratePowerUp(position, brickData.normalBricks.powerUpType);
-            }
-
-            brickAmount += 1;
-        }
-    }
-
-    //預覽-生成部分-道具生成
-    void PreviewGeneratePowerUp(Vector3 position, int powerUpType)
-    {
-        GameObject spawnedPowerUp;
-
-        switch (powerUpType)
-        {
-            case 0:
-                break;
-            case 1:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[0], position, Quaternion.identity, previewBrickList);
-                break;
-            case 2:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[1], position, Quaternion.identity, previewBrickList);
-                break;
-            case 3:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[2], position, Quaternion.identity, previewBrickList);
-                break;
-            case 4:
-                spawnedPowerUp = Instantiate(powerUpPrefabs[3], position, Quaternion.identity, previewBrickList);
-                break;
-            default:
-                Debug.LogWarning("未知的Item類型: " + powerUpType);
-                break;
-        }
-    }
-
-    //預覽-銷毀所有子物件
-    public void PreviewClearChildren()
-    {
-        // 遍歷並銷毀所有子物件
-        foreach (Transform child in previewBrickList)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // 清空子物件列表
-        previewBrickList.DetachChildren();
-    }
-
     //場景轉換==========================================================================================================================
 
     //接續(SelectLevelButton)-進入關卡
@@ -607,110 +603,12 @@ public class MainManager : MonoBehaviour
 
     //主場景==========================================================================================================================
 
-    //過關保存
-    public void GameClearedSave()
-    {
-        Debug.Log("開始保存 第" + nowLevel + "關 通關資訊...");
-        //已存在通關資訊
-        if (playerData.clearLevel[nowLevel].clearData.clear == true)
-        {
-            Debug.Log("已存在該關卡通關資訊");
-            //分數擇優
-            if (GameData.score > playerData.clearLevel[nowLevel].clearData.score)
-            {
-                playerData.clearLevel[nowLevel].clearData.score = GameData.score;
-            }
-            //計時擇優
-            if (GameData.saveTime > playerData.clearLevel[nowLevel].clearData.time)
-            {
-                playerData.clearLevel[nowLevel].clearData.time = (int)GameData.saveTime;
-                playerData.clearLevel[nowLevel].clearData.speed = settings.gameSpeedModifier;
-            }
-        }
-        //未通關
-        else if (playerData.clearLevel[nowLevel].clearData.clear == false)
-        {
-            Debug.Log("未存在該關卡通關資訊(未通關)");
-            if (defaultLevelsRoot.levelConfig[nowLevel].levelName != "Level.DeBug")
-            {
-                playerData.clearLevelAmount += 1;
-            }
-
-            playerData.clearLevel[nowLevel].clearData.clear = true;
-            playerData.clearLevel[nowLevel].clearData.score = GameData.score;
-            playerData.clearLevel[nowLevel].clearData.time = (int)GameData.saveTime;
-            playerData.clearLevel[nowLevel].clearData.speed = settings.gameSpeedModifier;
-
-            NewClearLevelSave();
-        }
-        //無通關資訊
-        else
-        {
-            Debug.Log("未存在該關卡通關資訊(無通關資訊)");
-            if (defaultLevelsRoot.levelConfig[nowLevel].levelName != "Level.DeBug")
-            {
-                playerData.clearLevelAmount += 1;
-            }
-
-            //初始化
-            ClearLevel clearLevel = new ClearLevel();
-            clearLevel.level = defaultLevelsRoot.levelConfig[nowLevel].levelName;
-
-            ClearData clearData = new ClearData();
-            clearData.clear = true;
-            clearData.score = GameData.score;
-            clearData.time = (int)GameData.saveTime;
-            clearData.speed = settings.gameSpeedModifier;
-
-            clearLevel.clearData = clearData;
-
-            playerData.clearLevel.Add(clearLevel);
-
-            NewClearLevelSave();
-        }
-
-        //保存Json
-        SavePlayerDataToJson();
-    }
-
-    //製作 N+1關
-    void NewClearLevelSave()
-    {
-        bool TorF = true;
-
-        //關卡重複判斷式
-        for (int i = 0; i < playerData.clearLevel.Count; i++)
-        {
-            if (defaultLevelsRoot.levelConfig[i].levelName == defaultLevelsRoot.levelConfig[(nowLevel + 1)].levelName)
-            {
-                TorF = false;
-                break;
-            }
-        }
-
-        if (TorF)
-        {
-            //初始化
-            ClearLevel newClearLevel = new ClearLevel();
-            newClearLevel.level = defaultLevelsRoot.levelConfig[(nowLevel + 1)].levelName;
-
-            ClearData newClearData = new ClearData();
-            newClearData.clear = false;
-            newClearData.score = -1;
-            newClearData.time = -1;
-            newClearData.speed = -1;
-
-            newClearLevel.clearData = newClearData;
-
-            playerData.clearLevel.Add(newClearLevel);
-        }
-    }
 
     //設定介面==========================================================================================================================
 
 
     //音訊==========================================================================================================================
-    
+
 
 
     //其他==========================================================================================================================

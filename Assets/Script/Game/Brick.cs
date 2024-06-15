@@ -18,7 +18,6 @@ public class Brick : MonoBehaviour
 
     private GameObject spawnedPowerUp;
     private Renderer brickRenderer;
-    private GameManager gameManager;
     private MainManager mainManager;
     private Transform bricksList;
 
@@ -34,15 +33,13 @@ public class Brick : MonoBehaviour
         //取得渲染
         brickRenderer = GetComponent<Renderer>();
 
-        //調用腳本
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
 
         bricksList = GameObject.Find("BrickList").GetComponent<Transform>();
 
         //設定分數 HP 更新顏色
-        pointValue = brickLevel *= 20;
         brickHP = brickLevel;
+        pointValue = brickLevel * 20;
         UpdateBrickColor();
 
 
@@ -135,8 +132,8 @@ public class Brick : MonoBehaviour
         {
             soundEffectDestroy.Play();
 
-
             //計算分數
+            var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             gameManager.UpdateScore(pointValue);
 
             // 當Ball物件碰撞時，刪除自身(稍微延遲)
@@ -150,8 +147,8 @@ public class Brick : MonoBehaviour
             }
 
             //計算磚塊數
-            gameManager.brickAmount -= 1;
-            if (gameManager.brickAmount <= 0)
+            GameManager.brickAmount -= 1;
+            if (GameManager.brickAmount <= 0)
             {
                 gameManager.GameCleared();
             }
