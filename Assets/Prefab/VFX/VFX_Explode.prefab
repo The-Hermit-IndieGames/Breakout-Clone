@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5706852755551672363}
   - component: {fileID: 3842870100242383542}
   - component: {fileID: 3675922059145327976}
+  - component: {fileID: 621925879013941962}
   m_Layer: 0
   m_Name: VFX_Explode
   m_TagString: Untagged
@@ -980,7 +981,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 50
+        scalar: 20
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -4886,3 +4887,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &621925879013941962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742193216436824282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aea2434a0b36804c9a539f5ece87dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ratio: 1
+  controlType: 2

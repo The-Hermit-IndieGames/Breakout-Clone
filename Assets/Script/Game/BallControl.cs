@@ -63,10 +63,9 @@ public class BallControl : MonoBehaviour
             //發射! 開始遊戲
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
+                var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+                gameManager.GameStarted();
                 lineRenderer.gameObject.SetActive(false);
-                GameData.gameStarted = true;
-                GameData.gameRunning = true;
-                GameData.startTime = Time.time;
                 Vector3 vector3 = worldPosition - transform.position;
                 rb.velocity = vector3.normalized * GameData.initialSpeed;
             }

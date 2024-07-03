@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class ExtraBall : MonoBehaviour
 {
     private int collisionTimes = 1;
-    private MainManager mainManager;
     private Rigidbody rb;
 
     [SerializeField] private GameObject vfxExplode;
@@ -21,12 +17,10 @@ public class ExtraBall : MonoBehaviour
 
     private void Start()
     {
-        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-
         rb = GetComponent<Rigidbody>();
 
-        soundEffectCollision.volume = mainManager.settings.gameSoundEffectF * 1.0f;
-        soundEffectBurstBall.volume = mainManager.settings.gameSoundEffectF * 0.25f;
+        soundEffectCollision.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectBurstBall.volume = MainManager.settingFile.gameSoundEffectF * 0.25f;
     }
 
     private void Update()
@@ -99,12 +93,6 @@ public class ExtraBall : MonoBehaviour
 
                 //設置粒子
                 GameObject vfx = Instantiate(vfxExplode, transform.position, Quaternion.identity);
-                var particleSystem = vfx.GetComponent<ParticleSystem>();
-                ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-                short burstsCount = (short)(mainManager.settings.effectsVFX * 1.0);
-                bursts[0].time = 0.0f; // 從運行開始時立即發射
-                bursts[0].count = burstsCount; //粒子數量
-                particleSystem.emission.SetBursts(bursts);
             }
         }
 
@@ -114,7 +102,7 @@ public class ExtraBall : MonoBehaviour
     void BurstBall()
     {
         // 在半徑為4的範圍內檢查其他物件
-        Collider[] colliders = Physics.OverlapSphere(transform.position, 2f);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
 
         foreach (Collider col in colliders)
         {

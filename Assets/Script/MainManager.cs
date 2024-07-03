@@ -15,6 +15,7 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class SettingRoot
     {
+        public int bgmId;
         public bool gameMusic;
         public float gameMusicF;
         public bool gameSoundEffect;
@@ -77,6 +78,7 @@ public class MainManager : MonoBehaviour
         public float menuX;
         public float menuY;
         public int menuStyle;
+        public bool hidden;
         public List<BricksData> bricksData;
     }
 
@@ -103,10 +105,13 @@ public class MainManager : MonoBehaviour
     //檔案
     [SerializeField] private TextAsset jsonDefaultLevels;
     public static Root[] levelConfigFiles;
-    [SerializeField] private Root[] levelConfigFilesOnGUI;  //DeBug - 用於GUI預覽
+    [SerializeField] private Root[] levelConfigFilesOnGUI;          //DeBug - 用於GUI預覽
 
     public static ClearDataRoot[] clearDataFiles;
-    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;  //DeBug - 用於GUI預覽
+    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;   //DeBug - 用於GUI預覽
+
+    public static SettingRoot settingFile;
+    [SerializeField] private SettingRoot settingFileOnGUI;          //DeBug - 用於GUI預覽
 
     //檔案ID (用於星圖生成)
     public static int nowFileId;
@@ -120,12 +125,13 @@ public class MainManager : MonoBehaviour
     //讀檔用(關卡)
     public void LoadLevelConfigFiles()
     {
+        Debug.Log("讀取關卡檔案...");
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
 
         if (!Directory.Exists(directoryPath))
         {
-            Debug.LogError($"Directory not found: {directoryPath}");
-            return;
+            Debug.LogWarning($"Directory not found: {directoryPath}");
+            Directory.CreateDirectory(directoryPath);
         }
 
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
@@ -158,15 +164,16 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Loaded {levelConfigFiles.Length} level configuration files.");
+        Debug.Log($"已載入 {levelConfigFiles.Length} 項關卡檔案");
 
         //該項僅用於開發預覽
         levelConfigFilesOnGUI = levelConfigFiles;
     }
 
-    //讀檔用(過關資料)
+    //讀檔用(過關資料) [需加密]
     public void LoadClearDataFiles()
     {
+        Debug.Log("讀取過關資料...");
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
 
         if (!Directory.Exists(directoryPath))
@@ -235,13 +242,82 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"Loaded {clearDataFiles.Length} level configuration files.");
+        Debug.Log($"已載入 {clearDataFiles.Length} 項過關資料檔案");
 
         //該項僅用於開發預覽
         clearDataFilesOnGUI = clearDataFiles;
     }
 
-    //建立 ClearData 檔案
+    //讀檔用(設定檔)
+    public void LoadSettingFile()
+    {
+        Debug.Log("讀取設定檔...");
+        string path = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
+
+        string jsonSetting = null;
+        try
+        {
+            jsonSetting = File.ReadAllText(path);
+        }
+        catch (DirectoryNotFoundException)
+        {
+            Debug.LogWarning("異常: 未找到目錄");
+
+            Debug.Log("建立目錄 " + "PlayerData");
+            string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
+            Directory.CreateDirectory(folderPath);
+
+            Debug.Log("建立文件 " + "SettingFile.json");
+            InitializationSettings();
+            jsonSetting = File.ReadAllText(path);
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.LogWarning("異常: 未找到文件");
+
+            Debug.Log("建立文件 " + "SettingFile.json");
+            InitializationSettings();
+            jsonSetting = File.ReadAllText(path);
+        }
+        finally
+        {
+            settingFile = JsonUtility.FromJson<SettingRoot>(jsonSetting);
+            Debug.Log("已解析設定參數");
+        }
+
+        //該項僅用於開發預覽
+        settingFileOnGUI = settingFile;
+    }
+
+    //初始化設定參數(並匯出)
+    public void InitializationSettings()
+    {
+        Debug.LogWarning("初始化設定檔...");
+        settingFile = new SettingRoot();
+        settingFile.bgmId = 0;
+        settingFile.gameMusic = true;
+        settingFile.gameMusicF = 1.0f;
+        settingFile.gameSoundEffect = true;
+        settingFile.gameSoundEffectF = 1.0f;
+
+        settingFile.effectsVFX = 20;
+        settingFile.backgroundVFX = 500;
+
+        settingFile.gameSpeedModifier = 1.0f;
+
+        SaveSettingFile();
+        Debug.Log("設定檔已初始化");
+    }
+
+    //保存設定參數
+    public static void SaveSettingFile()
+    {
+        string settingsjson = JsonUtility.ToJson(settingFile, true);
+        string exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
+        File.WriteAllText(exportFileName, settingsjson);
+    }
+
+    //建立 ClearData 檔案 [需加密]
     private void CreateClearDataFile(string fileName)
     {
         Debug.Log("建立文件 " + "ClearLevelData.json");
@@ -300,7 +376,7 @@ public class MainManager : MonoBehaviour
                 {
                     if (levelConfigFiles[i].version != clearDataFiles[j].version)
                     {
-                        UpdateVersionClearData(i,j);
+                        UpdateVersionClearData(i, j);
                     }
 
                     break;
@@ -309,7 +385,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    //比對單一 ClearData 版本
+    //比對單一 ClearData 版本 [需加密]
     private void UpdateVersionClearData(int levelID, int clearID)
     {
         clearDataFiles[clearID].version = levelConfigFiles[levelID].version;
@@ -321,7 +397,7 @@ public class MainManager : MonoBehaviour
             bool haveData = false;
             foreach (var data in clearLevel)
             {
-                if (level.levelID==data.levelID)
+                if (level.levelID == data.levelID)
                 {
                     haveData = true;
                 }
@@ -367,7 +443,6 @@ public class MainManager : MonoBehaviour
         Debug.Log("通關資訊版本已更新並保存到 " + exportFileName);
     }
 
-
     //以 nowLevelId 尋找關卡
     public static void FindLevelConfigById()
     {
@@ -383,12 +458,20 @@ public class MainManager : MonoBehaviour
     //以 nowFileId 尋找過關檔案
     public static void FindClearDataFileById()
     {
+        bool check = false;
         foreach (var clearDataFile in MainManager.clearDataFiles)
         {
             if (clearDataFile.name == MainManager.levelConfigFiles[MainManager.nowFileId].name)
             {
                 MainManager.nowClearDataFile = clearDataFile;
+                check = true;
+                break;
             }
+        }
+
+        if (check == false)
+        {
+            Debug.LogWarning("找不到該檔案!");
         }
     }
 
@@ -429,15 +512,104 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    //以 nowLevelId 保存當前關卡 [需加密]
+    public static void SaveCurrentLevelById(int medalLevel, int score, int time, float speed)
+    {
+        nowClearLevel.clear = true;
+        if (score >= nowClearLevel.clearData.score)
+        {
+            var newClearData = new ClearData();
+            newClearData.medalLevel = medalLevel;
+            newClearData.score = score;
+            if (time <= nowClearLevel.clearData.time && nowClearLevel.clearData.time != 0)
+            {
+                newClearData.time = time;
+                newClearData.speed = speed;
+            }
+            else if (nowClearLevel.clearData.time == 0)
+            {
+                newClearData.time = time;
+                newClearData.speed = speed;
+            }
+            nowClearLevel.clearData = newClearData;
+        }
+
+
+        // 檔案路徑
+        string exportFileName;
+        if (nowFileId == 0)
+        {
+            //預設關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.json");
+        }
+        else
+        {
+            //其他關卡
+            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + nowClearDataFile.name + ".json");
+        }
+
+        // 將Root轉換為JSON字符串
+        string newClearDataJson = JsonUtility.ToJson(nowClearDataFile, true);
+
+        // 將 JSON 字串寫入檔案
+        File.WriteAllText(exportFileName, newClearDataJson);
+    }
+
+    //以 nowLevelId 尋找下一關
+    public static void FindNextLevelById()
+    {
+        string nextLevelId = null;
+        if (nowLevelData.nextLevelID == null)
+        {
+            int nextID = -1;
+            for (int i = 0; i < MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count; i++)
+            {
+                if (MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig[i].levelID == nowLevelId)
+                {
+                    nextID = i + 1;
+                    break;
+                }
+            }
+
+            if (nextID == -1)
+            {
+                nextLevelId = nowLevelId;
+                Debug.LogWarning("無法取得 NextID " + nextID);
+            }
+            else if (nextID > MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
+            {
+                nextLevelId = nowLevelId;
+                Debug.LogWarning("超出關卡範圍 " + nextID);
+            }
+            else if (nextID == MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
+            {
+                nextLevelId = nowLevelId;
+                Debug.Log("已經是最後一關");
+            }
+            else if (nextID <= MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
+            {
+                nextLevelId = MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig[nextID].levelID;
+                Debug.Log("下一關為: " + nextID + " / " + nextLevelId);
+            }
+        }
+        else
+        {
+            nextLevelId = nowLevelData.nextLevelID;
+        }
+
+        nowLevelId = nextLevelId;
+        CalibrationInfoByLevelId();
+    }
+
+    //以 nowLevelId 校準資料
+    public static void CalibrationInfoByLevelId()
+    {
+        FindLevelConfigById();
+        FindClearLevelById();
+    }
+
+
     //變數==========================================================================================================================
-
-    //檔案
-    [SerializeField] private TextAsset jsonSetting;
-
-    //實例
-    public SettingRoot settings;                                //設定  
-
-    //腳本
 
     //預覽
     [SerializeField] private GameObject previewBrickPrefab;                 // 磚塊的預置體
@@ -450,140 +622,10 @@ public class MainManager : MonoBehaviour
     public AudioSource soundEffectUiFalse;
     public AudioSource soundEffectUiPage;
 
+    public AudioSource[] bgmMusic;
+
     //運行
     public int nowLevel = 0;
-
-
-    void Start()
-    {
-        //檔案
-        jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
-
-        //新版
-        LoadLevelConfigFiles();
-        LoadClearDataFiles();
-        CompareAllClearData();
-
-        //舊版
-        LoadSettingsFromFile();
-
-        UpdateAudio();
-    }
-
-
-    void Update()
-    {
-
-    }
-
-    //資料操作==========================================================================================================================
-
-    //資料操作-設定參數----------------------------------------------
-
-    //初始化設定參數(並匯出)
-    public void InitializationSettings()
-    {
-        Debug.LogWarning("初始化設定檔...");
-        settings.gameMusic = true;
-        settings.gameMusicF = 1.0f;
-        settings.gameSoundEffect = true;
-        settings.gameSoundEffectF = 1.0f;
-
-        settings.effectsVFX = 20;
-        settings.backgroundVFX = 500;
-
-        settings.gameSpeedModifier = 1.0f;
-
-        SaveSettingsToJson();
-        Debug.Log("設定檔已初始化");
-        Debug.Log("重新讀取設定檔...");
-        string path = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
-        string json = File.ReadAllText(path);
-        jsonSetting = new TextAsset(json);
-
-        if (jsonSetting != null)
-        {
-            settings = JsonUtility.FromJson<SettingRoot>(jsonSetting.text);
-            Debug.Log("[初始化]已成功載入設定參數");
-        }
-        else
-        {
-            Debug.LogWarning("[初始化]未找到設定參數檔");
-        }
-    }
-
-
-    //讀取設定參數
-    public void LoadSettingsFromFile()
-    {
-        Debug.Log("讀取設定檔...");
-        string path = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
-
-        try
-        {
-            string json = File.ReadAllText(path);
-            jsonSetting = new TextAsset(json);
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Debug.LogWarning("異常: 未找到目錄");
-
-            Debug.Log("建立目錄 " + "PlayerData");
-            string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
-            Directory.CreateDirectory(folderPath);
-
-            Debug.Log("建立文件 " + "SettingFile.json");
-            InitializationSettings();
-        }
-        catch (FileNotFoundException)
-        {
-            Debug.LogWarning("異常: 未找到文件");
-
-            Debug.Log("建立文件 " + "SettingFile.json");
-            InitializationSettings();
-        }
-        finally
-        {
-            settings = JsonUtility.FromJson<SettingRoot>(jsonSetting.text);
-            Debug.Log("已解析設定參數");
-        }
-    }
-
-
-    //匯出設定參數 JSON
-    public void SaveSettingsToJson()
-    {
-        Debug.Log("保存設定參數...");
-        // 將SettingRoot轉換為JSON字符串
-        string settingsjson = JsonUtility.ToJson(settings, true);
-
-        // 檔案路徑
-        string exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
-
-        // 將 JSON 字串寫入檔案
-        File.WriteAllText(exportFileName, settingsjson);
-
-        Debug.Log("設定參數已保存到 " + exportFileName);
-    }
-
-
-    //更新音量大小
-    public void UpdateAudio()
-    {
-        soundEffectUiTrue.volume = settings.gameSoundEffectF * 1.0f;
-        soundEffectUiFalse.volume = settings.gameSoundEffectF * 2.0f;
-        soundEffectUiPage.volume = settings.gameSoundEffectF * 1.0f;
-    }
-
-
-    //場景轉換==========================================================================================================================
-
-    //接續(SelectLevelButton)-進入關卡
-    public void EnterGameScene()
-    {
-        // 載入 GameScene
-        SceneManager.LoadScene("GameScene");
-    }
 
 
     //轉換場景
@@ -599,17 +641,60 @@ public class MainManager : MonoBehaviour
         }
 
         DontDestroyOnLoad(gameObject);
+
+        //檔案
+        jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
+
+        //新版
+        LoadLevelConfigFiles();
+        LoadClearDataFiles();
+        LoadSettingFile();
+        CompareAllClearData();
+
+
+        UpdateAudio();
+
+        Debug.Log("MainManager 初始化完成");
     }
 
-    //主場景==========================================================================================================================
+    void Start()
+    {
+        StartCoroutine(StartAfterAllObjectsLoaded());
+    }
+
+    IEnumerator StartAfterAllObjectsLoaded()
+    {
+        // 等待1秒，所有物件加載完成後執行的代碼
+        yield return new WaitForSeconds(1);
+
+        bgmMusic[MainManager.settingFile.bgmId].gameObject.SetActive(true);
+    }
+
+    void Update()
+    {
+
+    }
+
+    //更新音量大小
+    public void UpdateAudio()
+    {
+        soundEffectUiTrue.volume = settingFile.gameSoundEffectF * 1.0f;
+        soundEffectUiFalse.volume = settingFile.gameSoundEffectF * 2.0f;
+        soundEffectUiPage.volume = settingFile.gameSoundEffectF * 1.0f;
+
+        for (int i = 0; i < bgmMusic.Length; i++)
+        {
+            bgmMusic[i].volume = settingFile.gameMusicF * 1.0f;
+        }
+    }
 
 
-    //設定介面==========================================================================================================================
+    //場景轉換==========================================================================================================================
 
-
-    //音訊==========================================================================================================================
-
-
-
-    //其他==========================================================================================================================
+    //接續(SelectLevelButton)-進入關卡
+    public void EnterGameScene()
+    {
+        // 載入 GameScene
+        SceneManager.LoadScene("GameScene");
+    }
 }

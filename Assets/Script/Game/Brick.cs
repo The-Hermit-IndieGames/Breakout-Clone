@@ -18,7 +18,6 @@ public class Brick : MonoBehaviour
 
     private GameObject spawnedPowerUp;
     private Renderer brickRenderer;
-    private MainManager mainManager;
     private Transform bricksList;
 
     private Color brickColor = Color.white;
@@ -33,8 +32,6 @@ public class Brick : MonoBehaviour
         //眔磋琕
         brickRenderer = GetComponent<Renderer>();
 
-        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-
         bricksList = GameObject.Find("BrickList").GetComponent<Transform>();
 
         //砞﹚だ计 HP 穝肅︹
@@ -44,8 +41,8 @@ public class Brick : MonoBehaviour
 
 
         //
-        soundEffectCollision.volume = mainManager.settings.gameSoundEffectF * 1.0f;
-        soundEffectDestroy.volume = mainManager.settings.gameSoundEffectF * 1.0f;
+        soundEffectCollision.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectDestroy.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
 
         //ネΘ笵ㄣ(玛﹚)
         switch (powerUpType)
@@ -99,7 +96,7 @@ public class Brick : MonoBehaviour
             //砞竚采祇甮计秖
             ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
             bursts[0].time = 0.0f; // 眖笲︽秨﹍ミ祇甮
-            bursts[0].count = (short)mainManager.settings.effectsVFX; //采计秖
+            bursts[0].count = (short)MainManager.settingFile.effectsVFX; //采计秖
             particleSystem.emission.SetBursts(bursts);
 
             //砞竚ン Force Over Lifetime 

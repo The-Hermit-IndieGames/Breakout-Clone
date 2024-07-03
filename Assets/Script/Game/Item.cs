@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    private MainManager mainManager;
-
     public int type;                    // 笵ㄣ絪腹
     public bool inBrick = true;         // ン縥遏ず?
 
@@ -15,8 +13,6 @@ public class Item : MonoBehaviour
 
     private void Start()
     {
-        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-
         originalScale = transform.localScale;
 
         // 莉 Circle Collider 2D 舱ンまノ
@@ -67,7 +63,7 @@ public class Item : MonoBehaviour
             //砞竚采祇甮计秖
             ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
             bursts[0].time = 0.0f; // 眖笲︽秨﹍ミ祇甮
-            bursts[0].count = (short)mainManager.settings.effectsVFX * 0.5f; //采计秖
+            bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //采计秖
             particleSystem.emission.SetBursts(bursts);
 
             //砞竚ン Force Over Lifetime 

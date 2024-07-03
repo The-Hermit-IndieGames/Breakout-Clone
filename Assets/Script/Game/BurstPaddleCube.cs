@@ -5,7 +5,6 @@ using UnityEngine;
 public class BurstPaddleCube : MonoBehaviour
 {
     private bool canBurst = true;
-    private MainManager mainManager;
 
     [SerializeField] private GameObject gameObjects;
     [SerializeField] private GameObject vfxExplode;
@@ -13,8 +12,7 @@ public class BurstPaddleCube : MonoBehaviour
 
     void Start()
     {
-        mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
-        soundEffectBurstBall.volume = mainManager.settings.gameSoundEffectF * 0.5f;
+        soundEffectBurstBall.volume = MainManager.settingFile.gameSoundEffectF * 0.5f;
     }
 
 
@@ -27,12 +25,6 @@ public class BurstPaddleCube : MonoBehaviour
 
             //設置粒子
             GameObject vfx = Instantiate(vfxExplode, transform.position, Quaternion.identity);
-            var particleSystem = vfx.GetComponent<ParticleSystem>();
-            ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-            short burstsCount = (short)(mainManager.settings.effectsVFX * 20.0);
-            bursts[0].time = 0.0f; // 從運行開始時立即發射
-            bursts[0].count = burstsCount; //粒子數量
-            particleSystem.emission.SetBursts(bursts);
 
 
             // 在範圍內檢查其他物件

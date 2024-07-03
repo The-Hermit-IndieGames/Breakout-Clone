@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using TMPro;
 
 public class LevelStarButton : MonoBehaviour
 {
@@ -30,7 +26,7 @@ public class LevelStarButton : MonoBehaviour
         if (usable)
         {
             MainManager.nowLevelId = levelId;
-            MainManager.FindClearLevelById();
+            MainManager.CalibrationInfoByLevelId();
 
             var mainUIManager = GameObject.Find("MainUIManager").GetComponent<MainUIManager>();
             mainUIManager.BricksDelete();

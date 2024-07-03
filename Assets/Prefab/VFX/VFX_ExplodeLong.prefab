@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5706852755551672363}
   - component: {fileID: 3842870100242383542}
   - component: {fileID: 3675922059145327976}
+  - component: {fileID: 8110345484307858160}
   m_Layer: 0
   m_Name: VFX_ExplodeLong
   m_TagString: Untagged
@@ -664,7 +665,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 0
+    type: 5
     angle: 25
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -672,7 +673,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 0.25, y: 0.25, z: 0.25}
+    m_Scale: {x: 48, y: 1, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
@@ -980,7 +981,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 50
+        scalar: 200
         minScalar: 30
         maxCurve:
           serializedVersion: 2
@@ -1367,8 +1368,8 @@ ParticleSystem:
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 6.5588236, g: 2.9711776, b: 0.2403758, a: 0.627451}
-        key2: {r: 0.9150943, g: 0.5226156, b: 0, a: 0.2509804}
+        key1: {r: 6.5588236, g: 2.9711776, b: 0.2403758, a: 0.9019608}
+        key2: {r: 0.9150943, g: 0.5226156, b: 0, a: 0.39215687}
         key3: {r: 0.7490196, g: 0.31787565, b: 0, a: 0}
         key4: {r: 0.15484855, g: 0.025081102, b: 0, a: 0}
         key5: {r: 0.051886797, g: 0.0075931894, b: 0, a: 0}
@@ -4886,3 +4887,17 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8110345484307858160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7742193216436824282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aea2434a0b36804c9a539f5ece87dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ratio: 10
+  controlType: 2

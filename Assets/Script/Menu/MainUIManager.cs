@@ -5,25 +5,18 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Drawing;
+using System.Runtime.ConstrainedExecution;
+using Unity.VisualScripting;
 
 public class MainUIManager : MonoBehaviour
 {
     private MainManager mainManager;
 
-
-    //設定頁面
-    [SerializeField] private string inspectorSettings = "設定頁面";
-    public Slider musicSlider;
-    [SerializeField] private TextMeshProUGUI musicSliderValue;
-    public Slider soundEffectSlider;
-    [SerializeField] private TextMeshProUGUI soundEffectSliderValue;
-    public Slider effectsVFXSlider;
-    [SerializeField] private TextMeshProUGUI effectsVFXSliderValue;
-    public Slider backgroundVFXSlider;
-    [SerializeField] private TextMeshProUGUI backgroundVFXSliderValue;
-    public Slider speedModifierSlider;
-    [SerializeField] private TextMeshProUGUI speedModifierSliderValue;
-
+    //音訊
+    public AudioSource uiSoundEffectUiTrue;
+    public AudioSource uiSoundEffectUiFalse;
+    public AudioSource uiSoundEffectUiPage;
 
 
     void Start()
@@ -37,6 +30,22 @@ public class MainUIManager : MonoBehaviour
         effectsVFXSlider.onValueChanged.AddListener(HandleEffectsVFXChange);
         backgroundVFXSlider.onValueChanged.AddListener(HandleBackgroundVFXChange);
         speedModifierSlider.onValueChanged.AddListener(HandleSpeedModifierChange);
+
+        //UI備用音訊
+        uiSoundEffectUiTrue.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        uiSoundEffectUiFalse.volume = MainManager.settingFile.gameSoundEffectF * 2.0f;
+        uiSoundEffectUiPage.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+
+        StartCoroutine(StartAfterAllObjectsLoaded());
+    }
+
+    IEnumerator StartAfterAllObjectsLoaded()
+    {
+        // 等待1秒，所有物件加載完成後執行的代碼
+        yield return new WaitForSeconds(1);
+
+        AdsPlatformIntegration.AdBanner_Show();
+        AdsPlatformIntegration.AdInterstitial_Show();
     }
 
 
@@ -50,7 +59,7 @@ public class MainUIManager : MonoBehaviour
     //標題畫面-開始
     public void TitlePlayButton()
     {
-
+        mainManager.soundEffectUiTrue.Play();
     }
 
     //標題畫面-製作
@@ -64,13 +73,14 @@ public class MainUIManager : MonoBehaviour
     //標題畫面-實驗性內容
     public void TitleExperimentalButton()
     {
-
+        mainManager.soundEffectUiTrue.Play();
     }
 
     //標題畫面-設定
     public void TitleSettingButton()
     {
-
+        mainManager.soundEffectUiTrue.Play();
+        SetInitialSliderValue();
     }
 
     //標題畫面-結束遊戲
@@ -94,6 +104,7 @@ public class MainUIManager : MonoBehaviour
 
     [SerializeField] private GameObject canvas;             //主畫布
     [SerializeField] private GameObject levelsStarMap;      //星圖頁面
+    [SerializeField] private GameObject backgroundCanvas;   //背景頁面
     [SerializeField] private TextMeshProUGUI starMapNameText;
 
     [SerializeField] private GameObject levelsStarButton;           //選關按鈕(預製件)    
@@ -104,6 +115,8 @@ public class MainUIManager : MonoBehaviour
     //展開星圖
     public void OpenLevelsStarMap()
     {
+        mainManager.soundEffectUiTrue.Play();
+        backgroundCanvas.gameObject.SetActive(false);
         canvas.gameObject.SetActive(false);
         levelsStarMap.SetActive(true);
 
@@ -113,6 +126,8 @@ public class MainUIManager : MonoBehaviour
     //關閉星圖
     public void QuitLevelsStarMap()
     {
+        mainManager.soundEffectUiTrue.Play();
+        backgroundCanvas.gameObject.SetActive(true);
         canvas.gameObject.SetActive(true);
         levelsStarMap.SetActive(false);
         previewCanvas.SetActive(false);
@@ -187,6 +202,7 @@ public class MainUIManager : MonoBehaviour
     //星圖-預覽關卡
     public void PreviewTheLevel()
     {
+        mainManager.soundEffectUiTrue.Play();
         previewCanvas.SetActive(true);
         MainManager.FindLevelConfigById();
 
@@ -195,8 +211,15 @@ public class MainUIManager : MonoBehaviour
         previewNameText.text = MainManager.nowLevelData.levelName;
         previewBrickAmountText.text = brickAmount.ToString();
 
-        previewScoreText.text = "8888";
-        previewTimerAndSpeedText.text = ("[00:00]" + " (x" + "[1.00]" + ")");
+        //將時間格式化為分：秒
+        int minutes = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time / 60);
+        int seconds = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time % 60);
+        string timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
+        string timerAndSpeedString = (timerString + "   <size=24>x " + MainManager.nowClearLevel.clearData.speed + " Speed Modifier</size>");
+        int score = MainManager.nowClearLevel.clearData.score;
+
+        previewScoreText.text = score.ToString();
+        previewTimerAndSpeedText.text = timerAndSpeedString;
     }
 
     //預覽-磚塊生成器
@@ -232,6 +255,7 @@ public class MainUIManager : MonoBehaviour
     //星圖-預覽關卡返回
     public void PreviewBack()
     {
+        mainManager.soundEffectUiTrue.Play();
         BricksDelete();
     }
 
@@ -263,59 +287,143 @@ public class MainUIManager : MonoBehaviour
 
     //設定介面==========================================================================================================================
 
+    [SerializeField] private string inspectorSettings = "設定頁面";
+
+    public Slider musicSlider;
+    [SerializeField] private TextMeshProUGUI musicSliderValue;
+    [SerializeField] private Toggle musicToggle;
+    public Slider soundEffectSlider;
+    [SerializeField] private TextMeshProUGUI soundEffectSliderValue;
+    [SerializeField] private Toggle soundEffectToggle;
+
+    public Slider effectsVFXSlider;
+    [SerializeField] private TextMeshProUGUI effectsVFXSliderValue;
+    public Slider backgroundVFXSlider;
+    [SerializeField] private TextMeshProUGUI backgroundVFXSliderValue;
+
+    public Slider speedModifierSlider;
+    [SerializeField] private TextMeshProUGUI speedModifierSliderValue;
+
+    [SerializeField] private Button[] bgnButton;
+
 
     //設定-初始化
-    void SetInitialSliderValue()
+    public void SetInitialSliderValue()
     {
         //將 Slider 的值設定為 GameSetting 中的值
-        musicSlider.value = mainManager.settings.gameMusicF;
-        musicSliderValue.text = mainManager.settings.gameMusicF.ToString("F3");
-        soundEffectSlider.value = mainManager.settings.gameSoundEffectF;
-        soundEffectSliderValue.text = mainManager.settings.gameSoundEffectF.ToString("F3");
-        effectsVFXSlider.value = mainManager.settings.effectsVFX;
-        effectsVFXSliderValue.text = mainManager.settings.effectsVFX.ToString("F0");
-        backgroundVFXSlider.value = mainManager.settings.backgroundVFX;
-        backgroundVFXSliderValue.text = mainManager.settings.backgroundVFX.ToString("F0");
-        speedModifierSlider.value = mainManager.settings.gameSpeedModifier;
-        speedModifierSliderValue.text = mainManager.settings.gameSpeedModifier.ToString("F2");
+        musicSlider.value = (MainManager.settingFile.gameMusicF * 100);
+        musicSliderValue.text = (MainManager.settingFile.gameMusicF * 100).ToString("F0") + "%";
+        musicToggle.isOn = MainManager.settingFile.gameMusic;
+        soundEffectSlider.value = (MainManager.settingFile.gameSoundEffectF * 100);
+        soundEffectSliderValue.text = (MainManager.settingFile.gameSoundEffectF * 100).ToString("F0") + "%";
+        soundEffectToggle.isOn = MainManager.settingFile.gameSoundEffect;
+
+        for (int i = 0; i < bgnButton.Length; i++)
+        {
+            if (i == MainManager.settingFile.bgmId)
+            {
+                //按下的按鈕 interactable = false
+                bgnButton[i].interactable = false;
+            }
+            else
+            {
+                bgnButton[i].interactable = true;
+            }
+        }
+
+        effectsVFXSlider.value = MainManager.settingFile.effectsVFX;
+        effectsVFXSliderValue.text = MainManager.settingFile.effectsVFX.ToString("F0");
+        backgroundVFXSlider.value = MainManager.settingFile.backgroundVFX;
+        backgroundVFXSliderValue.text = MainManager.settingFile.backgroundVFX.ToString("F0");
+
+        speedModifierSlider.value = (MainManager.settingFile.gameSpeedModifier * 100);
+        speedModifierSliderValue.text = MainManager.settingFile.gameSpeedModifier.ToString("F2");
     }
 
 
     //設定數字顯示-音樂
     void HandleMusicChange(float volume)
     {
-        mainManager.settings.gameMusicF = volume;
-        mainManager.settings.gameMusicF = volume;
-        musicSliderValue.text = mainManager.settings.gameMusicF.ToString("F3");
+        float roundedNumber = volume / 100f;
+        MainManager.settingFile.gameMusicF = roundedNumber;
+        musicSliderValue.text = (MainManager.settingFile.gameMusicF * 100).ToString() + "%";
+        MainManager.SaveSettingFile();
+        mainManager.UpdateAudio();
+    }
+
+    public void SwitchMusicChange()
+    {
+        MainManager.settingFile.gameMusic = musicToggle.isOn;
+        MainManager.SaveSettingFile();
     }
 
     //設定數字顯示-音效
     void HandleSoundEffectChange(float volume)
     {
-        mainManager.settings.gameSoundEffectF = volume;
-        mainManager.settings.gameSoundEffectF = volume;
-        soundEffectSliderValue.text = mainManager.settings.gameSoundEffectF.ToString("F3");
+        float roundedNumber = volume / 100f;
+        MainManager.settingFile.gameSoundEffectF = roundedNumber;
+        soundEffectSliderValue.text = (MainManager.settingFile.gameSoundEffectF * 100).ToString() + "%";
+        MainManager.SaveSettingFile();
+        mainManager.UpdateAudio();
+
+        //UI備用音訊
+        uiSoundEffectUiTrue.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        uiSoundEffectUiFalse.volume = MainManager.settingFile.gameSoundEffectF * 2.0f;
+        uiSoundEffectUiPage.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+    }
+
+    public void SwitchSoundEffectChange()
+    {
+        MainManager.settingFile.gameSoundEffect = soundEffectToggle.isOn;
+        MainManager.SaveSettingFile();
     }
 
     //設定數字顯示-VFX特效
     void HandleEffectsVFXChange(float volume)
     {
-        mainManager.settings.effectsVFX = ((int)volume);
-        effectsVFXSliderValue.text = mainManager.settings.effectsVFX.ToString();
+        MainManager.settingFile.effectsVFX = ((int)volume);
+        effectsVFXSliderValue.text = MainManager.settingFile.effectsVFX.ToString();
+        MainManager.SaveSettingFile();
     }
 
     //設定數字顯示-VFX背景
     void HandleBackgroundVFXChange(float volume)
     {
-        mainManager.settings.backgroundVFX = ((int)volume);
-        backgroundVFXSliderValue.text = mainManager.settings.backgroundVFX.ToString();
+        MainManager.settingFile.backgroundVFX = ((int)volume);
+        backgroundVFXSliderValue.text = MainManager.settingFile.backgroundVFX.ToString();
+        MainManager.SaveSettingFile();
     }
 
     //設定數字顯示-速度
     void HandleSpeedModifierChange(float volume)
     {
-        mainManager.settings.gameSpeedModifier = volume;
-        mainManager.settings.gameSpeedModifier = volume;
-        speedModifierSliderValue.text = mainManager.settings.gameSpeedModifier.ToString("F2");
+        float roundedNumber = volume / 100f;
+        MainManager.settingFile.gameSpeedModifier = roundedNumber;
+        speedModifierSliderValue.text = MainManager.settingFile.gameSpeedModifier.ToString();
+        MainManager.SaveSettingFile();
+    }
+
+    //選擇BGM
+    public void BgmButtons(int id)
+    {
+        for (int i = 0; i < mainManager.bgmMusic.Length; i++)
+        {
+            mainManager.bgmMusic[i].gameObject.SetActive(false);
+        }
+        mainManager.bgmMusic[id].gameObject.SetActive(true);
+        MainManager.settingFile.bgmId = id;
+        MainManager.SaveSettingFile();
+
+        for (int i = 0; i < bgnButton.Length; i++)
+        {
+            if (i == id)
+            {
+                bgnButton[i].interactable = false;
+            }
+            else
+            {
+                bgnButton[i].interactable = true;
+            }
+        }
     }
 }

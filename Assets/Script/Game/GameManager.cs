@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class GameData
 {
@@ -54,10 +55,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject vfxStardustScore;
 
     //UI
-    [SerializeField] private GameObject PauseButton;                // 暫停按鍵
+    [SerializeField] private GameObject pauseButton;                // 暫停按鍵
 
     [SerializeField] private TextMeshProUGUI scoreText;                               // 主記分板
     [SerializeField] private TextMeshProUGUI timerText;                               // 主計時器
+    [SerializeField] private TextMeshProUGUI infoText;                                // 提示
 
     [SerializeField] private GameObject pauseUI;                    // 暫停畫面UI
     [SerializeField] private TextMeshProUGUI pauseTextName;
@@ -66,6 +68,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pauseTextSpeed;
 
     [SerializeField] private GameObject gameOverUI;                 // 遊戲結束畫面UI
+    [SerializeField] private GameObject adsButton_A;
+    [SerializeField] private GameObject adsButton_B;
+    [SerializeField] private GameObject AdsReward;
     [SerializeField] private TextMeshProUGUI gameOverTextName;
     [SerializeField] private TextMeshProUGUI gameOverTextScore;
     [SerializeField] private TextMeshProUGUI gameOverTextTimer;
@@ -105,6 +110,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        AdsPlatformIntegration.AdBanner_Hide();
+
         //初始化
         Initialization();
 
@@ -133,8 +140,8 @@ public class GameManager : MonoBehaviour
         GameData.levelName = MainManager.nowLevelData.levelName;
 
         //初始速度，速度上限，每次碰撞後的速度提升因子
-        GameData.initialSpeed = mainManager.settings.gameSpeedModifier * 15f;
-        GameData.maxSpeed = mainManager.settings.gameSpeedModifier * 30f;
+        GameData.initialSpeed = MainManager.settingFile.gameSpeedModifier * 15f;
+        GameData.maxSpeed = MainManager.settingFile.gameSpeedModifier * 30f;
         GameData.speedIncreaseFactor = 1.1f;
 
         GameData.score = 0;                         //記分板
@@ -171,10 +178,10 @@ public class GameManager : MonoBehaviour
         GameData.gameStarted = false;
         GameData.gameOver = false;
 
-        soundEffectGetItem.volume = mainManager.settings.gameSoundEffectF * 1.0f;
-        soundEffectGameOver.volume = mainManager.settings.gameSoundEffectF * 1.0f;
-        soundEffectGameCleared.volume = mainManager.settings.gameSoundEffectF * 1.0f;
-        soundEffectGameClearedPlus.volume = mainManager.settings.gameSoundEffectF * 1.0f;
+        soundEffectGetItem.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectGameOver.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectGameCleared.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectGameClearedPlus.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
 
         Debug.Log("已初始化關卡");
     }
@@ -275,6 +282,16 @@ public class GameManager : MonoBehaviour
     }
 
 
+    //遊戲開始
+    public void GameStarted()
+    {
+        GameData.gameStarted = true;
+        GameData.gameRunning = true;
+        GameData.startTime = Time.time;
+
+        pauseButton.gameObject.SetActive(true);
+    }
+
     //暫停按鈕
     public void PauseButtonClick()
     {
@@ -283,25 +300,29 @@ public class GameManager : MonoBehaviour
         pauseUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
         timerText.gameObject.SetActive(false);
-        PauseButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(false);
 
         pauseTextName.text = GameData.levelName;
         pauseTextTimer.text = GameData.timerString;
-        pauseTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        pauseTextSpeed.text = MainManager.settingFile.gameSpeedModifier.ToString();
         pauseTextScore.text = GameData.score.ToString();
 
         // 遊戲暫停，將時間凍結
         Time.timeScale = 0f;
+
+        AdsPlatformIntegration.AdBanner_Show();
     }
 
 
     //繼續按鈕
     public void ContinueButtonClick()
     {
+        AdsPlatformIntegration.AdBanner_Hide();
+
         mainManager.soundEffectUiTrue.Play();
         GameData.gameRunning = true;
         pauseUI.gameObject.SetActive(false);
-        PauseButton.gameObject.SetActive(true);
+        pauseButton.gameObject.SetActive(true);
 
         timerText.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(true);
@@ -314,6 +335,8 @@ public class GameManager : MonoBehaviour
     //重新開始按鈕
     public void RestartButtonClick()
     {
+        AdsPlatformIntegration.AdBanner_Hide();
+
         mainManager.soundEffectUiTrue.Play();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
@@ -322,6 +345,8 @@ public class GameManager : MonoBehaviour
     //退出按鈕
     public void BackButtonClick()
     {
+        AdsPlatformIntegration.AdBanner_Hide();
+
         mainManager.soundEffectUiTrue.Play();
         Time.timeScale = 1f;
 
@@ -330,34 +355,82 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //遊戲結束
+    //遊戲失敗
     public void GameOver()
     {
         gameOverUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
         timerText.gameObject.SetActive(false);
-        PauseButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(false);
 
         gameOverTextName.text = GameData.levelName;
         gameOverTextTimer.text = GameData.timerString;
-        gameOverTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        gameOverTextSpeed.text = MainManager.settingFile.gameSpeedModifier.ToString();
         gameOverTextScore.text = GameData.score.ToString();
 
         GameData.gameRunning = false;
         GameData.gameOver = true;
 
         soundEffectGameOver.Play();
+
+        AdsPlatformIntegration.AdBanner_Show();
+    }
+
+
+    //廣告按鈕-撥放
+    public void AdButtonClick_A()
+    {
+        AdsPlatformIntegration.AdRewarded_Show();
+        adsButton_A.gameObject.SetActive(false);
+        adsButton_B.gameObject.SetActive(true);
+
+        mainManager.soundEffectUiTrue.Play();
+    }
+
+
+    //廣告按鈕-繼續
+    public void AdButtonClick_B()
+    {
+        AdsPlatformIntegration.AdBanner_Hide();
+        adsButton_B.gameObject.SetActive(false);
+
+        if (AdsPlatformIntegration.aReward)
+        {
+            AdsPlatformIntegration.aReward = false;
+            Debug.Log("廣告獎勵-第二條命");
+
+            GameData.gameRunning = true;
+            GameData.gameOver = false;
+            gameOverUI.gameObject.SetActive(false);
+            pauseButton.gameObject.SetActive(true);
+
+            timerText.gameObject.SetActive(true);
+            scoreText.gameObject.SetActive(true);
+
+            AdsReward.gameObject.SetActive(true);
+            UpdateScore(-400);
+
+            Time.timeScale = 1f;
+
+            mainManager.soundEffectUiTrue.Play();
+        }
+        else
+        {
+            adsButton_A.gameObject.SetActive(true);
+            adsButton_B.gameObject.SetActive(false);
+
+            mainManager.soundEffectUiFalse.Play();
+        }
     }
 
 
     //下一關按鈕
     public void NextButtonClick()
     {
+        AdsPlatformIntegration.AdBanner_Hide();
+
         mainManager.soundEffectUiTrue.Play();
-        //if ((mainManager.nowLevel + 1) < mainManager.defaultLevelsRoot.levelConfig.Count)
-        //{
-        //    mainManager.nowLevel += 1;
-        //}
+        MainManager.FindNextLevelById();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -367,7 +440,7 @@ public class GameManager : MonoBehaviour
     {
         GameData.gameRunning = false;
         GameData.gameOver = true;
-        PauseButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(false);
 
         GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // 找到所有標籤為"Ball"的物件
         foreach (GameObject ball in balls)
@@ -410,7 +483,7 @@ public class GameManager : MonoBehaviour
                     //設置粒子發射數量
                     ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
                     bursts[0].time = 0.0f; // 從運行開始時立即發射
-                    bursts[0].count = (short)mainManager.settings.effectsVFX * 0.5f; //粒子數量
+                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //粒子數量
                     particleSystem.emission.SetBursts(bursts);
 
                     //設置子物件的 Force Over Lifetime 值
@@ -468,7 +541,7 @@ public class GameManager : MonoBehaviour
                     //設置粒子發射數量
                     ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
                     bursts[0].time = 0.0f; // 從運行開始時立即發射
-                    bursts[0].count = (short)mainManager.settings.effectsVFX * 0.5f; //粒子數量
+                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //粒子數量
                     particleSystem.emission.SetBursts(bursts);
 
                     //設置子物件的 Force Over Lifetime 值
@@ -504,11 +577,11 @@ public class GameManager : MonoBehaviour
     {
         gameClearedUI.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(false);
-        PauseButton.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(false);
 
         gameClearedTextName.text = GameData.levelName;
         gameClearedTextTimer.text = GameData.timerString;
-        gameClearedTextSpeed.text = mainManager.settings.gameSpeedModifier.ToString();
+        gameClearedTextSpeed.text = MainManager.settingFile.gameSpeedModifier.ToString();
         gameClearedTextScore.text = GameData.score.ToString();
 
         int middleScore = (int)(minTotalScore + (maxTotalScore - minTotalScore) * 0.6f);
@@ -518,19 +591,22 @@ public class GameManager : MonoBehaviour
         progressBarMaxScore.text = maxTotalScore.ToString();
         progressBarImage.fillAmount = scoreRatio;
 
-        Debug.Log("scoreRatio = " + scoreRatio);
 
+        int nowMedalLevel = 0;
         if (GameData.score >= minTotalScore)
         {
+            nowMedalLevel = 1;
             iconMedals[0].gameObject.SetActive(true);
 
             if (GameData.score >= middleScore)
             {
+                nowMedalLevel = 2;
                 iconMedals[0].gameObject.SetActive(false);
                 iconMedals[1].gameObject.SetActive(true);
 
                 if (GameData.score >= maxTotalScore)
                 {
+                    nowMedalLevel = 3;
                     iconMedals[0].gameObject.SetActive(false);
                     iconMedals[1].gameObject.SetActive(false);
                     iconMedals[2].gameObject.SetActive(true);
@@ -538,8 +614,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        soundEffectGameCleared.Play();
+        MainManager.SaveCurrentLevelById(nowMedalLevel, GameData.score, (int)GameData.saveTime, MainManager.settingFile.gameSpeedModifier);
 
+        soundEffectGameCleared.Play();
+        Time.timeScale = 0f;
+
+        AdsPlatformIntegration.AdBanner_Show();
     }
 
     //道具======================================================================================================================
@@ -587,8 +667,7 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-
-            Debug.Log("道具: 延長/爆炸/黑洞 剩餘 " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " 秒\n" + "防卡關道具發放 累積 " + GameData.noBreakTimer + "/30 秒");
+            infoText.text = ("道具: 延長/爆炸/黑洞 剩餘 " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " 秒\n" + "防卡關道具發放 累積 " + GameData.noBreakTimer + "/30 秒");
 
             yield return new WaitForSeconds(1.0f);
         }

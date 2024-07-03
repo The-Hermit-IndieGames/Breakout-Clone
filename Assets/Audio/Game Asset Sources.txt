@@ -1,0 +1,104 @@
+Game Asset (Music/Sound Effects) Sources
+Below is the source and licensing information for the music and sound effects used in this game:
+
+Music Assets:
+
+[BGM-1] [Rhythm]
+Asset Name: Background Music (Loop)
+Creator: Migfus20
+Source: freesound.org
+License: Attribution 4.0
+
+[BGM-2] [Energetic]
+Asset Name: MMO Theme BGM Music Synth Retro
+Creator: dantethehater
+Source: freesound.org
+License: Creative Commons 0
+
+[BGM-3] [Mysterious]
+Asset Name: Lost SoulZ The Labyrinth Theme
+Creator: naomuhibu
+Source: freesound.org
+License: Creative Commons 0
+
+[BGM-4] [Relaxed]
+Asset Name: Summer Sound (fixed track 57)
+Creator: Migfus20
+Source: freesound.org
+License: Attribution 4.0
+
+[BGM-5] [Casual]
+Asset Name: Relaxing Orchestra Music (Village)
+Creator: Migfus20
+Source: freesound.org
+License: Attribution 4.0
+
+
+
+Sound Effect Assets:
+
+@ freesound.org - [LittleRobotSoundFactory] - Attribution 4.0
+
+UI Sounds
+menu_select_00.wav
+UI_Synth_02.wav
+UI_Electric_08.wav
+
+Level Complete Sounds
+Jingle_Win_Synth_01.wav
+Jingle_Win_01.wav
+
+Item Sounds
+Ambience_BlackHole_00.wav
+
+Destruction Sounds
+Trap_01.wav
+
+
+@ freesound.org - [RHumphries] - Attribution 4.0
+
+Destruction Sounds
+RBH Glass_Break 01.wav
+RBH Glass_Break 02.wav
+RBH Glass_Break 03.wav
+RBH Glass_Break 04.wav
+RBH Glass_Break 05.wav
+
+
+@ freesound.org - [freesoundMozardes] - Creative Commons 0
+
+Collision Sounds
+Ball Single Bounce Concrete #1
+
+
+@ freesound.org - [GN2013] - Creative Commons 0
+
+Destruction Sounds (Large)
+Breaking-Glass.wav
+
+
+@ freesound.org - [snakedersch] - Creative Commons 0
+
+Glass Sounds (Chime)
+Bowl A#4 2
+
+
+@ freesound.org - [nfrae] - Creative Commons 0
+
+Explosion Sounds (2-stage)
+fireworkblast.wav
+
+
+@ freesound.org - [myfox14] - Creative Commons 0
+
+GAME OVER Sounds
+Game Over Arcade
+
+
+@ freesound.org - [noirenex] - Creative Commons 0
+
+GAME OVER Sounds
+Life Lost Game Over
+
+
+All materials are sourced from freesound.org and used in accordance with their respective licenses.

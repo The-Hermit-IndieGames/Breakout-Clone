@@ -10,7 +10,16 @@ TrueTypeFontImporter:
   includeFontData: 1
   fontNames:
   - Noto Sans TC
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2141dd9786d5a314183c1ff84ba81007, type: 3}
+  - {fileID: 12800000, guid: 8a08427591ae018449a6aca95786ef2c, type: 3}
+  - {fileID: 12800000, guid: de63e32275d4283458d5e79789967a5e, type: 3}
+  - {fileID: 12800000, guid: 5615e6082b0ea114aa1abcf79cd4c99e, type: 3}
+  - {fileID: 12800000, guid: aaea6b80ce7e3f840b60cd2584d7fabf, type: 3}
+  - {fileID: 12800000, guid: 774f2122895fb4c469bb2e9ec06aa3d4, type: 3}
+  - {fileID: 12800000, guid: ed6b20f46cbb887458fb9b952c31d500, type: 3}
+  - {fileID: 12800000, guid: 2aac4f2b2a8b28e4686e8501b9f6c879, type: 3}
+  - {fileID: 12800000, guid: 271760f266c359241809d33329af6129, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

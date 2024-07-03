@@ -155,7 +155,5 @@ public class DragStarMap : MonoBehaviour
         // 更新邊界
         currentBoundsMin = new Vector2(-xDistance, -yDistance);
         currentBoundsMax = new Vector2(xDistance, yDistance);
-
-        Debug.Log(currentBoundsMin + " , " + currentBoundsMax);
     }
 }

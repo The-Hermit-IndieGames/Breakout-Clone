@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7625163135545402622}
   - component: {fileID: 8580304858765668432}
   - component: {fileID: 8847616704442476215}
+  - component: {fileID: -3732508908503240422}
   m_Layer: 0
   m_Name: VFX_Stardust_Score
   m_TagString: Untagged
@@ -1442,20 +1443,20 @@ ParticleSystem:
         - serializedVersion: 3
           time: 0
           value: 0
-          inSlope: 0.7900288
-          outSlope: 0.7900288
+          inSlope: 0.061509218
+          outSlope: 0.061509218
           tangentMode: 0
           weightedMode: 0
           inWeight: 0.33333334
-          outWeight: 0.0923679
+          outWeight: 0.25011882
         - serializedVersion: 3
           time: 1
           value: 0.7027055
-          inSlope: 0.23116463
-          outSlope: 0.23116463
+          inSlope: 1.7408239
+          outSlope: 1.7408239
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.09354204
+          inWeight: 0.10318601
           outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -4923,6 +4924,20 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &-3732508908503240422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6570630510257888672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2aea2434a0b36804c9a539f5ece87dfa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ratio: 1
+  controlType: -1
 --- !u!1 &8398084648811005967
 GameObject:
   m_ObjectHideFlags: 0

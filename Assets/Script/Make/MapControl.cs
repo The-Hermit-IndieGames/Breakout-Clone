@@ -37,7 +37,6 @@ public class MapControl : MonoBehaviour, IDragHandler, IScrollHandler
 
             if (positionFix.magnitude > 32)
             {
-                Debug.Log("positionFix: " + positionFix + " magnitude=" + positionFix.magnitude);
                 positionFix = Vector2.zero;
             }
 

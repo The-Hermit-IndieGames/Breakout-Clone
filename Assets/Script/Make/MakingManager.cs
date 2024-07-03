@@ -84,6 +84,16 @@ public class MakingManager : MonoBehaviour
     void Start()
     {
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
+
+        StartCoroutine(StartAfterAllObjectsLoaded());
+    }
+
+    IEnumerator StartAfterAllObjectsLoaded()
+    {
+        // 等待1秒，所有物件加載完成後執行的代碼
+        yield return new WaitForSeconds(1);
+
+        AdsPlatformIntegration.AdBanner_Hide();
     }
 
 

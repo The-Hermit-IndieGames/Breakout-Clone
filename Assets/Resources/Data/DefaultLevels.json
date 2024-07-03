@@ -1,20 +1,30 @@
 {
     "name": "DefaultLevels",
-    "maker": "N/A",
-    "version": "-1",
-    "description": "Default Levels",
+    "maker": "The Hermit",
+    "version": "a 0.0.0",
+    "description": "Game default basic levels.\n(Contains novice guide.)",
     "levelConfig": [
         {
             "levelID": "ID_0000",
-            "levelName": "Level.01",
+            "levelName": "Guide.1",
             "preLevelID": [],
+            "nextLevelID": "ID_0001",
             "gameType": "Normal",
-            "menuX": -1470.0,
-            "menuY": 794.597412109375,
+            "menuX": -1450.0,
+            "menuY": 750.0,
             "menuStyle": 0,
             "bricksData": [
                 {
-                    "xPoint": 2,
+                    "xPoint": 1,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 1,
                     "yPoint": 5,
                     "brickType": "Normal",
                     "normalBricks": {
@@ -24,11 +34,29 @@
                 },
                 {
                     "xPoint": 2,
-                    "yPoint": 11,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
                         "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
                     }
                 },
                 {
@@ -41,8 +69,8 @@
                     }
                 },
                 {
-                    "xPoint": 3,
-                    "yPoint": 11,
+                    "xPoint": 4,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -55,16 +83,16 @@
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
-                    "xPoint": 4,
-                    "yPoint": 11,
+                    "xPoint": 5,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
@@ -77,8 +105,8 @@
                     }
                 },
                 {
-                    "xPoint": 5,
-                    "yPoint": 11,
+                    "xPoint": 6,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -91,12 +119,12 @@
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
-                    "xPoint": 6,
-                    "yPoint": 11,
+                    "xPoint": 7,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -109,16 +137,16 @@
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
-                    "xPoint": 7,
-                    "yPoint": 11,
+                    "xPoint": 8,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
@@ -131,8 +159,8 @@
                     }
                 },
                 {
-                    "xPoint": 8,
-                    "yPoint": 11,
+                    "xPoint": 9,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -145,16 +173,16 @@
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
-                    "xPoint": 9,
-                    "yPoint": 11,
+                    "xPoint": 10,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
-                        "powerUpType": 0
+                        "powerUpType": 2
                     }
                 },
                 {
@@ -167,8 +195,8 @@
                     }
                 },
                 {
-                    "xPoint": 10,
-                    "yPoint": 11,
+                    "xPoint": 11,
+                    "yPoint": 1,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -181,12 +209,21 @@
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
                         "powerUpType": 0
                     }
                 },
                 {
-                    "xPoint": 11,
-                    "yPoint": 11,
+                    "xPoint": 12,
+                    "yPoint": 5,
                     "brickType": "Normal",
                     "normalBricks": {
                         "brickLevel": 1,
@@ -197,53 +234,2025 @@
         },
         {
             "levelID": "ID_0001",
-            "levelName": "Level.02",
+            "levelName": "Guide.2",
             "preLevelID": [],
+            "nextLevelID": "ID_0002",
             "gameType": "Normal",
-            "menuX": 117.5,
-            "menuY": 750.8474731445313,
+            "menuX": -1200.0,
+            "menuY": 750.0,
             "menuStyle": 0,
-            "bricksData": []
+            "bricksData": [
+                {
+                    "xPoint": 1,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                }
+            ]
         },
         {
             "levelID": "ID_0002",
-            "levelName": "Level.03",
+            "levelName": "Guide.3",
             "preLevelID": [],
+            "nextLevelID": "ID_0003",
             "gameType": "Normal",
-            "menuX": 1475.0,
-            "menuY": 789.597412109375,
+            "menuX": -950.0,
+            "menuY": 750.0,
             "menuStyle": 0,
-            "bricksData": []
+            "bricksData": [
+                {
+                    "xPoint": 1,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 1,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 5
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 2,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 3,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 4,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 3,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                }
+            ]
         },
         {
             "levelID": "ID_0003",
-            "levelName": "Level.04",
+            "levelName": "Guide.4",
             "preLevelID": [],
+            "nextLevelID": "ID_0004",
             "gameType": "Normal",
-            "menuX": 103.75,
-            "menuY": -163.45346069335938,
+            "menuX": -1450.0,
+            "menuY": 500.0,
             "menuStyle": 0,
-            "bricksData": []
+            "bricksData": [
+                {
+                    "xPoint": 1,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 2,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 7,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 8,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 9,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 10,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 11,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 12,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 13,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 14,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 15,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 4,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 5,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 5,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 4,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 2,
+                        "powerUpType": 1
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 8,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 5,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 4
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 6,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 7,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 8,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 11,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 12,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 13,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 14,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 3
+                    }
+                },
+                {
+                    "xPoint": 9,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 7,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 8,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 9,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 10,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 11,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 12,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 13,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 14,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 15,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 16,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 11,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 12,
+                    "yPoint": 1,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 2
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 5,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 3,
+                    "yPoint": 6,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 5,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 10,
+                    "yPoint": 6,
+                    "brickType": "Unbreakable",
+                    "normalBricks": {
+                        "brickLevel": 0,
+                        "powerUpType": 0
+                    }
+                }
+            ]
         },
         {
             "levelID": "ID_0004",
-            "levelName": "Level.05",
+            "levelName": "Guide.5",
             "preLevelID": [],
+            "nextLevelID": "ID_0005",
             "gameType": "Normal",
-            "menuX": -1416.666748046875,
-            "menuY": -810.1201171875,
+            "menuX": -1200.0,
+            "menuY": 500.0,
             "menuStyle": 0,
-            "bricksData": []
+            "bricksData": [
+                {
+                    "xPoint": 6,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                }
+            ]
         },
         {
             "levelID": "ID_0005",
-            "levelName": "Level.06",
+            "levelName": "Guide.6",
             "preLevelID": [],
+            "nextLevelID": "",
             "gameType": "Normal",
-            "menuX": 1466.666748046875,
-            "menuY": -806.3701171875,
+            "menuX": -950.0,
+            "menuY": 500.0,
             "menuStyle": 0,
-            "bricksData": []
+            "bricksData": [
+                {
+                    "xPoint": 6,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 6,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 9,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                },
+                {
+                    "xPoint": 7,
+                    "yPoint": 10,
+                    "brickType": "Normal",
+                    "normalBricks": {
+                        "brickLevel": 1,
+                        "powerUpType": 0
+                    }
+                }
+            ]
         }
     ],
     "idCounter": 6
