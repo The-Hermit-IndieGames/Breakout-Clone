@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AdsJumbo.Native</id>
+    <version>1.2.0</version>
+    <title>Ads Monetization SDK for C++ / DirectX Interop / IL2CPP Windows 10 apps and games - The best alternative ad network for the Microsoft Advertising SDK</title>
+    <authors>AdsJumbo.com</authors>
+    <owners>AdsJumbo.com</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://www.adsjumbo.com/</licenseUrl>
+    <projectUrl>https://www.adsjumbo.com/</projectUrl>
+    <iconUrl>https://adsjumbo.com/adsjumbo-min.png</iconUrl>
+    <description>AdsJumbo SDK for C++ / IL2CPP / DirectX Windows 10 apps and games. Monetize your Windows 10 app or game with banner and interstitial ads with top revenue and 100% fill rate. AdsJumbo advetising SDK supports UWP, Unity3D and HTML5 apps. Increase your revenue opportunities by putting ads in your Universal Windows Platform (UWP) app or game for Windows 10 by using the AdsJumbo SDK. Our ad monetization platform offers a variety of ad formats that can be seamlessly integrated into your apps and supports many popular ad networks.</description>
+    <summary>AdsJumbo SDK for C++ / IL2CPP / DirectX Windows 10 apps and games. Display &amp; Video Advertising Solution for Windows Store Developers. AdsJumbo.com is verified ad network which provides banner &amp; interstitial ads for Windows 10 apps and games. 100% fill rate and top eCPM! The best alternative for Microsoft Advertising SDK with . This SDK is intended to be integrated in Windows 10 C#/XAML/Unity apps &amp; games. The AdsJumbo SDK provides several different types of ad controls you can use in your Windows 10 app. Choose which types of ads are best for your scenario and then add code to your app to display those ads.</summary>
+    <copyright>© 2020, AdsJumbo.com</copyright>
+    <tags>adsjumbo banner interstitial ads uwp windows phone app microsoft apps game games unity3d unityads msn revcontent appnexus aol addeals vungle publisher adduplex mobile monetization monetisation monetize json newtonsoft promotion winrt rewarded videos ad 8.1 10.0 jumbo advertising exchange adx google taboola outbrain developer 10 adsence adsdk uwpads in-app smaato aduplex advert adjumbo analytics affilate net pubfinity vmax adrotator adsrotator marketing api payout network</tags>
+  </metadata>
+</package>

@@ -1,0 +1,8 @@
+<FileList>
+  <File Reference = "AdsJumbo.winmd" >
+    <ToolboxItems VSCategory="AdsJumbo" BlendCategory="AdsJumbo">
+      <Item Type="AdsJumbo.BannerAd"/>
+      <Item Type="AdsJumbo.InterstitialAd"/>
+    </ToolboxItems>
+  </File>
+</FileList>

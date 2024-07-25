@@ -35,7 +35,7 @@ public class Item : MonoBehaviour
             transform.localScale = new Vector3(originalScale.x * 3, originalScale.y * 3, 1);
 
             // ¦V¤U²¾°Ê
-            if (GameData.gameRunning == true)
+            if (GameData.gameRunning == true && GameData.gameStarted == true)
             {                
                 transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
             }            

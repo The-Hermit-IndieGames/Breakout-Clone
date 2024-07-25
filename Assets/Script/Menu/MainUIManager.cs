@@ -197,7 +197,12 @@ public class MainUIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI previewScoreText;
     [SerializeField] private TextMeshProUGUI previewTimerAndSpeedText;
 
+<<<<<<< Updated upstream
     [SerializeField] private GameObject previewClearTF;
+=======
+    [SerializeField] private List<GameObject> previewClearMedal;
+    [SerializeField] private List<GameObject> previewInitialItems;
+>>>>>>> Stashed changes
 
     //星圖-預覽關卡
     public void PreviewTheLevel()
@@ -220,6 +225,21 @@ public class MainUIManager : MonoBehaviour
 
         previewScoreText.text = score.ToString();
         previewTimerAndSpeedText.text = timerAndSpeedString;
+<<<<<<< Updated upstream
+=======
+
+        //初始道具
+        if (MainManager.nowLevelData.initialItem.addBall == true)       { previewInitialItems[0].SetActive(true); }
+        else { previewInitialItems[0].SetActive(false); }
+        if (MainManager.nowLevelData.initialItem.longPaddle == true)    { previewInitialItems[1].SetActive(true); }
+        else { previewInitialItems[1].SetActive(false); }
+        if (MainManager.nowLevelData.initialItem.burstBall == true)     { previewInitialItems[2].SetActive(true); }
+        else { previewInitialItems[2].SetActive(false); }
+        if (MainManager.nowLevelData.initialItem.blackHole == true)     { previewInitialItems[3].SetActive(true); }
+        else { previewInitialItems[3].SetActive(false); }
+        if (MainManager.nowLevelData.initialItem.burstPaddle == true)   { previewInitialItems[4].SetActive(true); }
+        else { previewInitialItems[4].SetActive(false); }
+>>>>>>> Stashed changes
     }
 
     //預覽-磚塊生成器
@@ -242,13 +262,21 @@ public class MainUIManager : MonoBehaviour
                     brickScript.brickLevel = brickData.normalBricks.brickLevel;
                     brickScript.powerUpType = brickData.normalBricks.powerUpType;
                 }
+<<<<<<< Updated upstream
+=======
+
+                brickAmount += 1;
+>>>>>>> Stashed changes
             }
             else if (brickData.brickType == "Unbreakable")
             {
                 GameObject brick = Instantiate(brickUnbreakablePrefab, position, Quaternion.identity, bricksList);
             }
 
+<<<<<<< Updated upstream
             brickAmount += 1;
+=======
+>>>>>>> Stashed changes
         }
     }
 

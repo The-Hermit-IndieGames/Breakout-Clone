@@ -35,6 +35,10 @@ public class MakingManager : MonoBehaviour
         public float menuY;
         public int menuStyle;
         public List<BricksData> bricksData;
+<<<<<<< Updated upstream
+=======
+        public InitialItem initialItem;
+>>>>>>> Stashed changes
     }
 
     [Serializable]
@@ -55,6 +59,21 @@ public class MakingManager : MonoBehaviour
         public int powerUpType;
     }
 
+<<<<<<< Updated upstream
+=======
+    [Serializable]
+    public class InitialItem
+    {
+        //初始道具
+        public bool addBall;
+        public bool longPaddle;
+        public bool burstBall;
+        public bool blackHole;
+        public bool burstPaddle;
+    }
+
+
+>>>>>>> Stashed changes
     private MainManager mainManager;
 
     //預置體
@@ -426,14 +445,27 @@ public class MakingManager : MonoBehaviour
         nowLevelsData.levelName = "Null";
         nowLevelsData.gameType = "Normal";
         nowLevelsData.menuStyle = 0;
+<<<<<<< Updated upstream
+=======
+        nowLevelsData.bricksData = new List<BricksData>();
+        nowLevelsData.initialItem = new InitialItem();
+        SaveLevelToRoot();
+>>>>>>> Stashed changes
 
         var buttonScript = button.GetComponent<MapLevelButton>();
         if (buttonScript != null)
         {
+<<<<<<< Updated upstream
             buttonScript.levelID = nowLevelsData.levelID;
         }
 
         SaveLevelToRoot();
+=======
+            buttonScript.GetMakingManager();
+            buttonScript.levelID = nowLevelsData.levelID;
+        }
+
+>>>>>>> Stashed changes
         LoadRootToLevel(nowLevelsData.levelID);
         UpDataMapLevel();
     }
@@ -468,11 +500,25 @@ public class MakingManager : MonoBehaviour
     public void UpDataMapLevel()
     {
         idText.text = nowLevelsData.levelID;
+<<<<<<< Updated upstream
         nextIdText.text = nowLevelsData.nextLevelID;
         inputCoordinateX.text = nowLevelsData.menuX.ToString();
         inputCoordinateY.text = nowLevelsData.menuY.ToString();
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
         inputNowLevelName.text = nowLevelsData.levelName;
+=======
+        inputNowLevelName.text = nowLevelsData.levelName;
+        nextIdText.text = nowLevelsData.nextLevelID;
+        inputCoordinateX.text = nowLevelsData.menuX.ToString();
+        inputCoordinateY.text = nowLevelsData.menuY.ToString();
+
+        tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
+        initialItemToggle[1].isOn = nowLevelsData.initialItem.addBall;
+        initialItemToggle[2].isOn = nowLevelsData.initialItem.longPaddle;
+        initialItemToggle[3].isOn = nowLevelsData.initialItem.burstBall;
+        initialItemToggle[4].isOn = nowLevelsData.initialItem.blackHole;
+        initialItemToggle[5].isOn = nowLevelsData.initialItem.burstPaddle;
+>>>>>>> Stashed changes
 
         int bricksCount;
         if (nowLevelsData.bricksData == null)
@@ -687,7 +733,10 @@ public class MakingManager : MonoBehaviour
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
     }
 
+<<<<<<< Updated upstream
     //新版操作 ==============================================================================================================================
+=======
+>>>>>>> Stashed changes
 
     //磚塊生成器(讀取)
     void BricksGenerate(List<BricksData> bricksDatas)
@@ -874,4 +923,52 @@ public class MakingManager : MonoBehaviour
     }
 
 
+<<<<<<< Updated upstream
+=======
+    //初始道具--------------------------------------------------------------------------------------------------------
+
+
+    [SerializeField] private List<Toggle> initialItemToggle;
+
+
+    public void SetInitialItem_1()
+    {
+        var newInitialItem = nowLevelsData.initialItem;
+        newInitialItem.addBall = initialItemToggle[1].isOn;
+
+        SaveLevelToRoot();
+    }
+
+    public void SetInitialItem_2()
+    {
+        var newInitialItem = nowLevelsData.initialItem;
+        newInitialItem.longPaddle = initialItemToggle[2].isOn;
+
+        SaveLevelToRoot();
+    }
+
+    public void SetInitialItem_3()
+    {
+        var newInitialItem = nowLevelsData.initialItem;
+        newInitialItem.burstBall = initialItemToggle[3].isOn;
+
+        SaveLevelToRoot();
+    }
+
+    public void SetInitialItem_4()
+    {
+        var newInitialItem = nowLevelsData.initialItem;
+        newInitialItem.blackHole = initialItemToggle[4].isOn;
+
+        SaveLevelToRoot();
+    }
+
+    public void SetInitialItem_5()
+    {
+        var newInitialItem = nowLevelsData.initialItem;
+        newInitialItem.burstPaddle = initialItemToggle[5].isOn;
+
+        SaveLevelToRoot();
+    }
+>>>>>>> Stashed changes
 }
