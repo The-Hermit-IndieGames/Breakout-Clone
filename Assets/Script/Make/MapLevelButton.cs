@@ -9,15 +9,7 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
     public string levelID;
     public string levelName;
 
-<<<<<<< Updated upstream
-    private void Start()
-    {
-        // 獲取物件的 RectTransform
-        objectRectTransform = GetComponent<RectTransform>();
 
-        makingManager = GameObject.Find("MakingManager").GetComponent<MakingManager>();
-
-=======
     public void GetMakingManager()
     {
         makingManager = GameObject.Find("MakingManager").GetComponent<MakingManager>();
@@ -32,7 +24,6 @@ public class MapLevelButton : MonoBehaviour, IDragHandler, IEndDragHandler
         // 獲取物件的 RectTransform
         objectRectTransform = GetComponent<RectTransform>();
 
->>>>>>> Stashed changes
         UpdateButtonName();
     }
 

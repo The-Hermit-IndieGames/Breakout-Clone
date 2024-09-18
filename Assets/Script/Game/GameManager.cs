@@ -102,10 +102,7 @@ public class GameManager : MonoBehaviour
     public GameObject longPaddle;               //大滑板
     public GameObject blackHole;                //黑洞
     [SerializeField] private GameObject burstPaddlePrefab;
-<<<<<<< Updated upstream
-=======
     [SerializeField] private List<GameObject> initialItem;
->>>>>>> Stashed changes
 
     //運行
     public static int brickAmount;
@@ -226,10 +223,6 @@ public class GameManager : MonoBehaviour
     //磚塊生成器
     void GenerateBricks()
     {
-<<<<<<< Updated upstream
-        List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
-
-=======
         //初始道具
         if (MainManager.nowLevelData.initialItem.addBall == true)
         { maxTotalScore += 200; initialItem[0].SetActive(true); }
@@ -245,7 +238,6 @@ public class GameManager : MonoBehaviour
         List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
 
         //生成磚塊
->>>>>>> Stashed changes
         foreach (var brickData in bricks)
         {
             Vector3 position = new Vector3(26 - (4 * brickData.xPoint), 24.5f - brickData.yPoint, 0);
@@ -608,10 +600,7 @@ public class GameManager : MonoBehaviour
 
         int middleScore = (int)(minTotalScore + (maxTotalScore - minTotalScore) * 0.6f);
         float scoreRatio = (float)(GameData.score - minTotalScore) / (float)(maxTotalScore - minTotalScore);
-<<<<<<< Updated upstream
-=======
         if (minTotalScore == maxTotalScore) { scoreRatio = 1; }
->>>>>>> Stashed changes
         progressBarMinScore.text = minTotalScore.ToString();
         progressBarMiddleScore.text = middleScore.ToString();
         progressBarMaxScore.text = maxTotalScore.ToString();
