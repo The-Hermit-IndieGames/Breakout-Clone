@@ -1,27 +1,27 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BrickPreview : MonoBehaviour
 {
-    public int pointValue;      //¯}Ãa¤À¼Æ
-    public int brickLevel;      //¿j¶ôµ¥¯Å
-    public int powerUpType;     //¹D¨ãÃş§O
-    public int brickType = 0;   //¿j¶ôÃş§O
+    public int pointValue;      //ç ´å£åˆ†æ•¸
+    public int brickLevel;      //ç£šå¡Šç­‰ç´š
+    public int powerUpType;     //é“å…·é¡åˆ¥
+    public int brickType = 0;   //ç£šå¡Šé¡åˆ¥
 
     private Renderer brickRenderer;
 
     void Start()
     {
-        //¨ú±o´è¬V
+        //å–å¾—æ¸²æŸ“
         brickRenderer = GetComponent<Renderer>();
 
         UpdateBrickColor();
     }
 
 
-    //¦â±m§ó·s¾¹
+    //è‰²å½©æ›´æ–°å™¨
     private void UpdateBrickColor()
     {
         Color brickColor = Color.white;
@@ -29,25 +29,25 @@ public class BrickPreview : MonoBehaviour
         switch (brickLevel)
         {
             case 0:
-                brickColor = new Color(0.1f, 0.1f, 0.1f, 0.01f);   // ªñ³z©ú
+                brickColor = new Color(0.1f, 0.1f, 0.1f, 0.01f);   // è¿‘é€æ˜
                 break;
             case 1:
-                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.2f);    // ¥b³z©ú²HÂÅ
+                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.2f);    // åŠé€æ˜æ·¡è—
                 break;
             case 2:
-                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.3f); // ¥b³z©ú²Hºñ
+                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.3f); // åŠé€æ˜æ·¡ç¶ 
                 break;
             case 3:
-                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.45f); // ¥b³z©ú¶À
+                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.45f); // åŠé€æ˜é»ƒ
                 break;
             case 4:
-                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.6f); // ¥b³z©ú¾í
+                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.6f); // åŠé€æ˜æ©™
                 break;
             case 5:
-                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // ¥b³z©ú¬õ
+                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // åŠé€æ˜ç´…
                 break;
             default:
-                brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // µµ¦â
+                brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // ç´«è‰²
                 break;
         }
 

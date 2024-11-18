@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Advertisements;
 
 public class InterstitialAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
@@ -11,55 +11,55 @@ public class InterstitialAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnit
         LoadAd();
     }
 
-    // ¥[¸ü¼s§iªº¤èªk
+    // åŠ è¼‰å»£å‘Šçš„æ–¹æ³•
     public void LoadAd()
     {
         Advertisement.Load(adUnitId, this);
     }
 
-    // Åã¥Ü¼s§iªº¤èªk
+    // é¡¯ç¤ºå»£å‘Šçš„æ–¹æ³•
     public void ShowAd()
     {
         Advertisement.Show(adUnitId, this);
     }
 
-    // IUnityAdsLoadListener ¤èªk¹ê²{
+    // IUnityAdsLoadListener æ–¹æ³•å¯¦ç¾
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
-        //¼s§i¸ü¤J¦¨¥\
+        //å»£å‘Šè¼‰å…¥æˆåŠŸ
         Debug.Log("Ad loaded successfully.");
     }
 
     public void OnUnityAdsFailedToLoad(string adUnitId, UnityAdsLoadError error, string message)
     {
-        //¸ü¤J¼s§i³æ¤¸®Éµo¥Í¿ù»~
+        //è¼‰å…¥å»£å‘Šå–®å…ƒæ™‚ç™¼ç”ŸéŒ¯èª¤
         Debug.Log($"Error loading Ad Unit: {adUnitId} - {error.ToString()} - {message}");
     }
 
-    // IUnityAdsShowListener ¤èªk¹ê²{
+    // IUnityAdsShowListener æ–¹æ³•å¯¦ç¾
     public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
     {
-        //Åã¥Ü¼s§i³æ¤¸ {adUnitId} ®Éµo¥Í¿ù»~
+        //é¡¯ç¤ºå»£å‘Šå–®å…ƒ {adUnitId} æ™‚ç™¼ç”ŸéŒ¯èª¤
         Debug.Log($"Error showing Ad Unit {adUnitId}: {error.ToString()} - {message}");
     }
 
     public void OnUnityAdsShowStart(string adUnitId)
     {
-        //¼s§i³æ¤¸ {adUnitId} ¶}©l®i¥Ü
+        //å»£å‘Šå–®å…ƒ {adUnitId} é–‹å§‹å±•ç¤º
         Debug.Log($"Ad Unit {adUnitId} started showing.");
     }
 
     public void OnUnityAdsShowClick(string adUnitId)
     {
-        //¼s§i³æ¤¸ {adUnitId} ¤w³QÂIÀ»
+        //å»£å‘Šå–®å…ƒ {adUnitId} å·²è¢«é»æ“Š
         Debug.Log($"Ad Unit {adUnitId} was clicked.");
     }
 
     public void OnUnityAdsShowComplete(string adUnitId, UnityAdsShowCompletionState showCompletionState)
     {
-        //¼s§i³æ¤¸ {adUnitId} ¤w§¹¦¨®i¥Ü¡Aª¬ºA¬° {showCompletionState}
+        //å»£å‘Šå–®å…ƒ {adUnitId} å·²å®Œæˆå±•ç¤ºï¼Œç‹€æ…‹ç‚º {showCompletionState}
         Debug.Log($"Ad Unit {adUnitId} completed showing with state {showCompletionState}.");
-        // ·í¼s§iÅã¥Ü§¹¦¨«á¡A¥i¥H¿ï¾Ü¦A¦¸¥[¸ü·sªº¼s§i
+        // ç•¶å»£å‘Šé¡¯ç¤ºå®Œæˆå¾Œï¼Œå¯ä»¥é¸æ“‡å†æ¬¡åŠ è¼‰æ–°çš„å»£å‘Š
         LoadAd();
     }
 }

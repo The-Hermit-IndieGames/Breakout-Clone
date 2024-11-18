@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BallControl : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class BallControl : MonoBehaviour
 
     private void Update()
     {
-        //[¹CÀ¸¶}©l«eÀË´ú]
+        //[éŠæˆ²é–‹å§‹å‰æª¢æ¸¬]
         if (!GameData.gameStarted && startingStage <= 1)
         {
             LockBallToPaddle();
@@ -28,7 +28,7 @@ public class BallControl : MonoBehaviour
     }
 
 
-    //¹CÀ¸¶}©l«eÂê©w¦ì¸m
+    //éŠæˆ²é–‹å§‹å‰é–å®šä½ç½®
     private void LockBallToPaddle()
     {
         Vector3 paddlePos = FindObjectOfType<PaddleControl>().transform.position;
@@ -36,12 +36,12 @@ public class BallControl : MonoBehaviour
     }
 
 
-    //ÂIÀ»·Æ¹«®É¶}©l¹CÀ¸
+    //é»æ“Šæ»‘é¼ æ™‚é–‹å§‹éŠæˆ²
     private void LaunchOnMouseClick()
     {
         if (startingStage == 0)
         {
-            //¿ï¾Üµo®g¦ì¸m¡BÂê©w
+            //é¸æ“‡ç™¼å°„ä½ç½®ã€é–å®š
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 GameData.gameRunning = false;
@@ -51,27 +51,27 @@ public class BallControl : MonoBehaviour
         }
         else if (startingStage == 1)
         {
-            //¿ï¾Üµo®g¨¤«×¡Bµo®g
+            //é¸æ“‡ç™¼å°„è§’åº¦ã€ç™¼å°„
 
-            //Åª¨ú·Æ¹«¦b¿Ã¹õ¤Wªº¦ì¸m Âà´«¬°¥@¬É®y¼Ğ
+            //è®€å–æ»‘é¼ åœ¨è¢å¹•ä¸Šçš„ä½ç½® è½‰æ›ç‚ºä¸–ç•Œåº§æ¨™
             Vector3 mousePosition = Input.mousePosition;
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, Mathf.Abs(Camera.main.transform.position.z)));
 
-            //§ó·s¹wÄı­y¸ñ
+            //æ›´æ–°é è¦½è»Œè·¡
             UpdatePreview(transform.position, worldPosition);
 
-            //µo®g! ¶}©l¹CÀ¸
+            //ç™¼å°„! é–‹å§‹éŠæˆ²
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
                 var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
                 gameManager.GameStarted();
                 lineRenderer.gameObject.SetActive(false);
                 Vector3 vector3 = worldPosition - transform.position;
-                rb.velocity = vector3.normalized * GameData.initialSpeed;
+                rb.linearVelocity = vector3.normalized * GameData.initialSpeed;
             }
             else if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                //¨ú®ø
+                //å–æ¶ˆ
                 GameData.gameRunning = true;
                 startingStage = 0;
                 lineRenderer.gameObject.SetActive(false);
@@ -80,10 +80,10 @@ public class BallControl : MonoBehaviour
     }
 
 
-    //§ó·s¹wÄı­y¸ñ
+    //æ›´æ–°é è¦½è»Œè·¡
     public void UpdatePreview(Vector3 startPosition, Vector3 endPosition)
     {
-        // ³]¸mLine Rendererªº°_©l©M²×¤îÂI
+        // è¨­ç½®Line Rendererçš„èµ·å§‹å’Œçµ‚æ­¢é»
         lineRenderer.positionCount = 2;
         lineRenderer.SetPosition(0, startPosition);
         lineRenderer.SetPosition(1, endPosition);

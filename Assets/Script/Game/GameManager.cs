@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,31 +10,31 @@ public class GameData
 {
     public static string levelName;
 
-    public static string gameType = "Time";             //­p¤ÀÃş«¬: Time / Score
+    public static string gameType = "Time";             //è¨ˆåˆ†é¡å‹: Time / Score
 
     public static bool gameRunning = true;
     public static bool gameStarted = false;
     public static bool gameOver = false;
 
-    public static float initialSpeed;                   //ªì©l³t«×
-    public static float maxSpeed;                       //³t«×¤W­­
-    public static float speedIncreaseFactor;            //¨C¦¸¸I¼²«áªº³t«×´£¤É¦]¤l
+    public static float initialSpeed;                   //åˆå§‹é€Ÿåº¦
+    public static float maxSpeed;                       //é€Ÿåº¦ä¸Šé™
+    public static float speedIncreaseFactor;            //æ¯æ¬¡ç¢°æ’å¾Œçš„é€Ÿåº¦æå‡å› å­
 
-    public static float boundaryX = 21f;                // ²¾°ÊÃä¬É­­¨î
+    public static float boundaryX = 21f;                // ç§»å‹•é‚Šç•Œé™åˆ¶
 
-    public static int score = 0;                        //°O¤ÀªO
-    public static float startTime = 0;                  //°O®É¾¹
+    public static int score = 0;                        //è¨˜åˆ†æ¿
+    public static float startTime = 0;                  //è¨˜æ™‚å™¨
     public static string timerString;
     public static float saveTime;
 
-    //Item: 1=¼u¯]+  2=¥[ªøª©  3=Ãz¬µ¼u¯] 4=¶Â¬} 5=²¾°Ê¥­¥x
+    //Item: 1=å½ˆç +  2=åŠ é•·ç‰ˆ  3=çˆ†ç‚¸å½ˆç  4=é»‘æ´ 5=ç§»å‹•å¹³å°
     public static int timerLongPaddle = 0;
     public static int timerBurstBall = 0;
     public static int timerBlackHole = 0;
 
     public static int noBreakTimer = 0;
 
-    public static int totalBalls = 0;                //¼u¯]¼Æ
+    public static int totalBalls = 0;                //å½ˆç æ•¸
 
     public static bool longPaddle = false;
     public static bool burstBall = false;
@@ -43,11 +43,11 @@ public class GameData
 
 public class GameManager : MonoBehaviour
 {
-    //¸}¥»
+    //è…³æœ¬
     private MainManager mainManager;
 
-    //¿j¶ô
-    [SerializeField] private GameObject brickPrefab;                // ¿j¶ôªº¹w¸mÅé
+    //ç£šå¡Š
+    [SerializeField] private GameObject brickPrefab;                // ç£šå¡Šçš„é ç½®é«”
     [SerializeField] private GameObject brickUnbreakablePrefab;
     [SerializeField] private Transform brickList;
 
@@ -55,19 +55,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject vfxStardustScore;
 
     //UI
-    [SerializeField] private GameObject pauseButton;                // ¼È°±«öÁä
+    [SerializeField] private GameObject pauseButton;                // æš«åœæŒ‰éµ
 
-    [SerializeField] private TextMeshProUGUI scoreText;                               // ¥D°O¤ÀªO
-    [SerializeField] private TextMeshProUGUI timerText;                               // ¥D­p®É¾¹
-    [SerializeField] private TextMeshProUGUI infoText;                                // ´£¥Ü
+    [SerializeField] private TextMeshProUGUI scoreText;                               // ä¸»è¨˜åˆ†æ¿
+    [SerializeField] private TextMeshProUGUI timerText;                               // ä¸»è¨ˆæ™‚å™¨
+    [SerializeField] private TextMeshProUGUI infoText;                                // æç¤º
 
-    [SerializeField] private GameObject pauseUI;                    // ¼È°±µe­±UI
+    [SerializeField] private GameObject pauseUI;                    // æš«åœç•«é¢UI
     [SerializeField] private TextMeshProUGUI pauseTextName;
     [SerializeField] private TextMeshProUGUI pauseTextScore;
     [SerializeField] private TextMeshProUGUI pauseTextTimer;
     [SerializeField] private TextMeshProUGUI pauseTextSpeed;
 
-    [SerializeField] private GameObject gameOverUI;                 // ¹CÀ¸µ²§ôµe­±UI
+    [SerializeField] private GameObject gameOverUI;                 // éŠæˆ²çµæŸç•«é¢UI
     [SerializeField] private GameObject adsButton_A;
     [SerializeField] private GameObject adsButton_B;
     [SerializeField] private GameObject AdsReward;
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gameOverTextTimer;
     [SerializeField] private TextMeshProUGUI gameOverTextSpeed;
 
-    [SerializeField] private GameObject gameClearedUI;              // ¹CÀ¸¹LÃöµe­±UI
+    [SerializeField] private GameObject gameClearedUI;              // éŠæˆ²éé—œç•«é¢UI
     [SerializeField] private TextMeshProUGUI gameClearedTextName;
     [SerializeField] private TextMeshProUGUI gameClearedTextScore;
     [SerializeField] private TextMeshProUGUI gameClearedTextTimer;
@@ -90,21 +90,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<GameObject> iconMedals;
 
 
-    //­µ°T
+    //éŸ³è¨Š
     public AudioSource soundEffectGetItem;
     [SerializeField] private AudioSource soundEffectGameOver;
     [SerializeField] private AudioSource soundEffectGameCleared;
     [SerializeField] private AudioSource soundEffectGameClearedPlus;
 
 
-    //¹D¨ã
-    public GameObject paddle;                   //·ÆªO
-    public GameObject longPaddle;               //¤j·ÆªO
-    public GameObject blackHole;                //¶Â¬}
+    //é“å…·
+    public GameObject paddle;                   //æ»‘æ¿
+    public GameObject longPaddle;               //å¤§æ»‘æ¿
+    public GameObject blackHole;                //é»‘æ´
     [SerializeField] private GameObject burstPaddlePrefab;
     [SerializeField] private List<GameObject> initialItem;
 
-    //¹B¦æ
+    //é‹è¡Œ
     public static int brickAmount;
     private int minTotalScore = 150;
     private int maxTotalScore = 150;
@@ -113,10 +113,10 @@ public class GameManager : MonoBehaviour
     {
         AdsPlatformIntegration.AdBanner_Hide();
 
-        //ªì©l¤Æ
+        //åˆå§‹åŒ–
         Initialization();
 
-        //¥Í¦¨¿j¶ô
+        //ç”Ÿæˆç£šå¡Š
         LoadGenerate();
 
         StartCoroutine(ItemsTimer());
@@ -131,31 +131,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    //ªì©l¤Æ
+    //åˆå§‹åŒ–
     void Initialization()
     {
         Time.timeScale = 1f;
 
-        //¨ú±oÃö¥d¸¹
+        //å–å¾—é—œå¡è™Ÿ
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         GameData.levelName = MainManager.nowLevelData.levelName;
 
-        //ªì©l³t«×¡A³t«×¤W­­¡A¨C¦¸¸I¼²«áªº³t«×´£¤É¦]¤l
+        //åˆå§‹é€Ÿåº¦ï¼Œé€Ÿåº¦ä¸Šé™ï¼Œæ¯æ¬¡ç¢°æ’å¾Œçš„é€Ÿåº¦æå‡å› å­
         GameData.initialSpeed = MainManager.settingFile.gameSpeedModifier * 15f;
         GameData.maxSpeed = MainManager.settingFile.gameSpeedModifier * 30f;
         GameData.speedIncreaseFactor = 1.1f;
 
-        GameData.score = 0;                         //°O¤ÀªO
-        GameData.startTime = 0;                     //°O®É¾¹
+        GameData.score = 0;                         //è¨˜åˆ†æ¿
+        GameData.startTime = 0;                     //è¨˜æ™‚å™¨
 
-        GameData.totalBalls = 0;                    //¼u¯]¼Æ
+        GameData.totalBalls = 0;                    //å½ˆç æ•¸
 
-        GameData.burstBall = false;                 //¹D¨ã: Ãz¬µ¼u¯]
+        GameData.burstBall = false;                 //é“å…·: çˆ†ç‚¸å½ˆç 
 
-        longPaddle.gameObject.SetActive(false);     //¹D¨ã: ¥[ªøªO
+        longPaddle.gameObject.SetActive(false);     //é“å…·: åŠ é•·æ¿
         paddle.gameObject.SetActive(true);
 
-        GameData.boundaryX = 21f;                   //²¾°ÊÃä¬É­­¨î
+        GameData.boundaryX = 21f;                   //ç§»å‹•é‚Šç•Œé™åˆ¶
 
         brickAmount = 0;
 
@@ -169,10 +169,10 @@ public class GameManager : MonoBehaviour
         GameData.burstBall = false;
         GameData.blackHole = false;
 
-        //ªì©l¤Æ°O¤ÀªO
+        //åˆå§‹åŒ–è¨˜åˆ†æ¿
         scoreText.text = "Score: " + GameData.score.ToString();
 
-        //ªì©l¤Æ­p®É¾¹(Åã¥Ü®É¶¡=¥Ø«e®É¶¡-¶}©l®É¶¡)
+        //åˆå§‹åŒ–è¨ˆæ™‚å™¨(é¡¯ç¤ºæ™‚é–“=ç›®å‰æ™‚é–“-é–‹å§‹æ™‚é–“)
         GameData.startTime = Time.time;
 
         GameData.gameRunning = true;
@@ -184,14 +184,14 @@ public class GameManager : MonoBehaviour
         soundEffectGameCleared.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         soundEffectGameClearedPlus.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
 
-        Debug.Log("¤wªì©l¤ÆÃö¥d");
+        Debug.Log("å·²åˆå§‹åŒ–é—œå¡");
     }
 
 
-    //¸ü¤J¥Í¦¨¾¹(¦Û°Ê©I¥s->¿j¶ô¥Í¦¨¾¹)
+    //è¼‰å…¥ç”Ÿæˆå™¨(è‡ªå‹•å‘¼å«->ç£šå¡Šç”Ÿæˆå™¨)
     void LoadGenerate()
     {
-        //´£¨úÃö¥d¸ê®Æ
+        //æå–é—œå¡è³‡æ–™
         if (MainManager.nowLevelData != null)
         {
             GameData.levelName = MainManager.nowLevelData.levelName;
@@ -207,23 +207,23 @@ public class GameManager : MonoBehaviour
         }
 
 
-        //±Ò°Ê¥Í¦¨¾¹
+        //å•Ÿå‹•ç”Ÿæˆå™¨
         if (MainManager.nowLevelData.bricksData != null)
         {
             GenerateBricks();
         }
         else
         {
-            Debug.LogWarning("«ü©wªºÃö¥d½s¸¹¤£¦s¦b");
+            Debug.LogWarning("æŒ‡å®šçš„é—œå¡ç·¨è™Ÿä¸å­˜åœ¨");
         }
 
     }
 
 
-    //¿j¶ô¥Í¦¨¾¹
+    //ç£šå¡Šç”Ÿæˆå™¨
     void GenerateBricks()
     {
-        //ªì©l¹D¨ã
+        //åˆå§‹é“å…·
         if (MainManager.nowLevelData.initialItem.addBall == true)
         { maxTotalScore += 200; initialItem[0].SetActive(true); }
         if (MainManager.nowLevelData.initialItem.longPaddle == true)
@@ -237,7 +237,7 @@ public class GameManager : MonoBehaviour
 
         List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
 
-        //¥Í¦¨¿j¶ô
+        //ç”Ÿæˆç£šå¡Š
         foreach (var brickData in bricks)
         {
             Vector3 position = new Vector3(26 - (4 * brickData.xPoint), 24.5f - brickData.yPoint, 0);
@@ -246,14 +246,14 @@ public class GameManager : MonoBehaviour
             {
                 GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, brickList);
 
-                // ³]¸m¿j¶ôªºÄİ©Ê
+                // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                 var brickScript = brick.GetComponent<Brick>();
                 if (brickScript != null)
                 {
                     brickScript.brickLevel = brickData.normalBricks.brickLevel;
                     brickScript.powerUpType = brickData.normalBricks.powerUpType;
                 }
-                //°O¤À­pºâ
+                //è¨˜åˆ†è¨ˆç®—
                 brickAmount += 1;
                 minTotalScore += brickData.normalBricks.brickLevel * 20;
                 maxTotalScore += brickData.normalBricks.brickLevel * 20;
@@ -270,25 +270,25 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //­p®É¾¹
+    //è¨ˆæ™‚å™¨
     public void UpdateTimer()
     {
-        //­pºâ¹L¥hªº®É¶¡
+        //è¨ˆç®—éå»çš„æ™‚é–“
         GameData.saveTime = Time.time - GameData.startTime;
 
-        //±NÁ`¬í¼ÆÂà´«¬°¤ÀÄÁ©M¬í
+        //å°‡ç¸½ç§’æ•¸è½‰æ›ç‚ºåˆ†é˜å’Œç§’
         int minutes = Mathf.FloorToInt(GameData.saveTime / 60);
         int seconds = Mathf.FloorToInt(GameData.saveTime % 60);
 
-        //±N®É¶¡®æ¦¡¤Æ¬°¤À¡G¬í
+        //å°‡æ™‚é–“æ ¼å¼åŒ–ç‚ºåˆ†ï¼šç§’
         GameData.timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
 
-        //±N®É¶¡Åã¥Ü¦b¤¶­±¤å¥»¤W
+        //å°‡æ™‚é–“é¡¯ç¤ºåœ¨ä»‹é¢æ–‡æœ¬ä¸Š
         timerText.text = GameData.timerString;
     }
 
 
-    //§ó·s¤À¼Æ
+    //æ›´æ–°åˆ†æ•¸
     public void UpdateScore(int amount)
     {
         GameData.score += amount;
@@ -296,7 +296,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¹CÀ¸¶}©l
+    //éŠæˆ²é–‹å§‹
     public void GameStarted()
     {
         GameData.gameStarted = true;
@@ -306,7 +306,7 @@ public class GameManager : MonoBehaviour
         pauseButton.gameObject.SetActive(true);
     }
 
-    //¼È°±«ö¶s
+    //æš«åœæŒ‰éˆ•
     public void PauseButtonClick()
     {
         mainManager.soundEffectUiTrue.Play();
@@ -321,14 +321,14 @@ public class GameManager : MonoBehaviour
         pauseTextSpeed.text = MainManager.settingFile.gameSpeedModifier.ToString();
         pauseTextScore.text = GameData.score.ToString();
 
-        // ¹CÀ¸¼È°±¡A±N®É¶¡­áµ²
+        // éŠæˆ²æš«åœï¼Œå°‡æ™‚é–“å‡çµ
         Time.timeScale = 0f;
 
         AdsPlatformIntegration.AdBanner_Show();
     }
 
 
-    //Ä~Äò«ö¶s
+    //ç¹¼çºŒæŒ‰éˆ•
     public void ContinueButtonClick()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -341,12 +341,12 @@ public class GameManager : MonoBehaviour
         timerText.gameObject.SetActive(true);
         scoreText.gameObject.SetActive(true);
 
-        //¹CÀ¸Ä~Äò¡A±N®É¶¡¸Ñ­á
+        //éŠæˆ²ç¹¼çºŒï¼Œå°‡æ™‚é–“è§£å‡
         Time.timeScale = 1f;
     }
 
 
-    //­«·s¶}©l«ö¶s
+    //é‡æ–°é–‹å§‹æŒ‰éˆ•
     public void RestartButtonClick()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -356,7 +356,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //°h¥X«ö¶s
+    //é€€å‡ºæŒ‰éˆ•
     public void BackButtonClick()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -364,12 +364,12 @@ public class GameManager : MonoBehaviour
         mainManager.soundEffectUiTrue.Play();
         Time.timeScale = 1f;
 
-        // ¸ü¤J MenuScene
+        // è¼‰å…¥ MenuScene
         SceneManager.LoadScene("MenuScene");
     }
 
 
-    //¹CÀ¸¥¢±Ñ
+    //éŠæˆ²å¤±æ•—
     public void GameOver()
     {
         gameOverUI.gameObject.SetActive(true);
@@ -391,7 +391,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¼s§i«ö¶s-¼·©ñ
+    //å»£å‘ŠæŒ‰éˆ•-æ’¥æ”¾
     public void AdButtonClick_A()
     {
         AdsPlatformIntegration.AdRewarded_Show();
@@ -402,7 +402,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¼s§i«ö¶s-Ä~Äò
+    //å»£å‘ŠæŒ‰éˆ•-ç¹¼çºŒ
     public void AdButtonClick_B()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -411,7 +411,7 @@ public class GameManager : MonoBehaviour
         if (AdsPlatformIntegration.aReward)
         {
             AdsPlatformIntegration.aReward = false;
-            Debug.Log("¼s§i¼úÀy-²Ä¤G±ø©R");
+            Debug.Log("å»£å‘Šçå‹µ-ç¬¬äºŒæ¢å‘½");
 
             GameData.gameRunning = true;
             GameData.gameOver = false;
@@ -438,7 +438,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¤U¤@Ãö«ö¶s
+    //ä¸‹ä¸€é—œæŒ‰éˆ•
     public void NextButtonClick()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -449,44 +449,44 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¹CÀ¸¹LÃö
+    //éŠæˆ²éé—œ
     public void GameCleared()
     {
         GameData.gameRunning = false;
         GameData.gameOver = true;
         pauseButton.gameObject.SetActive(false);
 
-        GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // §ä¨ì©Ò¦³¼ĞÅÒ¬°"Ball"ªºª«¥ó
+        GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // æ‰¾åˆ°æ‰€æœ‰æ¨™ç±¤ç‚º"Ball"çš„ç‰©ä»¶
         foreach (GameObject ball in balls)
         {
             Rigidbody rb = ball.GetComponent<Rigidbody>();
             if (rb != null)
             {
-                rb.velocity = Vector3.zero; // ³]¸m³t«×¬°¹s
+                rb.linearVelocity = Vector3.zero; // è¨­ç½®é€Ÿåº¦ç‚ºé›¶
             }
         }
 
-        Debug.Log("¶}©lµ²ºâ...");
+        Debug.Log("é–‹å§‹çµç®—...");
         StartCoroutine(DestroyBalls());
     }
 
-    //µ²ºâ-®ø°£¼u¯]
+    //çµç®—-æ¶ˆé™¤å½ˆç 
     IEnumerator DestroyBalls()
     {
         while (true)
         {
-            GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // §ä¨ì©Ò¦³¼ĞÅÒ¬°"Ball"ªºª«¥ó
+            GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball"); // æ‰¾åˆ°æ‰€æœ‰æ¨™ç±¤ç‚º"Ball"çš„ç‰©ä»¶
 
             if (balls.Length > 0)
             {
-                // ÀH¾÷¿ï¾Ü¤@­Ó²y¶i¦æ®ø°£
+                // éš¨æ©Ÿé¸æ“‡ä¸€å€‹çƒé€²è¡Œæ¶ˆé™¤
                 int randomIndex = Random.Range(0, balls.Length);
                 GameObject ballToDestroy = balls[randomIndex];
 
-                // ¼W¥[¤À¼Æ
+                // å¢åŠ åˆ†æ•¸
                 UpdateScore(150);
 
-                //­µ°T
+                //éŸ³è¨Š
                 soundEffectGetItem.Play();
 
                 //VFX
@@ -494,13 +494,13 @@ public class GameManager : MonoBehaviour
                 var particleSystem = vfx.GetComponent<ParticleSystem>();
                 if (particleSystem != null)
                 {
-                    //³]¸m²É¤lµo®g¼Æ¶q
+                    //è¨­ç½®ç²’å­ç™¼å°„æ•¸é‡
                     ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-                    bursts[0].time = 0.0f; // ±q¹B¦æ¶}©l®É¥ß§Yµo®g
-                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //²É¤l¼Æ¶q
+                    bursts[0].time = 0.0f; // å¾é‹è¡Œé–‹å§‹æ™‚ç«‹å³ç™¼å°„
+                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //ç²’å­æ•¸é‡
                     particleSystem.emission.SetBursts(bursts);
 
-                    //³]¸m¤lª«¥óªº Force Over Lifetime ­È
+                    //è¨­ç½®å­ç‰©ä»¶çš„ Force Over Lifetime å€¼
                     Transform subToScore = vfx.transform.Find("SubToScore");
                     if (subToScore != null)
                     {
@@ -511,11 +511,11 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("¥¼§ä¨ì¦W¬° 'subToScore' ªº¤lª«¥ó¡I");
+                        Debug.LogError("æœªæ‰¾åˆ°åç‚º 'subToScore' çš„å­ç‰©ä»¶ï¼");
                     }
                 }
 
-                // ®ø°£ª«¥ó
+                // æ¶ˆé™¤ç‰©ä»¶
                 Destroy(ballToDestroy);
 
                 yield return new WaitForSeconds(0.25f);
@@ -523,28 +523,28 @@ public class GameManager : MonoBehaviour
             else
             {
                 StartCoroutine(DestroyItems());
-                break; // ¦pªG³õ´º¤¤¨S¦³²Å¦X±ø¥óªºª«¥ó¡A«hµ²§ô
+                break; // å¦‚æœå ´æ™¯ä¸­æ²’æœ‰ç¬¦åˆæ¢ä»¶çš„ç‰©ä»¶ï¼Œå‰‡çµæŸ
             }
         }
     }
 
-    //µ²ºâ-®ø°£¹D¨ã
+    //çµç®—-æ¶ˆé™¤é“å…·
     IEnumerator DestroyItems()
     {
         while (true)
         {
-            GameObject[] items = GameObject.FindGameObjectsWithTag("Item"); // §ä¨ì©Ò¦³¼ĞÅÒ¬°"Ball"ªºª«¥ó
+            GameObject[] items = GameObject.FindGameObjectsWithTag("Item"); // æ‰¾åˆ°æ‰€æœ‰æ¨™ç±¤ç‚º"Ball"çš„ç‰©ä»¶
 
             if (items.Length > 0)
             {
-                // ÀH¾÷¿ï¾Ü¤@­Ó²y¶i¦æ®ø°£
+                // éš¨æ©Ÿé¸æ“‡ä¸€å€‹çƒé€²è¡Œæ¶ˆé™¤
                 int randomIndex = Random.Range(0, items.Length);
                 GameObject itemToDestroy = items[randomIndex];
 
-                // ¼W¥[¤À¼Æ
+                // å¢åŠ åˆ†æ•¸
                 UpdateScore(200);
 
-                //­µ°T
+                //éŸ³è¨Š
                 soundEffectGetItem.Play();
 
                 //VFX
@@ -552,13 +552,13 @@ public class GameManager : MonoBehaviour
                 var particleSystem = vfx.GetComponent<ParticleSystem>();
                 if (particleSystem != null)
                 {
-                    //³]¸m²É¤lµo®g¼Æ¶q
+                    //è¨­ç½®ç²’å­ç™¼å°„æ•¸é‡
                     ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-                    bursts[0].time = 0.0f; // ±q¹B¦æ¶}©l®É¥ß§Yµo®g
-                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //²É¤l¼Æ¶q
+                    bursts[0].time = 0.0f; // å¾é‹è¡Œé–‹å§‹æ™‚ç«‹å³ç™¼å°„
+                    bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //ç²’å­æ•¸é‡
                     particleSystem.emission.SetBursts(bursts);
 
-                    //³]¸m¤lª«¥óªº Force Over Lifetime ­È
+                    //è¨­ç½®å­ç‰©ä»¶çš„ Force Over Lifetime å€¼
                     Transform subToScore = vfx.transform.Find("SubToScore");
                     if (subToScore != null)
                     {
@@ -569,11 +569,11 @@ public class GameManager : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogError("¥¼§ä¨ì¦W¬° 'subToScore' ªº¤lª«¥ó¡I");
+                        Debug.LogError("æœªæ‰¾åˆ°åç‚º 'subToScore' çš„å­ç‰©ä»¶ï¼");
                     }
                 }
 
-                // ®ø°£ª«¥ó
+                // æ¶ˆé™¤ç‰©ä»¶
                 Destroy(itemToDestroy);
 
                 yield return new WaitForSeconds(0.25f);
@@ -581,12 +581,12 @@ public class GameManager : MonoBehaviour
             else
             {
                 GameClearedEnd();
-                break; // ¦pªG³õ´º¤¤¨S¦³²Å¦X±ø¥óªºª«¥ó¡A«hµ²§ô
+                break; // å¦‚æœå ´æ™¯ä¸­æ²’æœ‰ç¬¦åˆæ¢ä»¶çš„ç‰©ä»¶ï¼Œå‰‡çµæŸ
             }
         }
     }
 
-    //µ²ºâ
+    //çµç®—
     void GameClearedEnd()
     {
         gameClearedUI.gameObject.SetActive(true);
@@ -637,9 +637,9 @@ public class GameManager : MonoBehaviour
         AdsPlatformIntegration.AdBanner_Show();
     }
 
-    //¹D¨ã======================================================================================================================
+    //é“å…·======================================================================================================================
 
-    //¹D¨ã­p®É¾¹
+    //é“å…·è¨ˆæ™‚å™¨
     IEnumerator ItemsTimer()
     {
         while (true)
@@ -673,7 +673,7 @@ public class GameManager : MonoBehaviour
                     }
                 }
 
-                //¨¾¥dÃö¾÷¨î
+                //é˜²å¡é—œæ©Ÿåˆ¶
                 GameData.noBreakTimer++;
                 if (GameData.noBreakTimer >= 30)
                 {
@@ -682,21 +682,21 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            infoText.text = ("¹D¨ã: ©µªø/Ãz¬µ/¶Â¬} ³Ñ¾l " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " ¬í\n" + "¨¾¥dÃö¹D¨ãµo©ñ ²Ö¿n " + GameData.noBreakTimer + "/30 ¬í");
+            infoText.text = ("é“å…·: å»¶é•·/çˆ†ç‚¸/é»‘æ´ å‰©é¤˜ " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " ç§’\n" + "é˜²å¡é—œé“å…·ç™¼æ”¾ ç´¯ç© " + GameData.noBreakTimer + "/30 ç§’");
 
             yield return new WaitForSeconds(1.0f);
         }
     }
 
-    //¹D¨ãÄ²µo¾¹
+    //é“å…·è§¸ç™¼å™¨
     public void ItemPowerUP(int type)
     {
-        //Item: 1=¼u¯]+  2=¥[ªøª©  3=Ãz¬µ¼u¯] 4=¶Â¬} 5=²¾°Ê¥­¥x
+        //Item: 1=å½ˆç +  2=åŠ é•·ç‰ˆ  3=çˆ†ç‚¸å½ˆç  4=é»‘æ´ 5=ç§»å‹•å¹³å°
         switch (type)
         {
             case 1:
                 UpdateScore(50);
-                //¥ÑPowerUPPaddle¨Ó·½ª½±µÄ²µo
+                //ç”±PowerUPPaddleä¾†æºç›´æ¥è§¸ç™¼
                 break;
             case 2:
                 UpdateScore(200);
@@ -718,13 +718,13 @@ public class GameManager : MonoBehaviour
                 BurstPaddle();
                 break;
             default:
-                Debug.LogWarning("¥¼ª¾ªºItemÃş«¬: " + type);
+                Debug.LogWarning("æœªçŸ¥çš„Itemé¡å‹: " + type);
                 break;
         }
     }
 
 
-    //¹D¨ã2 ¥[ªøª©
+    //é“å…·2 åŠ é•·ç‰ˆ
     void ItemLongPaddle()
     {
         paddle.gameObject.SetActive(false);
@@ -740,7 +740,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¹D¨ã3 Ãz¬µ¼u¯]
+    //é“å…·3 çˆ†ç‚¸å½ˆç 
     void ItemBurstBall()
     {
         GameData.burstBall = true;
@@ -752,7 +752,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¹D¨ã4 ¶Â¬}
+    //é“å…·4 é»‘æ´
     void ItemBlackHole()
     {
         GameData.blackHole = true;
@@ -766,7 +766,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    //¹D¨ã5 ²¾°Ê¥­¥x
+    //é“å…·5 ç§»å‹•å¹³å°
     void BurstPaddle()
     {
         Vector3 spawnPosition = new Vector3(0f, -1f, 0f);

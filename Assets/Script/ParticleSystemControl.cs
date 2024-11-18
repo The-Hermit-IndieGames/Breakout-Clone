@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -20,20 +20,20 @@ public class ParticleSystemControl : MonoBehaviour
             switch (controlType)
             {
                 case 0:
-                    //­I´º «í©wµo®g
+                    //èƒŒæ™¯ æ†å®šç™¼å°„
                     emission.rateOverTime = MainManager.settingFile.backgroundVFX * 0.1f * ratio;
                     break;
 
                 case 1:
-                    //¯S®Ä «í©wµo®g
+                    //ç‰¹æ•ˆ æ†å®šç™¼å°„
                     emission.rateOverTime = MainManager.settingFile.effectsVFX * 0.1f * ratio;
                     break;
 
                 case 2:
-                    //¯S®Ä Ãzµoµo®g-¥ß§Y
+                    //ç‰¹æ•ˆ çˆ†ç™¼ç™¼å°„-ç«‹å³
                     ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
                     bursts[0].time = 0.0f;
-                    //²É¤l¼Æ¶q
+                    //ç²’å­æ•¸é‡
                     bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.1f * ratio;
                     particleSystem.emission.SetBursts(bursts);
                     break;
@@ -42,7 +42,7 @@ public class ParticleSystemControl : MonoBehaviour
                     break;
 
                 default:
-                    Debug.LogWarning("¥¼ª¾ªº ControlType Ãş«¬: " + controlType + "  (0 = ­I´º «í©wµo®g; 1 = ¯S®Ä «í©wµo®g; 2 = ¯S®Ä Ãzµoµo®g-¥ß§Y)");
+                    Debug.LogWarning("æœªçŸ¥çš„ ControlType é¡å‹: " + controlType + "  (0 = èƒŒæ™¯ æ†å®šç™¼å°„; 1 = ç‰¹æ•ˆ æ†å®šç™¼å°„; 2 = ç‰¹æ•ˆ çˆ†ç™¼ç™¼å°„-ç«‹å³)");
                     break;
             }
         }

@@ -1,10 +1,10 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Advertisements;
 
 
 public class AdsInitializerUnity : MonoBehaviour, IUnityAdsInitializationListener
 {
-    //¹w³]¼s§i³æ¤¸ID: Interstitial_Android¡BInterstitial_iOS¡BRewarded_Android¡BRewarded_iOS¡BBanner_Android¡BBanner_iOS
+    //é è¨­å»£å‘Šå–®å…ƒID: Interstitial_Androidã€Interstitial_iOSã€Rewarded_Androidã€Rewarded_iOSã€Banner_Androidã€Banner_iOS
     [SerializeField] private string androidGameId;
     [SerializeField] private string iOSGameId;
 
@@ -39,11 +39,11 @@ public class AdsInitializerUnity : MonoBehaviour, IUnityAdsInitializationListene
 
     public void OnInitializationComplete()
     {
-        Debug.Log("Unity ¼s§iªì©l¤Æ§¹¦¨");
+        Debug.Log("Unity å»£å‘Šåˆå§‹åŒ–å®Œæˆ");
     }
 
     public void OnInitializationFailed(UnityAdsInitializationError error, string message)
     {
-        Debug.Log($"Unity ¼s§iªì©l¤Æ¥¢±Ñ¡G {error.ToString()} - {message}");
+        Debug.Log($"Unity å»£å‘Šåˆå§‹åŒ–å¤±æ•—ï¼š {error.ToString()} - {message}");
     }
 }

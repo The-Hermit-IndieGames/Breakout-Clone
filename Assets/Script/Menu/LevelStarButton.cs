@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using TMPro;
 
 public class LevelStarButton : MonoBehaviour
@@ -7,7 +7,7 @@ public class LevelStarButton : MonoBehaviour
     public string levelName;
     public TextMeshProUGUI levelNameTMP;
 
-    public bool usable;     //«e¸mÃö¥d§¹¦¨ (WIP)
+    public bool usable;     //å‰ç½®é—œå¡å®Œæˆ (WIP)
     public bool clear;
     public int medalLevel;
 
@@ -44,7 +44,7 @@ public class LevelStarButton : MonoBehaviour
         Color buttonColor;
         if (usable == false)
         {
-            //¤£¥i¿ï-¦Ç¡B°±¤î
+            //ä¸å¯é¸-ç°ã€åœæ­¢
             buttonColor = new Color(0.2f, 0.2f, 0.2f, 1f);
             basicTransformControl.isRotation = false;
         }
@@ -52,7 +52,7 @@ public class LevelStarButton : MonoBehaviour
         {
             if (clear)
             {
-                //¹LÃö-²HÂÅ
+                //éé—œ-æ·¡è—
                 buttonColor = new Color(0.5f, 0.5f, 0.9f, 0.4f);
                 switch (medalLevel)
                 {
@@ -66,13 +66,13 @@ public class LevelStarButton : MonoBehaviour
                         medal[2].gameObject.SetActive(true);
                         break;
                     default:
-                        Debug.LogWarning("¥¼ª¾ªº medalLevel Ãş«¬: " + medalLevel);
+                        Debug.LogWarning("æœªçŸ¥çš„ medalLevel é¡å‹: " + medalLevel);
                         break;
                 }
             }
             else
             {
-                //¥¼¹LÃö-¶À
+                //æœªéé—œ-é»ƒ
                 buttonColor = new Color(0.6f, 0.8f, 0.4f, 0.4f);
             }
         }

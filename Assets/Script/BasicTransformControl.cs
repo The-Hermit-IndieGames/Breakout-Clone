@@ -1,24 +1,24 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BasicTransformControl : MonoBehaviour
 {
-    //²¾°Ê
+    //ç§»å‹•
     [SerializeField] public bool isMove;
     [SerializeField] private float xMoveSpeed;
     [SerializeField] private float yMoveSpeed;
     [SerializeField] private float zMoveSpeed;
 
 
-    //±ÛÂà
+    //æ—‹è½‰
     [SerializeField] public bool isRotation;
-    [SerializeField] private float xRotationSpeed;      //¶b:¤ô¥­
-    [SerializeField] private float yRotationSpeed;      //¶b:««ª½
-    [SerializeField] private float zRotationSpeed;      //¶b:¤¤¤ß
+    [SerializeField] private float xRotationSpeed;      //è»¸:æ°´å¹³
+    [SerializeField] private float yRotationSpeed;      //è»¸:åž‚ç›´
+    [SerializeField] private float zRotationSpeed;      //è»¸:ä¸­å¿ƒ
 
 
-    //ÁY©ñ
+    //ç¸®æ”¾
     [SerializeField] public bool isScale;
     [SerializeField] private float xScaleSpeed;
     [SerializeField] private float yScaleSpeed;
@@ -27,21 +27,21 @@ public class BasicTransformControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        //²¾°Ê±±¨î
+        //ç§»å‹•æŽ§åˆ¶
         if (isMove)
         {
             Vector3 movement = new Vector3(xMoveSpeed, yMoveSpeed, zMoveSpeed) * Time.fixedDeltaTime;
             transform.Translate(movement);
         }
 
-        //±ÛÂà±±¨î
+        //æ—‹è½‰æŽ§åˆ¶
         if (isRotation)
         {
             Vector3 rotation = new Vector3(xRotationSpeed, yRotationSpeed, zRotationSpeed) * Time.fixedDeltaTime;
             transform.Rotate(rotation);
         }
 
-        //ÁY©ñ±±¨î
+        //ç¸®æ”¾æŽ§åˆ¶
         if (isScale)
         {
             Vector3 scale = new Vector3(xScaleSpeed, yScaleSpeed, zScaleSpeed) * Time.fixedDeltaTime;

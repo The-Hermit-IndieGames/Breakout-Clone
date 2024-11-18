@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class DeathZone : MonoBehaviour
 {
@@ -6,26 +6,26 @@ public class DeathZone : MonoBehaviour
 
     private void Start()
     {
-        // ¦b³õ´º¶}©l®É¡AÀò¨úªì©lªºBallª«¥óÁ`¼Æ
+        // åœ¨å ´æ™¯é–‹å§‹æ™‚ï¼Œç²å–åˆå§‹çš„Ballç‰©ä»¶ç¸½æ•¸
         GameData.totalBalls = GameObject.FindGameObjectsWithTag("Ball").Length;
 
-        //½Õ¥ÎGameManager¸}¥»
+        //èª¿ç”¨GameManagerè…³æœ¬
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
 
-    //¸I¼²ÀË´ú
+    //ç¢°æ’æª¢æ¸¬
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
         {
-            // ·íBallª«¥ó¸I¼²®É¡A§R°£¸Óª«¥ó
+            // ç•¶Ballç‰©ä»¶ç¢°æ’æ™‚ï¼Œåˆªé™¤è©²ç‰©ä»¶
             Destroy(collision.gameObject);
 
-            // §ó·sBallª«¥óªºÁ`¼Æ
+            // æ›´æ–°Ballç‰©ä»¶çš„ç¸½æ•¸
             GameData.totalBalls--;
 
-            // ¦pªGBallª«¥óÁ`¼Æ¬°0¡Aµ²§ô¹CÀ¸
+            // å¦‚æœBallç‰©ä»¶ç¸½æ•¸ç‚º0ï¼ŒçµæŸéŠæˆ²
             if (GameData.totalBalls == 0)
             {                
                 gameManager.GameOver();

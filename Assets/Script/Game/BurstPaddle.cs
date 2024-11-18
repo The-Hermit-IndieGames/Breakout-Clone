@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class BurstPaddle : MonoBehaviour
 {
@@ -12,13 +12,13 @@ public class BurstPaddle : MonoBehaviour
 
     void Update()
     {
-        //²¾°Ê
+        //ç§»å‹•
         if (GameData.gameRunning && GameData.gameStarted)
         {
             transform.Translate(Vector3.up * moveSpeed * Time.deltaTime);
         }
 
-        //®y¼Ð¡A§R°£
+        //åº§æ¨™ï¼Œåˆªé™¤
         if (transform.position.y > 22.0f)
         {
             Destroy(gameObject);

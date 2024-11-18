@@ -1,32 +1,32 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class PaddleControl : MonoBehaviour
 {
-    public Camera mainCamera;   // ¦bInspectorµøµ¡¤¤«ü©w¥DÄá¼v¾÷
-    private float targetX = 0f; // Àx¦sX¤À¶qªº¥Ø¼Ğ­È
+    public Camera mainCamera;   // åœ¨Inspectorè¦–çª—ä¸­æŒ‡å®šä¸»æ”å½±æ©Ÿ
+    private float targetX = 0f; // å„²å­˜Xåˆ†é‡çš„ç›®æ¨™å€¼
 
 
-    //²¾°Ê±±¨î
+    //ç§»å‹•æ§åˆ¶
     private void Update()
     {
-        //¥u¤¹³\¦b¹CÀ¸¹B¦æ®É²¾°Ê¡A§_«hªğ¦^
+        //åªå…è¨±åœ¨éŠæˆ²é‹è¡Œæ™‚ç§»å‹•ï¼Œå¦å‰‡è¿”å›
         if (GameData.gameRunning && !GameData.gameOver)
         {
 
-            // Àò¨ú·Æ¹«¦ì¸m
+            // ç²å–æ»‘é¼ ä½ç½®
             Vector3 mousePosition = Input.mousePosition;
 
-            // ±NZ®y¼Ğ³]¸m¬°45¡A¥H¨ÏµJÂI¥­­±¬°Z=0 (¬Û¾÷¦ì¸m¬°Z=45)
+            // å°‡Zåº§æ¨™è¨­ç½®ç‚º45ï¼Œä»¥ä½¿ç„¦é»å¹³é¢ç‚ºZ=0 (ç›¸æ©Ÿä½ç½®ç‚ºZ=45)
             mousePosition.z = 45;
 
-            // ¨Ï¥ÎCamera.ScreenToWorldPoint±N·Æ¹«¦ì¸mÂà´«¬°¥@¬É®y¼Ğ
+            // ä½¿ç”¨Camera.ScreenToWorldPointå°‡æ»‘é¼ ä½ç½®è½‰æ›ç‚ºä¸–ç•Œåº§æ¨™
             Vector3 worldPosition = mainCamera.ScreenToWorldPoint(mousePosition);
 
-            // ±NX¤À¶qÀx¦s¨ìtargetX¡A¨Ã­­¨î¦b«ü©w½d³ò¤º
+            // å°‡Xåˆ†é‡å„²å­˜åˆ°targetXï¼Œä¸¦é™åˆ¶åœ¨æŒ‡å®šç¯„åœå…§
             targetX = Mathf.Clamp(worldPosition.x, -GameData.boundaryX, GameData.boundaryX);
 
-            // §ó·s·ÆªOªº¦ì¸m
+            // æ›´æ–°æ»‘æ¿çš„ä½ç½®
             Vector3 paddlePosition = transform.position;
             paddlePosition.x = targetX;
             transform.position = paddlePosition;

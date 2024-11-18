@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -9,9 +9,9 @@ using UnityEngine.SceneManagement;
 
 public class MainManager : MonoBehaviour
 {
-    //§Ç¦C¤Æ==========================================================================================================================
+    //åºåˆ—åŒ–==========================================================================================================================
 
-    //§Ç¦C¤Æ©w¸q(³]©w)
+    //åºåˆ—åŒ–å®šç¾©(è¨­å®š)
     [Serializable]
     public class SettingRoot
     {
@@ -27,7 +27,7 @@ public class MainManager : MonoBehaviour
         public float gameSpeedModifier;
     }
 
-    //§Ç¦C¤Æ©w¸q(³qÃö¸ê°T)
+    //åºåˆ—åŒ–å®šç¾©(é€šé—œè³‡è¨Š)
     [Serializable]
     public class ClearDataRoot
     {
@@ -53,11 +53,11 @@ public class MainManager : MonoBehaviour
         public float speed;
     }
 
-    //§Ç¦C¤Æ©w¸q-Ãö¥d¸ê®Æ
+    //åºåˆ—åŒ–å®šç¾©-é—œå¡è³‡æ–™
     [Serializable]
     public class Root
     {
-        //®Ú¥Ø¿ı: ¥Ø¿ı¦WºÙ¡B»s§@ªÌ¡Bª©¥»¸¹¡B´y­z¡BÃö¥d¦Cªí(LevelConfig)
+        //æ ¹ç›®éŒ„: ç›®éŒ„åç¨±ã€è£½ä½œè€…ã€ç‰ˆæœ¬è™Ÿã€æè¿°ã€é—œå¡åˆ—è¡¨(LevelConfig)
         public string name;
         public string maker;
         public string version;
@@ -69,7 +69,7 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class LevelConfig
     {
-        //³æ¤@Ãö¥d¸ê®Æ: Ãö¥d¦WºÙ¡B«e¸mÃö¥dID¡B¹CÀ¸¼Ò¦¡(Normal¡B?¡B?)¡B¿ïÃö«ö¶s®y¼Ğ(x¡By)¡B¿ïÃö«ö¶s­·®æ¡B¿j¶ô¦Cªí(BricksData)
+        //å–®ä¸€é—œå¡è³‡æ–™: é—œå¡åç¨±ã€å‰ç½®é—œå¡IDã€éŠæˆ²æ¨¡å¼(Normalã€?ã€?)ã€é¸é—œæŒ‰éˆ•åº§æ¨™(xã€y)ã€é¸é—œæŒ‰éˆ•é¢¨æ ¼ã€ç£šå¡Šåˆ—è¡¨(BricksData)
         public string levelID;
         public string levelName;
         public string[] preLevelID;
@@ -86,7 +86,7 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class BricksData
     {
-        //³æ¤@¿j¶ô¸ê®Æ: ¿j¶ô®y¼Ğ(x¡By)¡B¿j¶ôÃş«¬(Null¡BNormal¡BUnbreakable)¡B¿j¶ôÃş«¬¯S¦³¸ê®Æ
+        //å–®ä¸€ç£šå¡Šè³‡æ–™: ç£šå¡Šåº§æ¨™(xã€y)ã€ç£šå¡Šé¡å‹(Nullã€Normalã€Unbreakable)ã€ç£šå¡Šé¡å‹ç‰¹æœ‰è³‡æ–™
         public int xPoint;
         public int yPoint;
         public string brickType;
@@ -96,7 +96,7 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class NormalBricks
     {
-        //´¶³q¿j¶ô¸ê®Æ: ¯Å§O¡B¹D¨ã
+        //æ™®é€šç£šå¡Šè³‡æ–™: ç´šåˆ¥ã€é“å…·
         public int brickLevel;
         public int powerUpType;
     }
@@ -104,7 +104,7 @@ public class MainManager : MonoBehaviour
     [Serializable]
     public class InitialItem
     {
-        //ªì©l¹D¨ã
+        //åˆå§‹é“å…·
         public bool addBall;
         public bool longPaddle;
         public bool burstBall;
@@ -112,32 +112,32 @@ public class MainManager : MonoBehaviour
         public bool burstPaddle;
     }
 
-    //ÀRºA==========================================================================================================================
+    //éœæ…‹==========================================================================================================================
 
-    //ÀÉ®×
+    //æª”æ¡ˆ
     [SerializeField] private TextAsset jsonDefaultLevels;
     public static Root[] levelConfigFiles;
-    [SerializeField] private Root[] levelConfigFilesOnGUI;          //DeBug - ¥Î©óGUI¹wÄı
+    [SerializeField] private Root[] levelConfigFilesOnGUI;          //DeBug - ç”¨æ–¼GUIé è¦½
 
     public static ClearDataRoot[] clearDataFiles;
-    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;   //DeBug - ¥Î©óGUI¹wÄı
+    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;   //DeBug - ç”¨æ–¼GUIé è¦½
 
     public static SettingRoot settingFile;
-    [SerializeField] private SettingRoot settingFileOnGUI;          //DeBug - ¥Î©óGUI¹wÄı
+    [SerializeField] private SettingRoot settingFileOnGUI;          //DeBug - ç”¨æ–¼GUIé è¦½
 
-    //ÀÉ®×ID (¥Î©ó¬P¹Ï¥Í¦¨)
+    //æª”æ¡ˆID (ç”¨æ–¼æ˜Ÿåœ–ç”Ÿæˆ)
     public static int nowFileId;
     public static ClearDataRoot nowClearDataFile;
 
-    //Ãö¥dID (¥Î©óÃö¥d¥Í¦¨)
+    //é—œå¡ID (ç”¨æ–¼é—œå¡ç”Ÿæˆ)
     public static string nowLevelId;
     public static LevelConfig nowLevelData;
     public static ClearLevel nowClearLevel;
 
-    //ÅªÀÉ¥Î(Ãö¥d)
+    //è®€æª”ç”¨(é—œå¡)
     public void LoadLevelConfigFiles()
     {
-        Debug.Log("Åª¨úÃö¥dÀÉ®×...");
+        Debug.Log("è®€å–é—œå¡æª”æ¡ˆ...");
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
 
         if (!Directory.Exists(directoryPath))
@@ -148,7 +148,7 @@ public class MainManager : MonoBehaviour
 
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
 
-        // i = 0  =>  ¹w³]Ãö¥d
+        // i = 0  =>  é è¨­é—œå¡
         levelConfigFiles = new Root[jsonFiles.Length + 1];
 
         try
@@ -176,16 +176,16 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"¤w¸ü¤J {levelConfigFiles.Length} ¶µÃö¥dÀÉ®×");
+        Debug.Log($"å·²è¼‰å…¥ {levelConfigFiles.Length} é …é—œå¡æª”æ¡ˆ");
 
-        //¸Ó¶µ¶È¥Î©ó¶}µo¹wÄı
+        //è©²é …åƒ…ç”¨æ–¼é–‹ç™¼é è¦½
         levelConfigFilesOnGUI = levelConfigFiles;
     }
 
-    // ÅªÀÉ¥Î(¹LÃö¸ê®Æ) [»İ¥[±K]
+    // è®€æª”ç”¨(éé—œè³‡æ–™) [éœ€åŠ å¯†]
     public void LoadClearDataFiles()
     {
-        Debug.Log("Åª¨ú¹LÃö¸ê®Æ...");
+        Debug.Log("è®€å–éé—œè³‡æ–™...");
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
 
         if (!Directory.Exists(directoryPath))
@@ -196,12 +196,12 @@ public class MainManager : MonoBehaviour
 
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.ejson");
 
-        // i = 0  =>  ¹w³]Ãö¥d
+        // i = 0  =>  é è¨­é—œå¡
         clearDataFiles = new ClearDataRoot[jsonFiles.Length + 1];
 
         try
         {
-            // ¹w³]Ãö¥d¦s©ñ©ó PlayerData/ClearLevelData.json
+            // é è¨­é—œå¡å­˜æ”¾æ–¼ PlayerData/ClearLevelData.json
             string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
             string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
             string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
@@ -210,14 +210,14 @@ public class MainManager : MonoBehaviour
         }
         catch (DirectoryNotFoundException)
         {
-            Debug.LogWarning("²§±`: ¥¼§ä¨ì¥Ø¿ı");
+            Debug.LogWarning("ç•°å¸¸: æœªæ‰¾åˆ°ç›®éŒ„");
 
-            Debug.Log("«Ø¥ß¥Ø¿ı " + "PlayerData");
+            Debug.Log("å»ºç«‹ç›®éŒ„ " + "PlayerData");
             string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
             Directory.CreateDirectory(folderPath);
             CreateClearDataFile("ClearLevelData");
 
-            // ­«·sÅª¨ú
+            // é‡æ–°è®€å–
             string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
             string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
             string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
@@ -226,10 +226,10 @@ public class MainManager : MonoBehaviour
         }
         catch (FileNotFoundException)
         {
-            Debug.LogWarning("²§±`: ¥¼§ä¨ì¤å¥ó");
+            Debug.LogWarning("ç•°å¸¸: æœªæ‰¾åˆ°æ–‡ä»¶");
             CreateClearDataFile("ClearLevelData");
 
-            // ­«·sÅª¨ú
+            // é‡æ–°è®€å–
             string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
             string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
             string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
@@ -238,7 +238,7 @@ public class MainManager : MonoBehaviour
         }
         finally
         {
-            Debug.Log("¤w¸ÑªR¹w³]Ãö¥d¬ö¿ı");
+            Debug.Log("å·²è§£æé è¨­é—œå¡ç´€éŒ„");
         }
 
         for (int i = 1; i <= jsonFiles.Length; i++)
@@ -257,16 +257,16 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"¤w¸ü¤J {clearDataFiles.Length} ¶µ¹LÃö¸ê®ÆÀÉ®×");
+        Debug.Log($"å·²è¼‰å…¥ {clearDataFiles.Length} é …éé—œè³‡æ–™æª”æ¡ˆ");
 
-        // ¸Ó¶µ¶È¥Î©ó¶}µo¹wÄı
+        // è©²é …åƒ…ç”¨æ–¼é–‹ç™¼é è¦½
         clearDataFilesOnGUI = clearDataFiles;
     }
 
-    //ÅªÀÉ¥Î(³]©wÀÉ)
+    //è®€æª”ç”¨(è¨­å®šæª”)
     public void LoadSettingFile()
     {
-        Debug.Log("Åª¨ú³]©wÀÉ...");
+        Debug.Log("è®€å–è¨­å®šæª”...");
         string path = Path.Combine(Application.persistentDataPath, "PlayerData", "SettingFile.json");
 
         string jsonSetting = null;
@@ -276,38 +276,41 @@ public class MainManager : MonoBehaviour
         }
         catch (DirectoryNotFoundException)
         {
-            Debug.LogWarning("²§±`: ¥¼§ä¨ì¥Ø¿ı");
+            Debug.LogWarning("ç•°å¸¸: æœªæ‰¾åˆ°ç›®éŒ„");
 
-            Debug.Log("«Ø¥ß¥Ø¿ı " + "PlayerData");
+            Debug.Log("å»ºç«‹ç›®éŒ„ " + "PlayerData");
             string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
             Directory.CreateDirectory(folderPath);
 
-            Debug.Log("«Ø¥ß¤å¥ó " + "SettingFile.json");
+            Debug.Log("å»ºç«‹æ–‡ä»¶ " + "SettingFile.json");
             InitializationSettings();
             jsonSetting = File.ReadAllText(path);
         }
         catch (FileNotFoundException)
         {
-            Debug.LogWarning("²§±`: ¥¼§ä¨ì¤å¥ó");
+            Debug.LogWarning("ç•°å¸¸: æœªæ‰¾åˆ°æ–‡ä»¶");
 
-            Debug.Log("«Ø¥ß¤å¥ó " + "SettingFile.json");
+            Debug.Log("å»ºç«‹æ–‡ä»¶ " + "SettingFile.json");
             InitializationSettings();
             jsonSetting = File.ReadAllText(path);
         }
         finally
         {
             settingFile = JsonUtility.FromJson<SettingRoot>(jsonSetting);
-            Debug.Log("¤w¸ÑªR³]©w°Ñ¼Æ");
+            Debug.Log("å·²è§£æè¨­å®šåƒæ•¸");
         }
 
-        //¸Ó¶µ¶È¥Î©ó¶}µo¹wÄı
+        //è©²é …åƒ…ç”¨æ–¼é–‹ç™¼é è¦½
         settingFileOnGUI = settingFile;
+
+        //æ›´æ–°éŸ³é‡
+        UpdateAudio();
     }
 
-    //ªì©l¤Æ³]©w°Ñ¼Æ(¨Ã¶×¥X)
+    //åˆå§‹åŒ–è¨­å®šåƒæ•¸(ä¸¦åŒ¯å‡º)
     public void InitializationSettings()
     {
-        Debug.LogWarning("ªì©l¤Æ³]©wÀÉ...");
+        Debug.LogWarning("åˆå§‹åŒ–è¨­å®šæª”...");
         settingFile = new SettingRoot();
         settingFile.bgmId = 0;
         settingFile.gameMusic = true;
@@ -321,10 +324,10 @@ public class MainManager : MonoBehaviour
         settingFile.gameSpeedModifier = 1.0f;
 
         SaveSettingFile();
-        Debug.Log("³]©wÀÉ¤wªì©l¤Æ");
+        Debug.Log("è¨­å®šæª”å·²åˆå§‹åŒ–");
     }
 
-    //«O¦s³]©w°Ñ¼Æ
+    //ä¿å­˜è¨­å®šåƒæ•¸
     public static void SaveSettingFile()
     {
         string settingsjson = JsonUtility.ToJson(settingFile, true);
@@ -332,43 +335,43 @@ public class MainManager : MonoBehaviour
         File.WriteAllText(exportFileName, settingsjson);
     }
 
-    // «Ø¥ß ClearData ÀÉ®× [»İ¥[±K]
+    // å»ºç«‹ ClearData æª”æ¡ˆ [éœ€åŠ å¯†]
     private void CreateClearDataFile(string fileName)
     {
-        Debug.Log("«Ø¥ß¤å¥ó " + "ClearLevelData.ejson");
+        Debug.Log("å»ºç«‹æ–‡ä»¶ " + "ClearLevelData.ejson");
         var newClearDataRoot = new ClearDataRoot();
 
-        // ÀÉ®×¸ô®|
+        // æª”æ¡ˆè·¯å¾‘
         string exportFileName;
         if (fileName == "ClearLevelData")
         {
-            // ¹w³]Ãö¥d
+            // é è¨­é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
             newClearDataRoot.name = levelConfigFiles[0].name;
         }
         else
         {
-            // ¨ä¥LÃö¥d
+            // å…¶ä»–é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + fileName + ".ejson");
             newClearDataRoot.name = fileName;
         }
 
-        // ±NRootÂà´«¬°JSON¦r²Å¦ê
+        // å°‡Rootè½‰æ›ç‚ºJSONå­—ç¬¦ä¸²
         string newClearDataJson = JsonUtility.ToJson(newClearDataRoot, true);
 
-        // ±N JSON ¦r¦ê¥[±K¨Ã¼g¤JÀÉ®×
+        // å°‡ JSON å­—ä¸²åŠ å¯†ä¸¦å¯«å…¥æª”æ¡ˆ
         string encryptedClearDataJson = EncryptionUtility.EncryptString(newClearDataJson);
         File.WriteAllText(exportFileName, encryptedClearDataJson);
     }
 
-    //¤ñ¹ï©Ò¦³ ClearData ¤Î LevelConfig
+    //æ¯”å°æ‰€æœ‰ ClearData åŠ LevelConfig
     private void CompareAllClearData()
     {
-        //¤ñ¹ï"¦s¦b"
+        //æ¯”å°"å­˜åœ¨"
         for (int i = 1; i < levelConfigFiles.Length; i++)
         {
             bool haveClearData = false;
-            for (int j = 1; i < clearDataFiles.Length; j++)
+            for (int j = 1; j < clearDataFiles.Length; j++)
             {
                 if (levelConfigFiles[i].name == clearDataFiles[j].name)
                 {
@@ -383,10 +386,10 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        //¤ñ¹ï"ª©¥»"
+        //æ¯”å°"ç‰ˆæœ¬"
         for (int i = 0; i < levelConfigFiles.Length; i++)
         {
-            for (int j = 0; i < clearDataFiles.Length; j++)
+            for (int j = 0; j < clearDataFiles.Length; j++)
             {
                 if (levelConfigFiles[i].name == clearDataFiles[j].name)
                 {
@@ -401,7 +404,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    // ¤ñ¹ï³æ¤@ ClearData ª©¥» [»İ¥[±K]
+    // æ¯”å°å–®ä¸€ ClearData ç‰ˆæœ¬ [éœ€åŠ å¯†]
     private void UpdateVersionClearData(int levelID, int clearID)
     {
         clearDataFiles[clearID].version = levelConfigFiles[levelID].version;
@@ -433,34 +436,34 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        // Âà´«¬°JSON¦r²Å¦ê
+        // è½‰æ›ç‚ºJSONå­—ç¬¦ä¸²
         string clearDataFilesJson = JsonUtility.ToJson(clearDataFiles[clearID], true);
 
-        // ½T«O¥Ø¿ı¦s¦b
+        // ç¢ºä¿ç›®éŒ„å­˜åœ¨
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
         Directory.CreateDirectory(directoryPath);
 
-        // ÀÉ®×¸ô®|
+        // æª”æ¡ˆè·¯å¾‘
         string exportFileName;
         if (clearID == 0)
         {
-            // ¹w³]Ãö¥d
+            // é è¨­é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
         }
         else
         {
-            // ¨ä¥LÃö¥d
+            // å…¶ä»–é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + clearDataFiles[clearID].name + ".ejson");
         }
 
-        // ¥[±K¨Ã¼g¤J JSON ¨ìÀÉ®×
+        // åŠ å¯†ä¸¦å¯«å…¥ JSON åˆ°æª”æ¡ˆ
         string encryptedClearDataFilesJson = EncryptionUtility.EncryptString(clearDataFilesJson);
         File.WriteAllText(exportFileName, encryptedClearDataFilesJson);
 
-        Debug.Log("³qÃö¸ê°Tª©¥»¤w§ó·s¨Ã«O¦s¨ì " + exportFileName);
+        Debug.Log("é€šé—œè³‡è¨Šç‰ˆæœ¬å·²æ›´æ–°ä¸¦ä¿å­˜åˆ° " + exportFileName);
     }
 
-    //¥H nowLevelId ´M§äÃö¥d
+    //ä»¥ nowLevelId å°‹æ‰¾é—œå¡
     public static void FindLevelConfigById()
     {
         foreach (var levelConfig in MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig)
@@ -472,7 +475,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    //¥H nowFileId ´M§ä¹LÃöÀÉ®×
+    //ä»¥ nowFileId å°‹æ‰¾éé—œæª”æ¡ˆ
     public static void FindClearDataFileById()
     {
         bool check = false;
@@ -488,11 +491,11 @@ public class MainManager : MonoBehaviour
 
         if (check == false)
         {
-            Debug.LogWarning("§ä¤£¨ì¸ÓÀÉ®×!");
+            Debug.LogWarning("æ‰¾ä¸åˆ°è©²æª”æ¡ˆ!");
         }
     }
 
-    //¥H nowLevelId ´M§ä¹LÃö¸ê®Æ
+    //ä»¥ nowLevelId å°‹æ‰¾éé—œè³‡æ–™
     public static void FindClearLevelById()
     {
         foreach (var clearLevel in MainManager.nowClearDataFile.clearLevel)
@@ -504,7 +507,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    //¥H nowLevelData ¤Î nowClearLevel ÀË¬d¬O§_§¹¦¨«e¸mÃö¥d
+    //ä»¥ nowLevelData åŠ nowClearLevel æª¢æŸ¥æ˜¯å¦å®Œæˆå‰ç½®é—œå¡
     public static bool CheckPreconditionById()
     {
         int preNumber = 0;
@@ -529,7 +532,7 @@ public class MainManager : MonoBehaviour
         }
     }
 
-    // ¥H nowLevelId «O¦s·í«eÃö¥d [»İ¥[±K]
+    // ä»¥ nowLevelId ä¿å­˜ç•¶å‰é—œå¡ [éœ€åŠ å¯†]
     public static void SaveCurrentLevelById(int medalLevel, int score, int time, float speed)
     {
         nowClearLevel.clear = true;
@@ -551,28 +554,28 @@ public class MainManager : MonoBehaviour
             nowClearLevel.clearData = newClearData;
         }
 
-        // ÀÉ®×¸ô®|
+        // æª”æ¡ˆè·¯å¾‘
         string exportFileName;
         if (nowFileId == 0)
         {
-            // ¹w³]Ãö¥d
+            // é è¨­é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
         }
         else
         {
-            // ¨ä¥LÃö¥d
+            // å…¶ä»–é—œå¡
             exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + nowClearDataFile.name + ".ejson");
         }
 
-        // ±NRootÂà´«¬°JSON¦r²Å¦ê
+        // å°‡Rootè½‰æ›ç‚ºJSONå­—ç¬¦ä¸²
         string newClearDataJson = JsonUtility.ToJson(nowClearDataFile, true);
 
-        // ¥[±K¨Ã¼g¤J JSON ¦r¦ê¨ìÀÉ®×
+        // åŠ å¯†ä¸¦å¯«å…¥ JSON å­—ä¸²åˆ°æª”æ¡ˆ
         string encryptedClearDataJson = EncryptionUtility.EncryptString(newClearDataJson);
         File.WriteAllText(exportFileName, encryptedClearDataJson);
     }
 
-    //¥H nowLevelId ´M§ä¤U¤@Ãö
+    //ä»¥ nowLevelId å°‹æ‰¾ä¸‹ä¸€é—œ
     public static void FindNextLevelById()
     {
         string nextLevelId = null;
@@ -591,22 +594,22 @@ public class MainManager : MonoBehaviour
             if (nextID == -1)
             {
                 nextLevelId = nowLevelId;
-                Debug.LogWarning("µLªk¨ú±o NextID " + nextID);
+                Debug.LogWarning("ç„¡æ³•å–å¾— NextID " + nextID);
             }
             else if (nextID > MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
             {
                 nextLevelId = nowLevelId;
-                Debug.LogWarning("¶W¥XÃö¥d½d³ò " + nextID);
+                Debug.LogWarning("è¶…å‡ºé—œå¡ç¯„åœ " + nextID);
             }
             else if (nextID == MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
             {
                 nextLevelId = nowLevelId;
-                Debug.Log("¤w¸g¬O³Ì«á¤@Ãö");
+                Debug.Log("å·²ç¶“æ˜¯æœ€å¾Œä¸€é—œ");
             }
             else if (nextID <= MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count)
             {
                 nextLevelId = MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig[nextID].levelID;
-                Debug.Log("¤U¤@Ãö¬°: " + nextID + " / " + nextLevelId);
+                Debug.Log("ä¸‹ä¸€é—œç‚º: " + nextID + " / " + nextLevelId);
             }
         }
         else
@@ -618,7 +621,7 @@ public class MainManager : MonoBehaviour
         CalibrationInfoByLevelId();
     }
 
-    //¥H nowLevelId ®Õ·Ç¸ê®Æ
+    //ä»¥ nowLevelId æ ¡æº–è³‡æ–™
     public static void CalibrationInfoByLevelId()
     {
         FindLevelConfigById();
@@ -627,35 +630,35 @@ public class MainManager : MonoBehaviour
 
 
 
-    //­µ°T
+    //éŸ³è¨Š
     public AudioSource soundEffectUiTrue;
     public AudioSource soundEffectUiFalse;
     public AudioSource soundEffectUiPage;
 
     public AudioSource[] bgmMusic;
 
-    //¹B¦æ
+    //é‹è¡Œ
     public int nowLevel = 0;
 
 
-    //Âà´«³õ´º
+    //è½‰æ›å ´æ™¯
     void Awake()
     {
-        //Âà´«³õ´º®É«O¯dª«¥ó
+        //è½‰æ›å ´æ™¯æ™‚ä¿ç•™ç‰©ä»¶
         GameObject[] objs = GameObject.FindGameObjectsWithTag("DontDestroy");
 
         if (objs.Length > 1)
         {
-            // ¤w¸g¦s¦b¬Û¦Pª«¥óªº¹ê¨Ò¡A¾P·´·sªº¹ê¨Ò
+            // å·²ç¶“å­˜åœ¨ç›¸åŒç‰©ä»¶çš„å¯¦ä¾‹ï¼ŒéŠ·æ¯€æ–°çš„å¯¦ä¾‹
             Destroy(gameObject);
         }
 
         DontDestroyOnLoad(gameObject);
 
-        //ÀÉ®×
+        //æª”æ¡ˆ
         jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
 
-        //·sª©
+        //æ–°ç‰ˆ
         LoadLevelConfigFiles();
         LoadClearDataFiles();
         LoadSettingFile();
@@ -664,7 +667,7 @@ public class MainManager : MonoBehaviour
 
         UpdateAudio();
 
-        Debug.Log("MainManager ªì©l¤Æ§¹¦¨");
+        Debug.Log("MainManager åˆå§‹åŒ–å®Œæˆ");
     }
 
     void Start()
@@ -674,7 +677,7 @@ public class MainManager : MonoBehaviour
 
     IEnumerator StartAfterAllObjectsLoaded()
     {
-        // µ¥«İ1¬í¡A©Ò¦³ª«¥ó¥[¸ü§¹¦¨«á°õ¦æªº¥N½X
+        // ç­‰å¾…1ç§’ï¼Œæ‰€æœ‰ç‰©ä»¶åŠ è¼‰å®Œæˆå¾ŒåŸ·è¡Œçš„ä»£ç¢¼
         yield return new WaitForSeconds(1);
 
         bgmMusic[MainManager.settingFile.bgmId].gameObject.SetActive(true);
@@ -685,7 +688,7 @@ public class MainManager : MonoBehaviour
 
     }
 
-    //§ó·s­µ¶q¤j¤p
+    //æ›´æ–°éŸ³é‡å¤§å°
     public void UpdateAudio()
     {
         soundEffectUiTrue.volume = settingFile.gameSoundEffectF * 1.0f;
@@ -699,11 +702,11 @@ public class MainManager : MonoBehaviour
     }
 
 
-    //³õ´ºÂà´«==========================================================================================================================
-    //±µÄò(SelectLevelButton)-¶i¤JÃö¥d
+    //å ´æ™¯è½‰æ›==========================================================================================================================
+    //æ¥çºŒ(SelectLevelButton)-é€²å…¥é—œå¡
     public void EnterGameScene()
     {
-        // ¸ü¤J GameScene
+        // è¼‰å…¥ GameScene
         SceneManager.LoadScene("GameScene");
     }
 }

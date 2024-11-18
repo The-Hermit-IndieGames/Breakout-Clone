@@ -1,62 +1,62 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class PowerUPPaddle : MonoBehaviour
 {
-    [SerializeField] private GameObject ballPrefabs;  // ExtraBall¹w»s¥ó
+    [SerializeField] private GameObject ballPrefabs;  // ExtraBallé è£½ä»¶
 
     private GameManager gameManager;
 
     private void Start()
     {
-        //½Õ¥ÎGameManager¸}¥»
+        //èª¿ç”¨GameManagerè…³æœ¬
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
-    // ·í2D Sprite»P¨ä¥L¸I¼²Åé±µÄ²®É½Õ¥Î¦¹¤èªk
+    // ç•¶2D Spriteèˆ‡å…¶ä»–ç¢°æ’é«”æ¥è§¸æ™‚èª¿ç”¨æ­¤æ–¹æ³•
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // ÀË¬d¸I¼²ªºª«¥ó¬O§_±a¦³Item¼ĞÅÒ
+        // æª¢æŸ¥ç¢°æ’çš„ç‰©ä»¶æ˜¯å¦å¸¶æœ‰Itemæ¨™ç±¤
         if (collision.gameObject.CompareTag("Item"))
         {
             gameManager.soundEffectGetItem.Play();
 
-            // ±q¸I¼²ª«¥ó¤¤Àò¨úItem¸}¥»
+            // å¾ç¢°æ’ç‰©ä»¶ä¸­ç²å–Itemè…³æœ¬
             Item item = collision.gameObject.GetComponent<Item>();
 
             if (item != null)
             {
-                // Àò¨úItemªºtype­È
+                // ç²å–Itemçš„typeå€¼
                 int itemType = item.type;
 
-                // ®Ú¾Útype­È°õ¦æ¬ÛÀ³ªºPowerUP
+                // æ ¹æ“štypeå€¼åŸ·è¡Œç›¸æ‡‰çš„PowerUP
                 if (itemType == 1) { addBall(); }
                 gameManager.ItemPowerUP(itemType);
 
-                //²É¤l®ÄªG
+                //ç²’å­æ•ˆæœ
                 item.GetItem();
 
-                // ¾P·´Itemª«¥ó
+                // éŠ·æ¯€Itemç‰©ä»¶
                 Destroy(collision.gameObject);
             }
         }
     }
 
 
-    //¹D¨ã®ÄªG
+    //é“å…·æ•ˆæœ
     void addBall()
     {
-        // ¦b¦Û¨­¦ì¸m¦V¤W°¾²¾ (0, 0.5, 0) ªº¦ì¸m
+        // åœ¨è‡ªèº«ä½ç½®å‘ä¸Šåç§» (0, 0.5, 0) çš„ä½ç½®
         Vector3 spawnPosition = transform.position + new Vector3(0f, 1.5f, 0f);
 
-        // ³Ğ«Ø¹w»s¥ó
+        // å‰µå»ºé è£½ä»¶
         GameObject ball = Instantiate(ballPrefabs, spawnPosition, Quaternion.identity);
         GameData.totalBalls += 1;
 
-        // ¨ú±o Rigidbody ²Õ¥ó
+        // å–å¾— Rigidbody çµ„ä»¶
         Rigidbody rb = ball.GetComponent<Rigidbody>();
         
-        // ³]©w³t«×¡A¥H¦V¤Wµo®g
-        rb.velocity = Vector3.up * GameData.initialSpeed;
+        // è¨­å®šé€Ÿåº¦ï¼Œä»¥å‘ä¸Šç™¼å°„
+        rb.linearVelocity = Vector3.up * GameData.initialSpeed;
     }
 
 }

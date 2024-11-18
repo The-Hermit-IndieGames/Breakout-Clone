@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,14 +7,14 @@ using static UnityEngine.ParticleSystem;
 
 public class Brick : MonoBehaviour
 {
-    public int pointValue;      //¯}Ãa¤À¼Æ
-    public int brickLevel;      //¿j¶ôµ¥¯Å(¥Í¦¨®É¼g¤J)
-    public int powerUpType;     //¹D¨ãÃş§O(¥Í¦¨®É¼g¤J)
+    public int pointValue;      //ç ´å£åˆ†æ•¸
+    public int brickLevel;      //ç£šå¡Šç­‰ç´š(ç”Ÿæˆæ™‚å¯«å…¥)
+    public int powerUpType;     //é“å…·é¡åˆ¥(ç”Ÿæˆæ™‚å¯«å…¥)
 
-    [SerializeField] private GameObject[] powerUpPrefabs; // ¤TºØ¤£¦Pªº¹w»s¥ó¡A¹w³]¤j¤p¬°3¡A¤À§O¥Nªítype¬°1¡B2¡B3ªº¹w»s¥ó
+    [SerializeField] private GameObject[] powerUpPrefabs; // ä¸‰ç¨®ä¸åŒçš„é è£½ä»¶ï¼Œé è¨­å¤§å°ç‚º3ï¼Œåˆ†åˆ¥ä»£è¡¨typeç‚º1ã€2ã€3çš„é è£½ä»¶
     [SerializeField] private GameObject vfxStardust;
 
-    private int brickHP;        //¿j¶ô¥Í©R(ÅÜ°Ê)
+    private int brickHP;        //ç£šå¡Šç”Ÿå‘½(è®Šå‹•)
 
     private GameObject spawnedPowerUp;
     private Renderer brickRenderer;
@@ -29,22 +29,22 @@ public class Brick : MonoBehaviour
 
     void Start()
     {
-        //¨ú±o´è¬V
+        //å–å¾—æ¸²æŸ“
         brickRenderer = GetComponent<Renderer>();
 
         bricksList = GameObject.Find("BrickList").GetComponent<Transform>();
 
-        //³]©w¤À¼Æ HP §ó·sÃC¦â
+        //è¨­å®šåˆ†æ•¸ HP æ›´æ–°é¡è‰²
         brickHP = brickLevel;
         pointValue = brickLevel * 20;
         UpdateBrickColor();
 
 
-        //­µ®Ä
+        //éŸ³æ•ˆ
         soundEffectCollision.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         soundEffectDestroy.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
 
-        //¥Í¦¨¹D¨ã(Âê©w)
+        //ç”Ÿæˆé“å…·(é–å®š)
         switch (powerUpType)
         {
             case 0:
@@ -65,13 +65,13 @@ public class Brick : MonoBehaviour
                 spawnedPowerUp = Instantiate(powerUpPrefabs[4], transform.position, Quaternion.identity, bricksList);
                 break;
             default:
-                Debug.LogWarning("¥¼ª¾ªºItemÃş«¬: " + powerUpType);
+                Debug.LogWarning("æœªçŸ¥çš„Itemé¡å‹: " + powerUpType);
                 break;
         }
     }
 
 
-    //¸I¼²³B²z
+    //ç¢°æ’è™•ç†
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ball"))
@@ -81,25 +81,25 @@ public class Brick : MonoBehaviour
         }
     }
 
-    //²É¤l®ÄªG
+    //ç²’å­æ•ˆæœ
     void VFXcontrol()
     {
         GameObject vfx = Instantiate(vfxStardust, transform.position, Quaternion.identity, bricksList);
         var particleSystem = vfx.GetComponent<ParticleSystem>();
         if (particleSystem != null)
         {
-            //³]¸m¬°ÃC¦â
+            //è¨­ç½®ç‚ºé¡è‰²
             var mainModule = particleSystem.main;
             var newColor = new Color(brickColor.r, brickColor.g, brickColor.b, 1f);
             mainModule.startColor = newColor;
 
-            //³]¸m²É¤lµo®g¼Æ¶q
+            //è¨­ç½®ç²’å­ç™¼å°„æ•¸é‡
             ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-            bursts[0].time = 0.0f; // ±q¹B¦æ¶}©l®É¥ß§Yµo®g
-            bursts[0].count = (short)MainManager.settingFile.effectsVFX; //²É¤l¼Æ¶q
+            bursts[0].time = 0.0f; // å¾é‹è¡Œé–‹å§‹æ™‚ç«‹å³ç™¼å°„
+            bursts[0].count = (short)MainManager.settingFile.effectsVFX; //ç²’å­æ•¸é‡
             particleSystem.emission.SetBursts(bursts);
 
-            //³]¸m¤lª«¥óªº Force Over Lifetime ­È
+            //è¨­ç½®å­ç‰©ä»¶çš„ Force Over Lifetime å€¼
             Transform subToScore = vfx.transform.Find("SubToScore");
             if (subToScore != null)
             {
@@ -110,7 +110,7 @@ public class Brick : MonoBehaviour
             }
             else
             {
-                Debug.LogError("¥¼§ä¨ì¦W¬° 'subToScore' ªº¤lª«¥ó¡I");
+                Debug.LogError("æœªæ‰¾åˆ°åç‚º 'subToScore' çš„å­ç‰©ä»¶ï¼");
             }
         }
     }
@@ -129,21 +129,21 @@ public class Brick : MonoBehaviour
         {
             soundEffectDestroy.Play();
 
-            //­pºâ¤À¼Æ
+            //è¨ˆç®—åˆ†æ•¸
             var gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
             gameManager.UpdateScore(pointValue);
 
-            // ·íBallª«¥ó¸I¼²®É¡A§R°£¦Û¨­(µy·L©µ¿ğ)
+            // ç•¶Ballç‰©ä»¶ç¢°æ’æ™‚ï¼Œåˆªé™¤è‡ªèº«(ç¨å¾®å»¶é²)
             Destroy(gameObject, 0.05f);
 
             if (powerUpType != 0)
             {
-                //ÄÀ©ñ¹D¨ã
+                //é‡‹æ”¾é“å…·
                 var itemScript = spawnedPowerUp.GetComponent<Item>();
                 itemScript.inBrick = false;
             }
 
-            //­pºâ¿j¶ô¼Æ
+            //è¨ˆç®—ç£šå¡Šæ•¸
             GameManager.brickAmount -= 1;
             if (GameManager.brickAmount <= 0)
             {
@@ -157,31 +157,31 @@ public class Brick : MonoBehaviour
     }
 
 
-    //¦â±m§ó·s¾¹
+    //è‰²å½©æ›´æ–°å™¨
     private void UpdateBrickColor()
     {
         switch (brickHP)
         {
             case 0:
-                brickColor = new Color(0.01f, 0.2f, 0.5f, 0.001f);   // ªñ³z©ú
+                brickColor = new Color(0.01f, 0.2f, 0.5f, 0.001f);   // è¿‘é€æ˜
                 break;
             case 1:
-                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // ¥b³z©ú²HÂÅ
+                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // åŠé€æ˜æ·¡è—
                 break;
             case 2:
-                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // ¥b³z©ú²Hºñ
+                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // åŠé€æ˜æ·¡ç¶ 
                 break;
             case 3:
-                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // ¥b³z©ú¶À
+                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // åŠé€æ˜é»ƒ
                 break;
             case 4:
-                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // ¥b³z©ú¾í
+                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // åŠé€æ˜æ©™
                 break;
             case 5:
-                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // ¥b³z©ú¬õ
+                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // åŠé€æ˜ç´…
                 break;
             default:
-                brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // µµ¦â
+                brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // ç´«è‰²
                 break;
         }
 

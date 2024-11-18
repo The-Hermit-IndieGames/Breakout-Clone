@@ -1,21 +1,21 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
-    [SerializeField] private RectTransform viewport;    //µøµ¡
-    [SerializeField] private RectTransform content;     //®e¾¹
-    [SerializeField] private GameObject contentPrefab;  //¤º®e¶µ¥Øªº¹w»s¥ó
+    [SerializeField] private RectTransform viewport;    //è¦–çª—
+    [SerializeField] private RectTransform content;     //å®¹å™¨
+    [SerializeField] private GameObject contentPrefab;  //å…§å®¹é …ç›®çš„é è£½ä»¶
 
-    [SerializeField] private int itemCount;             //¤º®e¶µ¼Æ
-    [SerializeField] private float itemHeight;          //¨C­Ó¶µ¥Øªº°ª«×
-    [SerializeField] private float spacing;             //¶µ¥Ø¤§¶¡ªº¶¡¶Z
-    [SerializeField] private float scrollSpeed = 200f;  //ºu°Ê³t«×
+    [SerializeField] private int itemCount;             //å…§å®¹é …æ•¸
+    [SerializeField] private float itemHeight;          //æ¯å€‹é …ç›®çš„é«˜åº¦
+    [SerializeField] private float spacing;             //é …ç›®ä¹‹é–“çš„é–“è·
+    [SerializeField] private float scrollSpeed = 200f;  //æ»¾å‹•é€Ÿåº¦
 
     private Vector2 contentStartPos;
 
     void Start()
     {
-        //ÀÉ®×¿ï¾Ü¦Cªí±M¥Î
+        //æª”æ¡ˆé¸æ“‡åˆ—è¡¨å°ˆç”¨
         itemCount = MainManager.levelConfigFiles.Length;
 
         AdjustScrollView();
@@ -29,13 +29,13 @@ public class NewBehaviourScript : MonoBehaviour
 
     void AdjustScrollView()
     {
-        //®Ú¾Ú¶µ¥Ø¼Æ¶q¤Î¨ä°ª«×­pºâ®e¾¹ªº°ª«×
+        //æ ¹æ“šé …ç›®æ•¸é‡åŠå…¶é«˜åº¦è¨ˆç®—å®¹å™¨çš„é«˜åº¦
         float contentHeight = (itemHeight + spacing) * itemCount - spacing;
 
-        //³]©w®e¾¹ªº¤j¤p
+        //è¨­å®šå®¹å™¨çš„å¤§å°
         content.sizeDelta = new Vector2(content.sizeDelta.x, contentHeight);
 
-        //¹ê¨Ò¤Æ¤º®e¶µ
+        //å¯¦ä¾‹åŒ–å…§å®¹é …
         for (int i = 0; i < itemCount; i++)
         {
             GameObject item = Instantiate(contentPrefab, content, false);
@@ -45,12 +45,12 @@ public class NewBehaviourScript : MonoBehaviour
             itemRect.sizeDelta = new Vector2(itemRect.sizeDelta.x, itemHeight);
 
 
-            //ÀÉ®×¿ï¾Ü¦Cªí±M¥Î
+            //æª”æ¡ˆé¸æ“‡åˆ—è¡¨å°ˆç”¨
             var buttonScript = itemRect.GetComponent<FileButton>();
             buttonScript.FileID = i;
         }
 
-        //±N¤º®e¦ì¸m­«¸m¨ì³»³¡
+        //å°‡å…§å®¹ä½ç½®é‡ç½®åˆ°é ‚éƒ¨
         content.anchoredPosition = ClampToBounds(new Vector2(content.anchoredPosition.x, contentHeight * -0.5f));
     }
 

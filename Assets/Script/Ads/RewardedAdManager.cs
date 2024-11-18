@@ -1,4 +1,4 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
 using UnityEngine.Advertisements;
 
 public class RewardedAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowListener
@@ -21,7 +21,7 @@ public class RewardedAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         Advertisement.Show(adUnitId, this);
     }
 
-    // IUnityAdsLoadListener πÍ≤{
+    // IUnityAdsLoadListener ÂØ¶Áèæ
     public void OnUnityAdsAdLoaded(string adUnitId)
     {
         Debug.Log("Rewarded ad loaded: " + adUnitId);
@@ -32,7 +32,7 @@ public class RewardedAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         Debug.Log($"Error loading ad unit {adUnitId}: {error.ToString()} - {message}");
     }
 
-    // IUnityAdsShowListener πÍ≤{
+    // IUnityAdsShowListener ÂØ¶Áèæ
     public void OnUnityAdsShowFailure(string adUnitId, UnityAdsShowError error, string message)
     {
         Debug.Log($"Error showing ad unit {adUnitId}: {error.ToString()} - {message}");
@@ -54,7 +54,7 @@ public class RewardedAdManager : MonoBehaviour, IUnityAdsLoadListener, IUnityAds
         if (showCompletionState == UnityAdsShowCompletionState.COMPLETED)
         {
             AdsPlatformIntegration.aReward = true;
-            Debug.Log("º˙¿y§wµo©Ò");
+            Debug.Log("ÁçéÂãµÂ∑≤ÁôºÊîæ");
         }
     }
 }

@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class MapControl : MonoBehaviour, IDragHandler, IScrollHandler
@@ -32,7 +32,7 @@ public class MapControl : MonoBehaviour, IDragHandler, IScrollHandler
         {
             Vector2 positionFix;
 
-            //­pºâÅÜ¤Æ¶q
+            //è¨ˆç®—è®ŠåŒ–é‡
             positionFix = eventData.position - oldPosition;
 
             if (positionFix.magnitude > 32)
@@ -40,10 +40,10 @@ public class MapControl : MonoBehaviour, IDragHandler, IScrollHandler
                 positionFix = Vector2.zero;
             }
 
-            //­pºâª«¥óªº·s¦ì¸m
+            //è¨ˆç®—ç‰©ä»¶çš„æ–°ä½ç½®
             Vector2 newPosition = ClampToCanvas(mapRectTransform.anchoredPosition + (positionFix * dragSpeed));
 
-            //§ó·sª«¥óªº®y¼Ğ
+            //æ›´æ–°ç‰©ä»¶çš„åº§æ¨™
             mapRectTransform.anchoredPosition = newPosition;
         }
 

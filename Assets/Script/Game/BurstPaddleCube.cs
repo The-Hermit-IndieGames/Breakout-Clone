@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,18 +16,18 @@ public class BurstPaddleCube : MonoBehaviour
     }
 
 
-    //¸I¼²ÀË´ú
+    //ç¢°æ’æª¢æ¸¬
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Brick") && canBurst)
         {
             soundEffectBurstBall.Play();
 
-            //³]¸m²É¤l
+            //è¨­ç½®ç²’å­
             GameObject vfx = Instantiate(vfxExplode, transform.position, Quaternion.identity);
 
 
-            // ¦b½d³ò¤ºÀË¬d¨ä¥Lª«¥ó
+            // åœ¨ç¯„åœå…§æª¢æŸ¥å…¶ä»–ç‰©ä»¶
             Vector3 box = new Vector3(50f, 1.5f, 1.5f);
             Collider[] colliders = Physics.OverlapBox(transform.position, box);
             foreach (Collider col in colliders)

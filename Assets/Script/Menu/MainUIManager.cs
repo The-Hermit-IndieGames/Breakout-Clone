@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,7 +13,7 @@ public class MainUIManager : MonoBehaviour
 {
     private MainManager mainManager;
 
-    //­µ°T
+    //éŸ³è¨Š
     public AudioSource uiSoundEffectUiTrue;
     public AudioSource uiSoundEffectUiFalse;
     public AudioSource uiSoundEffectUiPage;
@@ -21,17 +21,17 @@ public class MainUIManager : MonoBehaviour
 
     void Start()
     {
-        //½Õ¥Î¸}¥»
+        //èª¿ç”¨è…³æœ¬
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
 
-        //­q¾\ ³]©w¨Æ¥ó
+        //è¨‚é–± è¨­å®šäº‹ä»¶
         musicSlider.onValueChanged.AddListener(HandleMusicChange);
         soundEffectSlider.onValueChanged.AddListener(HandleSoundEffectChange);
         effectsVFXSlider.onValueChanged.AddListener(HandleEffectsVFXChange);
         backgroundVFXSlider.onValueChanged.AddListener(HandleBackgroundVFXChange);
         speedModifierSlider.onValueChanged.AddListener(HandleSpeedModifierChange);
 
-        //UI³Æ¥Î­µ°T
+        //UIå‚™ç”¨éŸ³è¨Š
         uiSoundEffectUiTrue.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         uiSoundEffectUiFalse.volume = MainManager.settingFile.gameSoundEffectF * 2.0f;
         uiSoundEffectUiPage.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
@@ -41,7 +41,7 @@ public class MainUIManager : MonoBehaviour
 
     IEnumerator StartAfterAllObjectsLoaded()
     {
-        // µ¥«İ1¬í¡A©Ò¦³ª«¥ó¥[¸ü§¹¦¨«á°õ¦æªº¥N½X
+        // ç­‰å¾…1ç§’ï¼Œæ‰€æœ‰ç‰©ä»¶åŠ è¼‰å®Œæˆå¾ŒåŸ·è¡Œçš„ä»£ç¢¼
         yield return new WaitForSeconds(1);
 
         AdsPlatformIntegration.AdBanner_Show();
@@ -54,65 +54,65 @@ public class MainUIManager : MonoBehaviour
 
     }
 
-    //¼ĞÃDµe­±==========================================================================================================================
+    //æ¨™é¡Œç•«é¢==========================================================================================================================
 
-    //¼ĞÃDµe­±-¶}©l
+    //æ¨™é¡Œç•«é¢-é–‹å§‹
     public void TitlePlayButton()
     {
         mainManager.soundEffectUiTrue.Play();
     }
 
-    //¼ĞÃDµe­±-»s§@
+    //æ¨™é¡Œç•«é¢-è£½ä½œ
     public void TitleMakingButton()
     {
         mainManager.soundEffectUiTrue.Play();
-        // ¸ü¤J LevelMaking
+        // è¼‰å…¥ LevelMaking
         SceneManager.LoadScene("LevelMaking");
     }
 
-    //¼ĞÃDµe­±-¹êÅç©Ê¤º®e
+    //æ¨™é¡Œç•«é¢-å¯¦é©—æ€§å…§å®¹
     public void TitleExperimentalButton()
     {
         mainManager.soundEffectUiTrue.Play();
     }
 
-    //¼ĞÃDµe­±-³]©w
+    //æ¨™é¡Œç•«é¢-è¨­å®š
     public void TitleSettingButton()
     {
         mainManager.soundEffectUiTrue.Play();
         SetInitialSliderValue();
     }
 
-    //¼ĞÃDµe­±-µ²§ô¹CÀ¸
+    //æ¨™é¡Œç•«é¢-çµæŸéŠæˆ²
     public void QuitGame()
     {
         mainManager.soundEffectUiTrue.Play();
-        // ¦b³o¸Ì©ñ¸mµ²§ô¹CÀ¸ªºÅŞ¿è
+        // åœ¨é€™è£¡æ”¾ç½®çµæŸéŠæˆ²çš„é‚è¼¯
         if (true)
         {
-            Debug.Log("Â÷¶}¹CÀ¸");
+            Debug.Log("é›¢é–‹éŠæˆ²");
 
-            // Unity ¹wÄı©M¶×¥Xªºµ{¦¡¤¤¡A³£¥i¥H¨Ï¥Î Application.Quit() ¨Óµ²§ôÀ³¥Îµ{§Ç
+            // Unity é è¦½å’ŒåŒ¯å‡ºçš„ç¨‹å¼ä¸­ï¼Œéƒ½å¯ä»¥ä½¿ç”¨ Application.Quit() ä¾†çµæŸæ‡‰ç”¨ç¨‹åº
             Application.Quit();
         }
     }
 
 
-    //Ãö¥d¬P¹Ï==========================================================================================================================
+    //é—œå¡æ˜Ÿåœ–==========================================================================================================================
 
-    [SerializeField] private string inspectorStarMap = "Ãö¥d¬P¹Ï";
+    [SerializeField] private string inspectorStarMap = "é—œå¡æ˜Ÿåœ–";
 
-    [SerializeField] private GameObject canvas;             //¥Dµe¥¬
-    [SerializeField] private GameObject levelsStarMap;      //¬P¹Ï­¶­±
-    [SerializeField] private GameObject backgroundCanvas;   //­I´º­¶­±
+    [SerializeField] private GameObject canvas;             //ä¸»ç•«å¸ƒ
+    [SerializeField] private GameObject levelsStarMap;      //æ˜Ÿåœ–é é¢
+    [SerializeField] private GameObject backgroundCanvas;   //èƒŒæ™¯é é¢
     [SerializeField] private TextMeshProUGUI starMapNameText;
 
-    [SerializeField] private GameObject levelsStarButton;           //¿ïÃö«ö¶s(¹w»s¥ó)    
-    [SerializeField] private Transform buttonsList;                 //¿ïÃöµe­±(§¤¼Ğ¨t)
+    [SerializeField] private GameObject levelsStarButton;           //é¸é—œæŒ‰éˆ•(é è£½ä»¶)    
+    [SerializeField] private Transform buttonsList;                 //é¸é—œç•«é¢(åæ¨™ç³»)
 
 
 
-    //®i¶}¬P¹Ï
+    //å±•é–‹æ˜Ÿåœ–
     public void OpenLevelsStarMap()
     {
         mainManager.soundEffectUiTrue.Play();
@@ -123,7 +123,7 @@ public class MainUIManager : MonoBehaviour
         LoadJsonToMap();
     }
 
-    //Ãö³¬¬P¹Ï
+    //é—œé–‰æ˜Ÿåœ–
     public void QuitLevelsStarMap()
     {
         mainManager.soundEffectUiTrue.Play();
@@ -134,9 +134,9 @@ public class MainUIManager : MonoBehaviour
     }
 
 
-    private List<GameObject> buttonInMap = new List<GameObject>();                          //¦a¹Ï¤¤ªº«ö¶s¦Cªí
+    private List<GameObject> buttonInMap = new List<GameObject>();                          //åœ°åœ–ä¸­çš„æŒ‰éˆ•åˆ—è¡¨
 
-    //¬P¹Ï-¸ÑªR JSON ¦ÜUI
+    //æ˜Ÿåœ–-è§£æ JSON è‡³UI
     private void LoadJsonToMap()
     {
         var rootLevelsData = MainManager.levelConfigFiles[MainManager.nowFileId];
@@ -181,10 +181,10 @@ public class MainUIManager : MonoBehaviour
         }
     }
 
-    //¹wÄıµe­±
-    [SerializeField] private string inspectorPreview = "¹wÄıµe­±";
+    //é è¦½ç•«é¢
+    [SerializeField] private string inspectorPreview = "é è¦½ç•«é¢";
 
-    [SerializeField] private Transform bricksList;                  //¿j¶ô¦Cªí(§¤¼Ğ¨t)
+    [SerializeField] private Transform bricksList;                  //ç£šå¡Šåˆ—è¡¨(åæ¨™ç³»)
     [SerializeField] private GameObject brickPrefab;
     [SerializeField] private GameObject brickUnbreakablePrefab;
     private int brickAmount;
@@ -201,7 +201,7 @@ public class MainUIManager : MonoBehaviour
     [SerializeField] private List<GameObject> previewClearMedal;
     [SerializeField] private List<GameObject> previewInitialItems;
 
-    //¬P¹Ï-¹wÄıÃö¥d
+    //æ˜Ÿåœ–-é è¦½é—œå¡
     public void PreviewTheLevel()
     {
         mainManager.soundEffectUiTrue.Play();
@@ -213,7 +213,7 @@ public class MainUIManager : MonoBehaviour
         previewNameText.text = MainManager.nowLevelData.levelName;
         previewBrickAmountText.text = brickAmount.ToString();
 
-        //±N®É¶¡®æ¦¡¤Æ¬°¤À¡G¬í
+        //å°‡æ™‚é–“æ ¼å¼åŒ–ç‚ºåˆ†ï¼šç§’
         int minutes = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time / 60);
         int seconds = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time % 60);
         string timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
@@ -223,7 +223,7 @@ public class MainUIManager : MonoBehaviour
         previewScoreText.text = score.ToString();
         previewTimerAndSpeedText.text = timerAndSpeedString;
 
-        //ªì©l¹D¨ã
+        //åˆå§‹é“å…·
         if (MainManager.nowLevelData.initialItem.addBall == true)       { previewInitialItems[0].SetActive(true); }
         else { previewInitialItems[0].SetActive(false); }
         if (MainManager.nowLevelData.initialItem.longPaddle == true)    { previewInitialItems[1].SetActive(true); }
@@ -237,7 +237,7 @@ public class MainUIManager : MonoBehaviour
 
     }
 
-    //¹wÄı-¿j¶ô¥Í¦¨¾¹
+    //é è¦½-ç£šå¡Šç”Ÿæˆå™¨
     private void PreviewGenerateBricks()
     {
         List<MainManager.BricksData> bricks = new List<MainManager.BricksData>(MainManager.nowLevelData.bricksData);
@@ -250,7 +250,7 @@ public class MainUIManager : MonoBehaviour
             {
                 GameObject brick = Instantiate(brickPrefab, position, Quaternion.identity, bricksList);
 
-                // ³]¸m¿j¶ôªºÄİ©Ê
+                // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                 var brickScript = brick.GetComponent<Brick>();
                 if (brickScript != null)
                 {
@@ -266,23 +266,23 @@ public class MainUIManager : MonoBehaviour
         }
     }
 
-    //¬P¹Ï-¹wÄıÃö¥dªğ¦^
+    //æ˜Ÿåœ–-é è¦½é—œå¡è¿”å›
     public void PreviewBack()
     {
         mainManager.soundEffectUiTrue.Play();
         BricksDelete();
     }
 
-    //¿j¶ô²M°£¾¹
+    //ç£šå¡Šæ¸…é™¤å™¨
     public void BricksDelete()
     {
-        // ¹M¾ú Transform ¤¤ªº¨C­Ó¤lª«¥ó
+        // éæ­· Transform ä¸­çš„æ¯å€‹å­ç‰©ä»¶
         for (int i = 0; i < bricksList.childCount; i++)
         {
-            //Àò¨ú¤lª«¥óªº Transform
+            //ç²å–å­ç‰©ä»¶çš„ Transform
             Transform childTransform = bricksList.GetChild(i);
 
-            //Àò¨ú¤lª«¥óªº GameObject
+            //ç²å–å­ç‰©ä»¶çš„ GameObject
             GameObject childGameObject = childTransform.gameObject;
 
             Destroy(childGameObject);
@@ -290,18 +290,18 @@ public class MainUIManager : MonoBehaviour
         brickAmount = 0;
     }
 
-    //¹wÄıµe­±-¶i¤JÃö¥d
+    //é è¦½ç•«é¢-é€²å…¥é—œå¡
     public void EnterTheLevel()
     {
         mainManager.soundEffectUiTrue.Play();
-        // ¸ü¤J GameScene
+        // è¼‰å…¥ GameScene
         SceneManager.LoadScene("GameScene");
     }
 
 
-    //³]©w¤¶­±==========================================================================================================================
+    //è¨­å®šä»‹é¢==========================================================================================================================
 
-    [SerializeField] private string inspectorSettings = "³]©w­¶­±";
+    [SerializeField] private string inspectorSettings = "è¨­å®šé é¢";
 
     public Slider musicSlider;
     [SerializeField] private TextMeshProUGUI musicSliderValue;
@@ -321,10 +321,10 @@ public class MainUIManager : MonoBehaviour
     [SerializeField] private Button[] bgnButton;
 
 
-    //³]©w-ªì©l¤Æ
+    //è¨­å®š-åˆå§‹åŒ–
     public void SetInitialSliderValue()
     {
-        //±N Slider ªº­È³]©w¬° GameSetting ¤¤ªº­È
+        //å°‡ Slider çš„å€¼è¨­å®šç‚º GameSetting ä¸­çš„å€¼
         musicSlider.value = (MainManager.settingFile.gameMusicF * 100);
         musicSliderValue.text = (MainManager.settingFile.gameMusicF * 100).ToString("F0") + "%";
         musicToggle.isOn = MainManager.settingFile.gameMusic;
@@ -336,7 +336,7 @@ public class MainUIManager : MonoBehaviour
         {
             if (i == MainManager.settingFile.bgmId)
             {
-                //«ö¤Uªº«ö¶s interactable = false
+                //æŒ‰ä¸‹çš„æŒ‰éˆ• interactable = false
                 bgnButton[i].interactable = false;
             }
             else
@@ -355,7 +355,7 @@ public class MainUIManager : MonoBehaviour
     }
 
 
-    //³]©w¼Æ¦rÅã¥Ü-­µ¼Ö
+    //è¨­å®šæ•¸å­—é¡¯ç¤º-éŸ³æ¨‚
     void HandleMusicChange(float volume)
     {
         float roundedNumber = volume / 100f;
@@ -371,7 +371,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
     }
 
-    //³]©w¼Æ¦rÅã¥Ü-­µ®Ä
+    //è¨­å®šæ•¸å­—é¡¯ç¤º-éŸ³æ•ˆ
     void HandleSoundEffectChange(float volume)
     {
         float roundedNumber = volume / 100f;
@@ -380,7 +380,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
         mainManager.UpdateAudio();
 
-        //UI³Æ¥Î­µ°T
+        //UIå‚™ç”¨éŸ³è¨Š
         uiSoundEffectUiTrue.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         uiSoundEffectUiFalse.volume = MainManager.settingFile.gameSoundEffectF * 2.0f;
         uiSoundEffectUiPage.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
@@ -392,7 +392,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
     }
 
-    //³]©w¼Æ¦rÅã¥Ü-VFX¯S®Ä
+    //è¨­å®šæ•¸å­—é¡¯ç¤º-VFXç‰¹æ•ˆ
     void HandleEffectsVFXChange(float volume)
     {
         MainManager.settingFile.effectsVFX = ((int)volume);
@@ -400,7 +400,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
     }
 
-    //³]©w¼Æ¦rÅã¥Ü-VFX­I´º
+    //è¨­å®šæ•¸å­—é¡¯ç¤º-VFXèƒŒæ™¯
     void HandleBackgroundVFXChange(float volume)
     {
         MainManager.settingFile.backgroundVFX = ((int)volume);
@@ -408,7 +408,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
     }
 
-    //³]©w¼Æ¦rÅã¥Ü-³t«×
+    //è¨­å®šæ•¸å­—é¡¯ç¤º-é€Ÿåº¦
     void HandleSpeedModifierChange(float volume)
     {
         float roundedNumber = volume / 100f;
@@ -417,7 +417,7 @@ public class MainUIManager : MonoBehaviour
         MainManager.SaveSettingFile();
     }
 
-    //¿ï¾ÜBGM
+    //é¸æ“‡BGM
     public void BgmButtons(int id)
     {
         for (int i = 0; i < mainManager.bgmMusic.Length; i++)

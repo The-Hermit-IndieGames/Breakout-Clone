@@ -1,13 +1,13 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
 public class EncryptionUtility
 {
-    // ³]©w 128¡B192¡B256 ¦ì¤¸ª÷Æ_
-    // ( 16¡B24¡B32 ¦r¸`_EN )
-    private static readonly string key = "³o¬O¤@­Ó¥[±Kª÷Æ_";
+    // è¨­å®š 128ã€192ã€256 ä½å…ƒé‡‘é‘°
+    // ( 16ã€24ã€32 å­—ç¯€_EN )
+    private static readonly string key = "é€™æ˜¯ä¸€å€‹åŠ å¯†é‡‘é‘°";
 
     public static string EncryptString(string plainText)
     {

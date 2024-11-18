@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
@@ -15,12 +15,12 @@ public class BannerAdManager : MonoBehaviour
     {
         Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
         Advertisement.Banner.Show(adUnitId);
-        Debug.Log("¾î´T¼s§i¤wÅã¥Ü");
+        Debug.Log("æ©«å¹…å»£å‘Šå·²é¡¯ç¤º");
     }
 
     public void HideBannerAd()
     {
         Advertisement.Banner.Hide();
-        Debug.Log("¾î´T¼s§i¤wÁôÂÃ");
+        Debug.Log("æ©«å¹…å»£å‘Šå·²éš±è—");
     }
 }

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,11 +9,11 @@ using UnityEngine.UI;
 
 public class MakingManager : MonoBehaviour
 {
-    //§Ç¦C¤Æ©w¸q-Ãö¥d¸ê®Æ
+    //åºåˆ—åŒ–å®šç¾©-é—œå¡è³‡æ–™
     [Serializable]
     public class Root
     {
-        //®Ú¥Ø¿ı: ¥Ø¿ı¦WºÙ¡B»s§@ªÌ¡Bª©¥»¸¹¡B´y­z¡BÃö¥d¦Cªí(LevelConfig)
+        //æ ¹ç›®éŒ„: ç›®éŒ„åç¨±ã€è£½ä½œè€…ã€ç‰ˆæœ¬è™Ÿã€æè¿°ã€é—œå¡åˆ—è¡¨(LevelConfig)
         public string name;
         public string maker;
         public string version;
@@ -25,7 +25,7 @@ public class MakingManager : MonoBehaviour
     [Serializable]
     public class LevelConfig
     {
-        //³æ¤@Ãö¥d¸ê®Æ: Ãö¥d¦WºÙ¡B«e¸mÃö¥dID¡B¹CÀ¸¼Ò¦¡(Normal¡B?¡B?)¡B¿ïÃö«ö¶s®y¼Ğ(x¡By)¡B¿ïÃö«ö¶s­·®æ¡B¿j¶ô¦Cªí(BricksData)
+        //å–®ä¸€é—œå¡è³‡æ–™: é—œå¡åç¨±ã€å‰ç½®é—œå¡IDã€éŠæˆ²æ¨¡å¼(Normalã€?ã€?)ã€é¸é—œæŒ‰éˆ•åº§æ¨™(xã€y)ã€é¸é—œæŒ‰éˆ•é¢¨æ ¼ã€ç£šå¡Šåˆ—è¡¨(BricksData)
         public string levelID;
         public string levelName;
         public string[] preLevelID;
@@ -41,7 +41,7 @@ public class MakingManager : MonoBehaviour
     [Serializable]
     public class BricksData
     {
-        //³æ¤@¿j¶ô¸ê®Æ: ¿j¶ô®y¼Ğ(x¡By)¡B¿j¶ôÃş«¬(Null¡BNormal¡BUnbreakable)¡B¿j¶ôÃş«¬¯S¦³¸ê®Æ
+        //å–®ä¸€ç£šå¡Šè³‡æ–™: ç£šå¡Šåº§æ¨™(xã€y)ã€ç£šå¡Šé¡å‹(Nullã€Normalã€Unbreakable)ã€ç£šå¡Šé¡å‹ç‰¹æœ‰è³‡æ–™
         public int xPoint;
         public int yPoint;
         public string brickType;
@@ -51,7 +51,7 @@ public class MakingManager : MonoBehaviour
     [Serializable]
     public class NormalBricks
     {
-        //´¶³q¿j¶ô¸ê®Æ: ¯Å§O¡B¹D¨ã
+        //æ™®é€šç£šå¡Šè³‡æ–™: ç´šåˆ¥ã€é“å…·
         public int brickLevel;
         public int powerUpType;
     }
@@ -59,7 +59,7 @@ public class MakingManager : MonoBehaviour
     [Serializable]
     public class InitialItem
     {
-        //ªì©l¹D¨ã
+        //åˆå§‹é“å…·
         public bool addBall;
         public bool longPaddle;
         public bool burstBall;
@@ -70,12 +70,12 @@ public class MakingManager : MonoBehaviour
 
     private MainManager mainManager;
 
-    //¹w¸mÅé
+    //é ç½®é«”
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject brickPrefab;
     [SerializeField] private GameObject brickUnbreakablePrefab;
 
-    //JSON°t¸m¤å¥ó
+    //JSONé…ç½®æ–‡ä»¶
     [SerializeField] private Root rootLevelsData;
     [SerializeField] private LevelConfig nowLevelsData;
     [SerializeField] private List<BricksData> bricksDataList;
@@ -84,12 +84,12 @@ public class MakingManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI warningTextEN;
     [SerializeField] private TextMeshProUGUI warningTextCH;
 
-    //¹B¦æ
-    private List<GameObject> buttonInMap = new List<GameObject>();                          //¦a¹Ï¤¤ªº«ö¶s¦Cªí
-    private List<GameObject> bricksInScene = new List<GameObject>();                        //³õ´º¤¤ªº¿j¶ô¦Cªí
+    //é‹è¡Œ
+    private List<GameObject> buttonInMap = new List<GameObject>();                          //åœ°åœ–ä¸­çš„æŒ‰éˆ•åˆ—è¡¨
+    private List<GameObject> bricksInScene = new List<GameObject>();                        //å ´æ™¯ä¸­çš„ç£šå¡Šåˆ—è¡¨
 
-    [SerializeField] private Transform buttonsMap;                                          //«ö¶s¦Cªí(§¤¼Ğ¨t)
-    [SerializeField] private Transform bricksList;                                          //¿j¶ô¦Cªí(§¤¼Ğ¨t)
+    [SerializeField] private Transform buttonsMap;                                          //æŒ‰éˆ•åˆ—è¡¨(åæ¨™ç³»)
+    [SerializeField] private Transform bricksList;                                          //ç£šå¡Šåˆ—è¡¨(åæ¨™ç³»)
 
     private BrickMake nowBrick;
 
@@ -103,7 +103,7 @@ public class MakingManager : MonoBehaviour
 
     IEnumerator StartAfterAllObjectsLoaded()
     {
-        // µ¥«İ1¬í¡A©Ò¦³ª«¥ó¥[¸ü§¹¦¨«á°õ¦æªº¥N½X
+        // ç­‰å¾…1ç§’ï¼Œæ‰€æœ‰ç‰©ä»¶åŠ è¼‰å®Œæˆå¾ŒåŸ·è¡Œçš„ä»£ç¢¼
         yield return new WaitForSeconds(1);
 
         AdsPlatformIntegration.AdBanner_Hide();
@@ -112,36 +112,36 @@ public class MakingManager : MonoBehaviour
 
     void Update()
     {
-        // ÀË¬d·Æ¹««öÁäÂIÀ»¨Æ¥ó
-        if (Input.GetMouseButtonDown(0)) // ¥ªÁä
+        // æª¢æŸ¥æ»‘é¼ æŒ‰éµé»æ“Šäº‹ä»¶
+        if (Input.GetMouseButtonDown(0)) // å·¦éµ
         {
             HandleLeftClick();
         }
-        else if (Input.GetMouseButtonDown(1)) // ¥kÁä
+        else if (Input.GetMouseButtonDown(1)) // å³éµ
         {
             HandleRightClick();
         }
     }
 
-    //¥ªÁä
+    //å·¦éµ
     void HandleLeftClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        // ¨Ï¥Î®g½uÀË´ú·Æ¹«ÂIÀ»ªº¦ì¸m
+        // ä½¿ç”¨å°„ç·šæª¢æ¸¬æ»‘é¼ é»æ“Šçš„ä½ç½®
         if (Physics.Raycast(ray, out hit))
         {
-            // ÀË¬d¬O§_ÂIÀ»¨ì¤F Brick ª«¥ó
+            // æª¢æŸ¥æ˜¯å¦é»æ“Šåˆ°äº† Brick ç‰©ä»¶
             BrickMake brick = hit.collider.GetComponent<BrickMake>();
             if (brick != null)
             {
-                //«ü©wnowBrick¥Î©ó«áÄò§ó§ï
+                //æŒ‡å®šnowBrickç”¨æ–¼å¾ŒçºŒæ›´æ”¹
                 nowBrick = brick;
 
                 if (Input.GetKey(KeyCode.LeftShift) && Input.GetMouseButtonDown(0))
                 {
-                    //­×§ï¤è¶ôÃş«¬
+                    //ä¿®æ”¹æ–¹å¡Šé¡å‹
                     brick.brickType += 1;
                     if (brick.brickType >= 2)
                     {
@@ -151,7 +151,7 @@ public class MakingManager : MonoBehaviour
                 }
                 else
                 {
-                    //­×§ï¤è¶ôµ¥¯Å¡B§ó·s brickLevel
+                    //ä¿®æ”¹æ–¹å¡Šç­‰ç´šã€æ›´æ–° brickLevel
                     brick.brickLevel += 1;
                     if (brick.brickLevel >= 6)
                     {
@@ -163,40 +163,40 @@ public class MakingManager : MonoBehaviour
         }
     }
 
-    //¥kÁä
+    //å³éµ
     void HandleRightClick()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        // ¨Ï¥Î®g½uÀË´ú·Æ¹«ÂIÀ»ªº¦ì¸m
+        // ä½¿ç”¨å°„ç·šæª¢æ¸¬æ»‘é¼ é»æ“Šçš„ä½ç½®
         if (Physics.Raycast(ray, out hit))
         {
-            // ÀË¬d¬O§_ÂIÀ»¨ì¤F Brick ª«¥ó
+            // æª¢æŸ¥æ˜¯å¦é»æ“Šåˆ°äº† Brick ç‰©ä»¶
             BrickMake brick = hit.collider.GetComponent<BrickMake>();
             if (brick != null)
             {
-                //«ü©wnowBrick¥Î©ó«áÄò§ó§ï
+                //æŒ‡å®šnowBrickç”¨æ–¼å¾ŒçºŒæ›´æ”¹
                 nowBrick = brick;
 
-                brick.UpdateItem();     //§ó·s powerUpType
+                brick.UpdateItem();     //æ›´æ–° powerUpType
             }
         }
     }
 
 
 
-    //·sª©UI ==============================================================================================================================
+    //æ–°ç‰ˆUI ==============================================================================================================================
 
-    //Äµ§iµe­±--------------------------------------------------------------------------------------------------------------
+    //è­¦å‘Šç•«é¢--------------------------------------------------------------------------------------------------------------
 
-    //©w¸q¤@­Ó©e°UÃş«¬¡A¥Î©óªí¥Ü¨S¦³°Ñ¼Æ©M¨S¦³ªğ¦^­Èªº¤èªk
+    //å®šç¾©ä¸€å€‹å§”è¨—é¡å‹ï¼Œç”¨æ–¼è¡¨ç¤ºæ²’æœ‰åƒæ•¸å’Œæ²’æœ‰è¿”å›å€¼çš„æ–¹æ³•
     delegate void Action();
 
-    //Àx¦s«áÄò°Ê§@ªº©e°UÅÜ¼Æ
+    //å„²å­˜å¾ŒçºŒå‹•ä½œçš„å§”è¨—è®Šæ•¸
     private Action nextAction;
 
-    //Åã¥ÜUI
+    //é¡¯ç¤ºUI
     void ShowWarningCanva(string textEN, string textZH)
     {
         warningCanva.SetActive(true);
@@ -204,7 +204,7 @@ public class MakingManager : MonoBehaviour
         warningTextCH.text = textZH;
     }
 
-    // UI¿ï¾Ü¦^¶Ç YES/NO
+    // UIé¸æ“‡å›å‚³ YES/NO
     public void WarningCanvaYes()
     {
         warningCanva.SetActive(false);
@@ -223,34 +223,34 @@ public class MakingManager : MonoBehaviour
 
 
 
-    //¥DªO¶ô-°h¥X«ö¶s ---------------------------------------------------------------------------------------------------------
+    //ä¸»æ¿å¡Š-é€€å‡ºæŒ‰éˆ• ---------------------------------------------------------------------------------------------------------
     public void BackButtonClick()
     {
         mainManager.soundEffectUiTrue.Play();
-        // ¸ü¤J MenuScene
+        // è¼‰å…¥ MenuScene
         SceneManager.LoadScene("MenuScene");
     }
 
 
 
-    //ÀÉ®×°t¸mªO¶ô-·s¼W JSON «ö¶s ---------------------------------------------------------------------------------------------
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-æ–°å¢ JSON æŒ‰éˆ• ---------------------------------------------------------------------------------------------
     public void NewLevelsJson()
     {
         rootLevelsData = new Root();
     }
 
 
-    //ÀÉ®×°t¸mªO¶ô-§ó·s JSON ¸ê®Æ
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-æ›´æ–° JSON è³‡æ–™
     public void UpdateLevelsJson()
     {
-        //¸ê®Æ¶¥¼h-ÀÉ®×¸ê°T
+        //è³‡æ–™éšå±¤-æª”æ¡ˆè³‡è¨Š
         OnInputFileName();
         OnInputMakerName();
         OnInputVersion();
         OnInputDescription();
     }
 
-    //Ãö¥d°t¸m¤ñ¹ï«O¦s(rootLevelsData.levelConfig << nowLevelsData)
+    //é—œå¡é…ç½®æ¯”å°ä¿å­˜(rootLevelsData.levelConfig << nowLevelsData)
     public void SaveLevelToRoot()
     {
         if (nowLevelsData.levelID != null)
@@ -278,7 +278,7 @@ public class MakingManager : MonoBehaviour
         }
     }
 
-    //Ãö¥d°t¸m¤ñ¹ï¸ü¤J(rootLevelsData.levelConfig >> nowLevelsData)
+    //é—œå¡é…ç½®æ¯”å°è¼‰å…¥(rootLevelsData.levelConfig >> nowLevelsData)
     public void LoadRootToLevel(string id)
     {
         foreach (var levelConfig in rootLevelsData.levelConfig)
@@ -291,27 +291,27 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //ÀÉ®×°t¸mªO¶ô-¶×¥X JSON «ö¶s
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-åŒ¯å‡º JSON æŒ‰éˆ•
     public void ExportLevelsJson()
     {
         UpdateLevelsJson();
 
-        // Âà´«¬°JSON¦r²Å¦ê
+        // è½‰æ›ç‚ºJSONå­—ç¬¦ä¸²
         string rootLevelsDataJson = JsonUtility.ToJson(rootLevelsData, true);
 
-        // ½T«O¥Ø¿ı¦s¦b
+        // ç¢ºä¿ç›®éŒ„å­˜åœ¨
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
         Directory.CreateDirectory(directoryPath);
 
-        // ¼g¤J JSON ¨ìÀÉ®×
+        // å¯«å…¥ JSON åˆ°æª”æ¡ˆ
         string filePath = Path.Combine(directoryPath, rootLevelsData.name + ".json");
         File.WriteAllText(filePath, rootLevelsDataJson);
 
-        Debug.Log("Ãö¥d°t¸m¤w«O¦s¨ì " + filePath);
+        Debug.Log("é—œå¡é…ç½®å·²ä¿å­˜åˆ° " + filePath);
     }
 
 
-    //ÀÉ®×°t¸mªO¶ô-·j´M JSON «ö¶s
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-æœå°‹ JSON æŒ‰éˆ•
     public void SearchLevelsJson()
     {
         string filePath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels", searchFileName + ".json");
@@ -338,7 +338,7 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //ÀÉ®×°t¸mªO¶ô-¸ÑªR JSON ¦ÜUI
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-è§£æ JSON è‡³UI
     private void LoadJsonToMap()
     {
         if (rootLevelsData != null)
@@ -372,13 +372,13 @@ public class MakingManager : MonoBehaviour
             nowButton = buttonInMap[0];
             nowLevelsData = rootLevelsData.levelConfig[0];
 
-            Debug.Log("ÀÉ®×: " + rootLevelsData.name + ".json ¸ü¤J§¹¦¨!");
+            Debug.Log("æª”æ¡ˆ: " + rootLevelsData.name + ".json è¼‰å…¥å®Œæˆ!");
         }
     }
 
 
 
-    //¿é¤J¶µ¥Ø
+    //è¼¸å…¥é …ç›®
     public TMP_InputField inputFileName;
     public TMP_InputField inputMakerName;
     public TMP_InputField inputVersion;
@@ -388,7 +388,7 @@ public class MakingManager : MonoBehaviour
     private string searchFileName;
 
 
-    //ÀÉ®×°t¸mªO¶ô-¿é¤J±ø
+    //æª”æ¡ˆé…ç½®æ¿å¡Š-è¼¸å…¥æ¢
     public void OnInputFileName()
     {
         rootLevelsData.name = inputFileName.text;
@@ -416,7 +416,7 @@ public class MakingManager : MonoBehaviour
 
 
 
-    //Ãö¥d°t¸mªO¶ô----------------------------------------------------------------------------------------------------------
+    //é—œå¡é…ç½®æ¿å¡Š----------------------------------------------------------------------------------------------------------
 
     public GameObject nowButton;
 
@@ -424,7 +424,7 @@ public class MakingManager : MonoBehaviour
     public TMP_InputField inputPrerequisitesLevel;
     private string prerequisitesLevel;
 
-    //Map-·s¼WÃö¥d
+    //Map-æ–°å¢é—œå¡
     public void MapAddLevel()
     {
         Vector2 buttonPosition = new Vector2(0, 10);
@@ -453,7 +453,7 @@ public class MakingManager : MonoBehaviour
 
     private string GenerateID(int id)
     {
-        // ¨Ï¥Î¦r¦ê®æ¦¡¤Æ±N¾ã¼Æ ID Âà´«¬°±a¦³©T©w¦ì¼Æªº ID ¦r¦ê
+        // ä½¿ç”¨å­—ä¸²æ ¼å¼åŒ–å°‡æ•´æ•¸ ID è½‰æ›ç‚ºå¸¶æœ‰å›ºå®šä½æ•¸çš„ ID å­—ä¸²
         return $"ID_{id:D4}";
     }
 
@@ -477,7 +477,7 @@ public class MakingManager : MonoBehaviour
     [SerializeField] private TMP_InputField inputCoordinateY;
     [SerializeField] private TextMeshProUGUI tempBricksText;
 
-    //§ó·sµe­±¸ê°T
+    //æ›´æ–°ç•«é¢è³‡è¨Š
     public void UpDataMapLevel()
     {
         idText.text = nowLevelsData.levelID;
@@ -511,24 +511,24 @@ public class MakingManager : MonoBehaviour
         }
     }
 
-    //Ãö¥d°t¸mªO¶ô-Åª¨ú
+    //é—œå¡é…ç½®æ¿å¡Š-è®€å–
     public void MapLoadLevel(string id)
     {
         SaveLevelToRoot();
         LoadRootToLevel(id);
 
-        //§ó·sµe­±¸ê°T
+        //æ›´æ–°ç•«é¢è³‡è¨Š
         UpDataMapLevel();
     }
 
-    //Ãö¥d°t¸mªO¶ô-½Æ»sID
+    //é—œå¡é…ç½®æ¿å¡Š-è¤‡è£½ID
     public void CopyId()
     {
         GUIUtility.systemCopyBuffer = nowLevelsData.levelID;
         Debug.Log("Copy ID : " + nowLevelsData.levelID);
     }
 
-    //Ãö¥d°t¸mªO¶ô-¶K¤WID (¤U¤@Ãö)
+    //é—œå¡é…ç½®æ¿å¡Š-è²¼ä¸ŠID (ä¸‹ä¸€é—œ)
     public void PasteId()
     {
         nowLevelsData.nextLevelID = GUIUtility.systemCopyBuffer;
@@ -537,7 +537,7 @@ public class MakingManager : MonoBehaviour
         SaveLevelToRoot();
     }
 
-    //Ãö¥d°t¸mªO¶ô-§R°£Ãö¥d
+    //é—œå¡é…ç½®æ¿å¡Š-åˆªé™¤é—œå¡
     public void MapDeleteLevel()
     {
         nextAction = MapDeleteLevelNext;
@@ -555,7 +555,7 @@ public class MakingManager : MonoBehaviour
         nextAction = null;
     }
 
-    //Ãö¥d°t¸mªO¶ô-¿é¤JÃö¥d¦WºÙ
+    //é—œå¡é…ç½®æ¿å¡Š-è¼¸å…¥é—œå¡åç¨±
     public void MapLevelNameInput()
     {
         nowLevelsData.levelName = inputNowLevelName.text;
@@ -565,13 +565,13 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //Ãö¥d°t¸mªO¶ô-«ö¶s¼Ë¦¡
+    //é—œå¡é…ç½®æ¿å¡Š-æŒ‰éˆ•æ¨£å¼
     public void MapButtonType()
     {
 
     }
 
-    //Ãö¥d°t¸mªO¶ô-¿é¤J®y¼Ğ
+    //é—œå¡é…ç½®æ¿å¡Š-è¼¸å…¥åº§æ¨™
     public void CoordinateXInput()
     {
         float value;
@@ -597,7 +597,7 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //Ãö¥d°t¸mªO¶ô-¦a¹Ï-§ó·s®y¼Ğ
+    //é—œå¡é…ç½®æ¿å¡Š-åœ°åœ–-æ›´æ–°åº§æ¨™
     public void UpDataPosition(string id, Vector2 position)
     {
         MapLoadLevel(id);
@@ -611,25 +611,25 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //Ãö¥d°t¸mªO¶ô-«e¸mÃö¥d-¿é¤J---------------------------
+    //é—œå¡é…ç½®æ¿å¡Š-å‰ç½®é—œå¡-è¼¸å…¥---------------------------
     public void PrerequisitesInput()
     {
 
     }
 
-    //Ãö¥d°t¸mªO¶ô-«e¸mÃö¥d-¥[¤J
+    //é—œå¡é…ç½®æ¿å¡Š-å‰ç½®é—œå¡-åŠ å…¥
     public void PrerequisitesAdd()
     {
 
     }
 
-    //Ãö¥d°t¸mªO¶ô-«e¸mÃö¥d-¿ï¾Ü
+    //é—œå¡é…ç½®æ¿å¡Š-å‰ç½®é—œå¡-é¸æ“‡
     public void PrerequisitesDropdown()
     {
 
     }
 
-    //Ãö¥d°t¸mªO¶ô-«e¸mÃö¥d-§R°£
+    //é—œå¡é…ç½®æ¿å¡Š-å‰ç½®é—œå¡-åˆªé™¤
     public void PrerequisitesDelete()
     {
 
@@ -639,11 +639,11 @@ public class MakingManager : MonoBehaviour
 
 
 
-    //¿j¶ô°t¸mªO¶ô-­«»s¿j¶ô-------------------------------------------------------------------------------------------
+    //ç£šå¡Šé…ç½®æ¿å¡Š-é‡è£½ç£šå¡Š-------------------------------------------------------------------------------------------
     public void BricksRestart()
     {
         nextAction = BricksRestartNext;
-        ShowWarningCanva("Restart Bricks ?", "½T©w­n­«¸mµe­±¤¤ªº¿j¶ô¶Ü?");
+        ShowWarningCanva("Restart Bricks ?", "ç¢ºå®šè¦é‡ç½®ç•«é¢ä¸­çš„ç£šå¡Šå—?");
     }
 
     public void BricksRestartNext()
@@ -654,7 +654,7 @@ public class MakingManager : MonoBehaviour
         nextAction = null;
     }
 
-    //¿j¶ô°t¸mªO¶ô-¸ü¤J¿j¶ô
+    //ç£šå¡Šé…ç½®æ¿å¡Š-è¼‰å…¥ç£šå¡Š
     public void BricksLoadByTemp()
     {
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
@@ -663,20 +663,20 @@ public class MakingManager : MonoBehaviour
         BricksGenerate(bricksDataList);
     }
 
-    //¿j¶ô°t¸mªO¶ô-Àx¦s¿j¶ô
+    //ç£šå¡Šé…ç½®æ¿å¡Š-å„²å­˜ç£šå¡Š
     public void BricksSaveToTemp()
     {
         BricksAnalyze();
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
-        Debug.Log("BricksSave: ¸ÑªR¿j¶ô¨Ã«O¦s¦Ü bricksDataList");
+        Debug.Log("BricksSave: è§£æç£šå¡Šä¸¦ä¿å­˜è‡³ bricksDataList");
     }
 
 
 
-    //¿j¶ô°t¸mªO¶ô-¸ü¤J¿j¶ô
+    //ç£šå¡Šé…ç½®æ¿å¡Š-è¼‰å…¥ç£šå¡Š
     public void TempLoadByLevel()
     {
-        //Á×§Kµo¥Í¶Ç§}©I¥s
+        //é¿å…ç™¼ç”Ÿå‚³å€å‘¼å«
         if (nowLevelsData.bricksData == null)
         {
             bricksDataList = new List<BricksData>();
@@ -689,10 +689,10 @@ public class MakingManager : MonoBehaviour
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
     }
 
-    //¿j¶ô°t¸mªO¶ô-Àx¦s¿j¶ô
+    //ç£šå¡Šé…ç½®æ¿å¡Š-å„²å­˜ç£šå¡Š
     public void TempSaveToLevel()
     {
-        //Á×§Kµo¥Í¶Ç§}©I¥s
+        //é¿å…ç™¼ç”Ÿå‚³å€å‘¼å«
         nowLevelsData.bricksData = new List<BricksData>(bricksDataList);
 
         foreach (var levelConfig in rootLevelsData.levelConfig)
@@ -707,7 +707,7 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //¿j¶ô¥Í¦¨¾¹(Åª¨ú)
+    //ç£šå¡Šç”Ÿæˆå™¨(è®€å–)
     void BricksGenerate(List<BricksData> bricksDatas)
     {
         if (bricksDatas == null)
@@ -720,7 +720,7 @@ public class MakingManager : MonoBehaviour
                     GameObject brick = Instantiate(brickPrefab, brickPosition, Quaternion.identity, bricksList);
                     bricksInScene.Add(brick);
 
-                    // ³]¸m¿j¶ôªºÄİ©Ê
+                    // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                     var brickScript = brick.GetComponent<BrickMake>();
                     if (brickScript != null)
                     {
@@ -750,7 +750,7 @@ public class MakingManager : MonoBehaviour
                 GameObject brick = Instantiate(brickPrefab, brickPosition, Quaternion.identity, bricksList);
                 bricksInScene.Add(brick);
 
-                // ³]¸m¿j¶ôªºÄİ©Ê
+                // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                 var brickScript = brick.GetComponent<BrickMake>();
                 if (brickScript != null)
                 {
@@ -774,7 +774,7 @@ public class MakingManager : MonoBehaviour
                             break;
 
                         default:
-                            Debug.LogWarning("¥¼ª¾ªº¿j¶ôÃş«¬:" + brickData.brickType + "  ( " + brickData.xPoint + " , " + brickData.yPoint + " )");
+                            Debug.LogWarning("æœªçŸ¥çš„ç£šå¡Šé¡å‹:" + brickData.brickType + "  ( " + brickData.xPoint + " , " + brickData.yPoint + " )");
                             break;
                     }
                 }
@@ -789,7 +789,7 @@ public class MakingManager : MonoBehaviour
                 GameObject brick = Instantiate(brickPrefab, brickPosition, Quaternion.identity, bricksList);
                 bricksInScene.Add(brick);
 
-                // ³]¸m¿j¶ôªºÄİ©Ê
+                // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                 var brickScript = brick.GetComponent<BrickMake>();
                 if (brickScript != null)
                 {
@@ -805,7 +805,7 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //¿j¶ô¥Í¦¨¾¹(·s)
+    //ç£šå¡Šç”Ÿæˆå™¨(æ–°)
     void BricksGenerateNew()
     {
         for (int x = 1; x <= 12; x++)
@@ -816,7 +816,7 @@ public class MakingManager : MonoBehaviour
                 GameObject brick = Instantiate(brickPrefab, brickPosition, Quaternion.identity, bricksList);
                 bricksInScene.Add(brick);
 
-                // ³]¸m¿j¶ôªºÄİ©Ê
+                // è¨­ç½®ç£šå¡Šçš„å±¬æ€§
                 var brickScript = brick.GetComponent<BrickMake>();
                 if (brickScript != null)
                 {
@@ -831,12 +831,12 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //¿j¶ô¸ÑªR¾¹
+    //ç£šå¡Šè§£æå™¨
     void BricksAnalyze()
     {
         bricksDataList.Clear();
 
-        // ¦¬¶°³õ´º¤¤ªº¿j¶ô¼Æ¾Ú
+        // æ”¶é›†å ´æ™¯ä¸­çš„ç£šå¡Šæ•¸æ“š
         foreach (GameObject brick in bricksInScene)
         {
             var brickScript = brick.GetComponent<BrickMake>();
@@ -866,7 +866,7 @@ public class MakingManager : MonoBehaviour
                     bricksDataList.Add(brickData);
                     break;
                 default:
-                    Debug.LogWarning("¥¼ª¾ªº¿j¶ôÃş«¬:" + brickScript.brickType + "  ( " + brickScript.xPoint + " , " + brickScript.yPoint + " )");
+                    Debug.LogWarning("æœªçŸ¥çš„ç£šå¡Šé¡å‹:" + brickScript.brickType + "  ( " + brickScript.xPoint + " , " + brickScript.yPoint + " )");
                     break;
             }
 
@@ -874,16 +874,16 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //¿j¶ô²M°£¾¹
+    //ç£šå¡Šæ¸…é™¤å™¨
     void BricksDelete()
     {
-        // ¹M¾ú Transform ¤¤ªº¨C­Ó¤lª«¥ó
+        // éæ­· Transform ä¸­çš„æ¯å€‹å­ç‰©ä»¶
         for (int i = 0; i < bricksList.childCount; i++)
         {
-            //Àò¨ú¤lª«¥óªº Transform
+            //ç²å–å­ç‰©ä»¶çš„ Transform
             Transform childTransform = bricksList.GetChild(i);
 
-            //Àò¨ú¤lª«¥óªº GameObject
+            //ç²å–å­ç‰©ä»¶çš„ GameObject
             GameObject childGameObject = childTransform.gameObject;
 
             Destroy(childGameObject);
@@ -893,7 +893,7 @@ public class MakingManager : MonoBehaviour
 
 
 
-    //ªì©l¹D¨ã--------------------------------------------------------------------------------------------------------
+    //åˆå§‹é“å…·--------------------------------------------------------------------------------------------------------
 
 
     [SerializeField] private List<Toggle> initialItemToggle;

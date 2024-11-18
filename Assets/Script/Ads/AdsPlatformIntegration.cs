@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -46,7 +46,7 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     }
 
-    //Á`¶°¦¨: Åã¥Ü»PÁôÂÃ
+    //ç¸½é›†æˆ: é¡¯ç¤ºèˆ‡éš±è—
     public static void AdBanner_Show()
     {
         var adsPlatformIntegration = GameObject.Find("MainManager").GetComponent<AdsPlatformIntegration>();
@@ -130,7 +130,7 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     }
 
-    // Unity¶°¦¨: Åã¥Ü»PÁôÂÃ
+    // Unityé›†æˆ: é¡¯ç¤ºèˆ‡éš±è—
     private void Unity_AdBanner_Show()
     {
         bannerAdManager.ShowBannerAd();
@@ -154,7 +154,7 @@ public class AdsPlatformIntegration : MonoBehaviour
 
 
 
-    // LevelPlay¶°¦¨: Åã¥Ü»PÁôÂÃ
+    // LevelPlayé›†æˆ: é¡¯ç¤ºèˆ‡éš±è—
     private void LevelPlay_AdBanner_Show()
     {
         levelPlayBannerAd.ShowBanner();

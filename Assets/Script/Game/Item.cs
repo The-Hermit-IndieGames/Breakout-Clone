@@ -1,12 +1,12 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    public int type;                    // ¹D¨ã½s¸¹
-    public bool inBrick = true;         // ª«¥ó¦b¿j¶ô¤º?
+    public int type;                    // é“å…·ç·¨è™Ÿ
+    public bool inBrick = true;         // ç‰©ä»¶åœ¨ç£šå¡Šå…§?
 
-    private float moveSpeed = 4f;       // ª«¥ó¦V¤U²¾°Êªº³t«×
-    private Vector3 originalScale;      // ­ì©lªºÁY©ñ­È
+    private float moveSpeed = 4f;       // ç‰©ä»¶å‘ä¸‹ç§»å‹•çš„é€Ÿåº¦
+    private Vector3 originalScale;      // åŸå§‹çš„ç¸®æ”¾å€¼
     private CircleCollider2D circleCollider;
 
     [SerializeField] private GameObject vfxStardustScore;
@@ -15,7 +15,7 @@ public class Item : MonoBehaviour
     {
         originalScale = transform.localScale;
 
-        // Àò¨ú Circle Collider 2D ²Õ¥óªº¤Ş¥Î
+        // ç²å– Circle Collider 2D çµ„ä»¶çš„å¼•ç”¨
         circleCollider = GetComponent<CircleCollider2D>();
     }
 
@@ -25,22 +25,22 @@ public class Item : MonoBehaviour
         {
             if (circleCollider != null)
             {
-                // ±Ò¥Î Circle Collider 2D
+                // å•Ÿç”¨ Circle Collider 2D
                 circleCollider.enabled = true;
 
                 circleCollider = null;
             }
 
-            // ¦pªGª«¥ó¤£¦b¿j¶ô¤º¡A¼W¥[ªø©M¼e¬°­ì©lªº3­¿
+            // å¦‚æœç‰©ä»¶ä¸åœ¨ç£šå¡Šå…§ï¼Œå¢åŠ é•·å’Œå¯¬ç‚ºåŸå§‹çš„3å€
             transform.localScale = new Vector3(originalScale.x * 3, originalScale.y * 3, 1);
 
-            // ¦V¤U²¾°Ê
+            // å‘ä¸‹ç§»å‹•
             if (GameData.gameRunning == true && GameData.gameStarted == true)
             {                
                 transform.Translate(Vector3.down * moveSpeed * Time.deltaTime);
             }            
 
-            // ¦pªGY®y¼Ğ¤p©óminY¡A§R°£ª«¥ó
+            // å¦‚æœYåº§æ¨™å°æ–¼minYï¼Œåˆªé™¤ç‰©ä»¶
             if (transform.position.y < -5f)
             {
                 Destroy(gameObject);
@@ -48,25 +48,25 @@ public class Item : MonoBehaviour
         }
     }
 
-    //¨ú±o¹D¨ã®É
+    //å–å¾—é“å…·æ™‚
     public void GetItem()
     {
         GameObject vfx = Instantiate(vfxStardustScore, transform.position, Quaternion.identity);
         var particleSystem = vfx.GetComponent<ParticleSystem>();
         if (particleSystem != null)
         {
-            //³]¸m¬°ÃC¦â
+            //è¨­ç½®ç‚ºé¡è‰²
             var mainModule = particleSystem.main;
             var newColor = new Color(1f, 1f, 1f, 1f);
             mainModule.startColor = newColor;
 
-            //³]¸m²É¤lµo®g¼Æ¶q
+            //è¨­ç½®ç²’å­ç™¼å°„æ•¸é‡
             ParticleSystem.Burst[] bursts = new ParticleSystem.Burst[1];
-            bursts[0].time = 0.0f; // ±q¹B¦æ¶}©l®É¥ß§Yµo®g
-            bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //²É¤l¼Æ¶q
+            bursts[0].time = 0.0f; // å¾é‹è¡Œé–‹å§‹æ™‚ç«‹å³ç™¼å°„
+            bursts[0].count = (short)MainManager.settingFile.effectsVFX * 0.5f; //ç²’å­æ•¸é‡
             particleSystem.emission.SetBursts(bursts);
 
-            //³]¸m¤lª«¥óªº Force Over Lifetime ­È
+            //è¨­ç½®å­ç‰©ä»¶çš„ Force Over Lifetime å€¼
             Transform subToScore = vfx.transform.Find("SubToScore");
             if (subToScore != null)
             {
@@ -77,7 +77,7 @@ public class Item : MonoBehaviour
             }
             else
             {
-                Debug.LogError("¥¼§ä¨ì¦W¬° 'subToScore' ªº¤lª«¥ó¡I");
+                Debug.LogError("æœªæ‰¾åˆ°åç‚º 'subToScore' çš„å­ç‰©ä»¶ï¼");
             }
         }
     }

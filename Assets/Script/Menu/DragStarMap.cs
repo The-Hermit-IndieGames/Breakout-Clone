@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class DragStarMap : MonoBehaviour
@@ -7,28 +7,28 @@ public class DragStarMap : MonoBehaviour
     private bool isDragging = false;
     private Camera mainCamera;
 
-    // ³]¸mÄá¼v¾÷¦ì¸m©M¥Ø¼Ğ¥­­±
+    // è¨­ç½®æ”å½±æ©Ÿä½ç½®å’Œç›®æ¨™å¹³é¢
     public Vector3 cameraPosition = new Vector3(0, 0, -20);
     public float targetPlaneZ = 10f;
 
-    // ¿Ã¹õÃä¬É
+    // è¢å¹•é‚Šç•Œ
     public Vector2 screenMax = new Vector2(80f, 45f);
 
-    // ª«¥ó¤j¤p
+    // ç‰©ä»¶å¤§å°
     public Vector3 objectSize = new Vector3(320f, 180f, 1f);
 
-    // »P¿Ã¹õÃä¬É¶ZÂ÷
+    // èˆ‡è¢å¹•é‚Šç•Œè·é›¢
     public float xBoundsDistance = 2.5f;
     public float yBoundsDistance = 2.5f;
 
-    // ·í«e©ì¦²Ãä¬É
+    // ç•¶å‰æ‹–æ›³é‚Šç•Œ
     private Vector2 currentBoundsMin;
     private Vector2 currentBoundsMax;
 
-    // °¾²¾¶qìH­È¡A¥Î©ó­­¨îªì©l¿ù»~¦ì²¾
+    // åç§»é‡é–¾å€¼ï¼Œç”¨æ–¼é™åˆ¶åˆå§‹éŒ¯èª¤ä½ç§»
     public float maxAllowedOffset = 1f;
 
-    // ÁY©ñ°Ñ¼Æ
+    // ç¸®æ”¾åƒæ•¸
     public float zoomSpeed = 1f;
     public float minScale = 0.5f;
     public float maxScale = 2f;
@@ -72,7 +72,7 @@ public class DragStarMap : MonoBehaviour
         {
             offset = transform.position - mouseWorldPosition;
 
-            // ÀË¬d°¾²¾¶q¬O§_¶W¹LìH­È
+            // æª¢æŸ¥åç§»é‡æ˜¯å¦è¶…éé–¾å€¼
             if (offset.magnitude <= maxAllowedOffset)
             {
                 isDragging = true;
@@ -90,7 +90,7 @@ public class DragStarMap : MonoBehaviour
         Vector3 mouseWorldPosition = GetMouseWorldPosition();
         Vector3 targetPosition = mouseWorldPosition + offset;
 
-        // ­­¨î¥Ø¼Ğ¦ì¸m¦b·í«eÃä¬É¤º
+        // é™åˆ¶ç›®æ¨™ä½ç½®åœ¨ç•¶å‰é‚Šç•Œå…§
         ClampPosition(ref targetPosition);
 
         transform.position = targetPosition;
@@ -105,7 +105,7 @@ public class DragStarMap : MonoBehaviour
 
         transform.localScale *= scaleFactor;
 
-        // ½T«Oª«¥ó¦ì¸m¦b·sªºÃä¬É¤º
+        // ç¢ºä¿ç‰©ä»¶ä½ç½®åœ¨æ–°çš„é‚Šç•Œå…§
         CalculateBounds();
         Vector3 clampedPosition = transform.position;
         ClampPosition(ref clampedPosition);
@@ -115,13 +115,13 @@ public class DragStarMap : MonoBehaviour
     private Vector3 GetMouseWorldPosition()
     {
         Vector3 mouseScreenPosition = Input.mousePosition;
-        mouseScreenPosition.z = targetPlaneZ - mainCamera.transform.position.z; // ­pºâÄá¼v¾÷¨ì¥Ø¼Ğ¥­­±ªº¶ZÂ÷
+        mouseScreenPosition.z = targetPlaneZ - mainCamera.transform.position.z; // è¨ˆç®—æ”å½±æ©Ÿåˆ°ç›®æ¨™å¹³é¢çš„è·é›¢
         return mainCamera.ScreenToWorldPoint(mouseScreenPosition);
     }
 
     private bool IsMouseOverObject(Vector3 mouseWorldPosition)
     {
-        // ÀË¬d·Æ¹«¦ì¸m¬O§_¦bª«¥óªº¸I¼²½d³ò¤º
+        // æª¢æŸ¥æ»‘é¼ ä½ç½®æ˜¯å¦åœ¨ç‰©ä»¶çš„ç¢°æ’ç¯„åœå…§
         Collider2D collider2D = GetComponent<Collider2D>();
         if (collider2D != null)
         {
@@ -141,18 +141,18 @@ public class DragStarMap : MonoBehaviour
 
     private void ClampPosition(ref Vector3 position)
     {
-        // ­­¨î¥Ø¼Ğ¦ì¸m¦bÃä¬É¤º
+        // é™åˆ¶ç›®æ¨™ä½ç½®åœ¨é‚Šç•Œå…§
         position.x = Mathf.Clamp(position.x, currentBoundsMin.x, currentBoundsMax.x);
         position.y = Mathf.Clamp(position.y, currentBoundsMin.y, currentBoundsMax.y);
     }
 
     private void CalculateBounds()
     {
-        // ­pºâÃä¬É
+        // è¨ˆç®—é‚Šç•Œ
         float xDistance = (objectSize.x * nowScale - screenMax.x) * 0.5f + xBoundsDistance;
         float yDistance = (objectSize.y * nowScale - screenMax.y) * 0.5f + yBoundsDistance;
 
-        // §ó·sÃä¬É
+        // æ›´æ–°é‚Šç•Œ
         currentBoundsMin = new Vector2(-xDistance, -yDistance);
         currentBoundsMax = new Vector2(xDistance, yDistance);
     }

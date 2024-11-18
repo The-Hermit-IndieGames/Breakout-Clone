@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 
 public class ExtraBall : MonoBehaviour
@@ -12,7 +12,7 @@ public class ExtraBall : MonoBehaviour
     [SerializeField] private AudioSource soundEffectBurstBall;
 
     [SerializeField] private Transform blackHole;
-    public float forceStrength = 7.5f; // §@¥Î¤Oªº±j«×
+    public float forceStrength = 7.5f; // ä½œç”¨åŠ›çš„å¼·åº¦
 
 
     private void Start()
@@ -27,7 +27,7 @@ public class ExtraBall : MonoBehaviour
     {
         if (GameData.gameOver == true)
         {
-            rb.velocity = Vector3.zero; // ³]¸m³t«×¬°¹s
+            rb.linearVelocity = Vector3.zero; // è¨­ç½®é€Ÿåº¦ç‚ºé›¶
         }
 
         if (GameData.blackHole == true)
@@ -36,53 +36,53 @@ public class ExtraBall : MonoBehaviour
         }
     }
 
-    //¸I¼²ÀË´ú
+    //ç¢°æ’æª¢æ¸¬
     private void OnCollisionExit(Collision other)
     {
         soundEffectCollision.Play();
 
-        var velocity = rb.velocity;
+        var velocity = rb.linearVelocity;
 
-        //¸I¼²«á¥[³t
+        //ç¢°æ’å¾ŒåŠ é€Ÿ
         velocity *= GameData.speedIncreaseFactor;
 
-        //ÀË¬d¬O§_±µªñ§¹¥ş««ª½¡A¦]¬°³o·|¾É­P¥d¦í¡A«d®z¤@ÂI««ª½¤O
+        //æª¢æŸ¥æ˜¯å¦æ¥è¿‘å®Œå…¨å‚ç›´ï¼Œå› ç‚ºé€™æœƒå°è‡´å¡ä½ï¼Œå‰Šå¼±ä¸€é»å‚ç›´åŠ›
         if (Vector3.Dot(velocity.normalized, Vector3.up) > 0.998f)
         {
             velocity.y *= 0.5f;
             velocity *= 2.0f;
-            Debug.Log("¦V¶q­×¥¿" + velocity.normalized);
+            Debug.Log("å‘é‡ä¿®æ­£" + velocity.normalized);
             if (Math.Abs(velocity.x) <= 0.01f)
             {
                 float speed = velocity.y;
                 velocity = new Vector3(0.1f * collisionTimes, 1.0f, 0f).normalized * speed;
-                Debug.Log("««ª½¥d¦º ­×¥¿¦V¶q" + velocity.normalized);
+                Debug.Log("å‚ç›´å¡æ­» ä¿®æ­£å‘é‡" + velocity.normalized);
                 collisionTimes *= -1;
             }
         }
 
-        //ÀË¬d¬O§_±µªñ§¹¥ş¤ô¥­¡A¦]¬°³o·|¾É­P¥d¦í¡A«d®z¤@ÂI¤ô¥­¤O
+        //æª¢æŸ¥æ˜¯å¦æ¥è¿‘å®Œå…¨æ°´å¹³ï¼Œå› ç‚ºé€™æœƒå°è‡´å¡ä½ï¼Œå‰Šå¼±ä¸€é»æ°´å¹³åŠ›
         if (Vector3.Dot(velocity.normalized, Vector3.right) > 0.998f)
         {
             velocity.x *= 0.5f;
             velocity *= 2.0f;
-            Debug.Log("¦V¶q­×¥¿" + velocity.normalized);
+            Debug.Log("å‘é‡ä¿®æ­£" + velocity.normalized);
             if (Math.Abs(velocity.y) <= 0.01f)
             {
                 float speed = velocity.x;
                 velocity = new Vector3(1.0f, 0.1f * collisionTimes, 0f).normalized * speed;
-                Debug.Log("¤ô¥­¥d¦º ­×¥¿¦V¶q" + velocity.normalized);
+                Debug.Log("æ°´å¹³å¡æ­» ä¿®æ­£å‘é‡" + velocity.normalized);
                 collisionTimes *= -1;
             }
         }
 
-        //³Ì¤j³t«×
+        //æœ€å¤§é€Ÿåº¦
         if (velocity.magnitude > GameData.maxSpeed)
         {
             velocity = velocity.normalized * GameData.maxSpeed;
         }
 
-        //¹D¨ã:Ãz¬µ
+        //é“å…·:çˆ†ç‚¸
         if (GameData.burstBall == true)
         {
             if (other.gameObject.CompareTag("Brick"))
@@ -91,17 +91,17 @@ public class ExtraBall : MonoBehaviour
 
                 soundEffectBurstBall.Play();
 
-                //³]¸m²É¤l
+                //è¨­ç½®ç²’å­
                 GameObject vfx = Instantiate(vfxExplode, transform.position, Quaternion.identity);
             }
         }
 
-        rb.velocity = velocity;
+        rb.linearVelocity = velocity;
     }
 
     void BurstBall()
     {
-        // ¦b¥b®|¬°4ªº½d³ò¤ºÀË¬d¨ä¥Lª«¥ó
+        // åœ¨åŠå¾‘ç‚º4çš„ç¯„åœå…§æª¢æŸ¥å…¶ä»–ç‰©ä»¶
         Collider[] colliders = Physics.OverlapSphere(transform.position, 3f);
 
         foreach (Collider col in colliders)
@@ -121,11 +121,11 @@ public class ExtraBall : MonoBehaviour
     {
         if (blackHole != null && rb != null)
         {
-            //­pºâ¤è¦V¦V¶q
+            //è¨ˆç®—æ–¹å‘å‘é‡
             Vector3 direction = (blackHole.position - transform.position).normalized;
             direction.z = 0;
 
-            //¬I¥[¤O
+            //æ–½åŠ åŠ›
             rb.AddForce(direction * forceStrength, ForceMode.Force);
         }
         else if (blackHole == null)

@@ -1,8 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class OpenFileWindows : MonoBehaviour
 {
-    // ¶}±ÒÀÉ®×Á`ºŞ¨Ó¿ï¾Ü¥~³¡ÀÉ®×
+    // é–‹å•Ÿæª”æ¡ˆç¸½ç®¡ä¾†é¸æ“‡å¤–éƒ¨æª”æ¡ˆ
     public void OpenFile()
     {
         
