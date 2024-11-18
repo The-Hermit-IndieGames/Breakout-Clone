@@ -96,6 +96,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioSource soundEffectGameCleared;
     [SerializeField] private AudioSource soundEffectGameClearedPlus;
 
+    [SerializeField] private AudioSource soundEffectBlackHole;
+
 
     //道具
     public GameObject paddle;                   //滑板
@@ -183,6 +185,7 @@ public class GameManager : MonoBehaviour
         soundEffectGameOver.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         soundEffectGameCleared.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
         soundEffectGameClearedPlus.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
+        soundEffectBlackHole.volume = MainManager.settingFile.gameSoundEffectF * 1.0f;
 
         Debug.Log("已初始化關卡");
     }
@@ -224,6 +227,7 @@ public class GameManager : MonoBehaviour
     void GenerateBricks()
     {
         //初始道具
+        Debug.LogWarning("初始道具");
         if (MainManager.nowLevelData.initialItem.addBall == true)
         { maxTotalScore += 200; initialItem[0].SetActive(true); }
         if (MainManager.nowLevelData.initialItem.longPaddle == true)

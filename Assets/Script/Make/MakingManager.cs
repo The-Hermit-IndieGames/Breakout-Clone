@@ -439,6 +439,7 @@ public class MakingManager : MonoBehaviour
         nowLevelsData.levelName = "Null";
         nowLevelsData.gameType = "Normal";
         nowLevelsData.menuStyle = 0;
+        nowLevelsData.initialItem = new InitialItem();
 
         var buttonScript = button.GetComponent<MapLevelButton>();
         if (buttonScript != null)
@@ -487,11 +488,11 @@ public class MakingManager : MonoBehaviour
         inputCoordinateY.text = nowLevelsData.menuY.ToString();
 
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
-        initialItemToggle[1].isOn = nowLevelsData.initialItem.addBall;
-        initialItemToggle[2].isOn = nowLevelsData.initialItem.longPaddle;
-        initialItemToggle[3].isOn = nowLevelsData.initialItem.burstBall;
-        initialItemToggle[4].isOn = nowLevelsData.initialItem.blackHole;
-        initialItemToggle[5].isOn = nowLevelsData.initialItem.burstPaddle;
+        initialItemToggle[0].isOn = nowLevelsData.initialItem.addBall;
+        initialItemToggle[1].isOn = nowLevelsData.initialItem.longPaddle;
+        initialItemToggle[2].isOn = nowLevelsData.initialItem.burstBall;
+        initialItemToggle[3].isOn = nowLevelsData.initialItem.blackHole;
+        initialItemToggle[4].isOn = nowLevelsData.initialItem.burstPaddle;
 
         int bricksCount;
         if (nowLevelsData.bricksData == null)
@@ -902,7 +903,7 @@ public class MakingManager : MonoBehaviour
     public void SetInitialItem_1()
     {
         var newInitialItem = nowLevelsData.initialItem;
-        newInitialItem.addBall = initialItemToggle[1].isOn;
+        newInitialItem.addBall = initialItemToggle[0].isOn;
 
         SaveLevelToRoot();
     }
@@ -910,7 +911,7 @@ public class MakingManager : MonoBehaviour
     public void SetInitialItem_2()
     {
         var newInitialItem = nowLevelsData.initialItem;
-        newInitialItem.longPaddle = initialItemToggle[2].isOn;
+        newInitialItem.longPaddle = initialItemToggle[1].isOn;
 
         SaveLevelToRoot();
     }
@@ -918,7 +919,7 @@ public class MakingManager : MonoBehaviour
     public void SetInitialItem_3()
     {
         var newInitialItem = nowLevelsData.initialItem;
-        newInitialItem.burstBall = initialItemToggle[3].isOn;
+        newInitialItem.burstBall = initialItemToggle[2].isOn;
 
         SaveLevelToRoot();
     }
@@ -926,7 +927,7 @@ public class MakingManager : MonoBehaviour
     public void SetInitialItem_4()
     {
         var newInitialItem = nowLevelsData.initialItem;
-        newInitialItem.blackHole = initialItemToggle[4].isOn;
+        newInitialItem.blackHole = initialItemToggle[3].isOn;
 
         SaveLevelToRoot();
     }
@@ -934,7 +935,7 @@ public class MakingManager : MonoBehaviour
     public void SetInitialItem_5()
     {
         var newInitialItem = nowLevelsData.initialItem;
-        newInitialItem.burstPaddle = initialItemToggle[5].isOn;
+        newInitialItem.burstPaddle = initialItemToggle[4].isOn;
 
         SaveLevelToRoot();
     }
