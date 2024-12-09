@@ -19,7 +19,7 @@ public class BurstPaddle : MonoBehaviour
         }
 
         //座標，刪除
-        if (transform.position.y > 22.0f)
+        if (transform.position.y > 25.0f)
         {
             Destroy(gameObject);
         }
