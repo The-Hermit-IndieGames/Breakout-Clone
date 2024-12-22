@@ -5,10 +5,13 @@ using TMPro;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
+using NUnit.Framework;
 
 
 public class MainManager : MonoBehaviour
 {
+    private static MainManager instance;
+
     //序列化==========================================================================================================================
 
     //序列化定義(設定)
@@ -113,6 +116,13 @@ public class MainManager : MonoBehaviour
     }
 
     //靜態==========================================================================================================================
+
+    //模式
+    [SerializeField] private bool testMode;
+    public static bool TestMode => instance.testMode; // 全局可用的靜態屬性
+
+    [SerializeField] private bool freeMode;
+    public static bool FreeMode => instance.freeMode; // 全局可用的靜態屬性
 
     //檔案
     [SerializeField] private TextAsset jsonDefaultLevels;
@@ -645,15 +655,15 @@ public class MainManager : MonoBehaviour
     void Awake()
     {
         //轉換場景時保留物件
-        GameObject[] objs = GameObject.FindGameObjectsWithTag("DontDestroy");
-
-        if (objs.Length > 1)
+        if (instance == null)
         {
-            // 已經存在相同物件的實例，銷毀新的實例
-            Destroy(gameObject);
+            instance = this;
+            DontDestroyOnLoad(gameObject); // 確保不被場景切換銷毀
         }
-
-        DontDestroyOnLoad(gameObject);
+        else
+        {
+            Destroy(gameObject); // 防止重複的實例
+        }
 
         //檔案
         jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");

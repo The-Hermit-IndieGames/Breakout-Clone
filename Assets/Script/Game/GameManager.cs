@@ -68,8 +68,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pauseTextSpeed;
 
     [SerializeField] private GameObject gameOverUI;                 // 遊戲結束畫面UI
-    [SerializeField] private GameObject adsButton_A;
-    [SerializeField] private GameObject adsButton_B;
+    [SerializeField] private GameObject secondLifeButton;
     [SerializeField] private GameObject AdsReward;
     [SerializeField] private TextMeshProUGUI gameOverTextName;
     [SerializeField] private TextMeshProUGUI gameOverTextScore;
@@ -111,6 +110,13 @@ public class GameManager : MonoBehaviour
     private int minTotalScore = 150;
     private int maxTotalScore = 150;
 
+    private int secondLife = 1;
+
+    //測試模式
+    [SerializeField] private GameObject debugPaddle;
+    [SerializeField] private GameObject debugPaddleTag;
+    [SerializeField] private Toggle debugPaddleToggle;
+
     void Start()
     {
         AdsPlatformIntegration.AdBanner_Hide();
@@ -122,8 +128,16 @@ public class GameManager : MonoBehaviour
         LoadGenerate();
 
         StartCoroutine(ItemsTimer());
+
+        //測試模式
+        debugPaddleTag.SetActive(MainManager.TestMode);
     }
 
+    //測試模式
+    public void SetDebugPaddle()
+    {
+        debugPaddle.SetActive(debugPaddleToggle.isOn);
+    }
 
     void Update()
     {
@@ -372,7 +386,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MenuScene");
     }
 
-
     //遊戲失敗
     public void GameOver()
     {
@@ -380,6 +393,15 @@ public class GameManager : MonoBehaviour
         scoreText.gameObject.SetActive(false);
         timerText.gameObject.SetActive(false);
         pauseButton.gameObject.SetActive(false);
+
+        if (MainManager.FreeMode == false && secondLife >= 1)
+        {
+            secondLifeButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            secondLifeButton.gameObject.SetActive(false);
+        }
 
         gameOverTextName.text = GameData.levelName;
         gameOverTextTimer.text = GameData.timerString;
@@ -390,55 +412,30 @@ public class GameManager : MonoBehaviour
         GameData.gameOver = true;
 
         soundEffectGameOver.Play();
-
-        AdsPlatformIntegration.AdBanner_Show();
     }
 
 
-    //廣告按鈕-撥放
-    public void AdButtonClick_A()
+    //第2條命-繼續
+    public void SecondLifeButton()
     {
-        AdsPlatformIntegration.AdRewarded_Show();
-        adsButton_A.gameObject.SetActive(false);
-        adsButton_B.gameObject.SetActive(true);
+        Debug.Log("廣告/付費獎勵-第二條命");
+
+        secondLife -= 1;
+
+        GameData.gameRunning = true;
+        GameData.gameOver = false;
+        gameOverUI.gameObject.SetActive(false);
+        pauseButton.gameObject.SetActive(true);
+
+        timerText.gameObject.SetActive(true);
+        scoreText.gameObject.SetActive(true);
+
+        AdsReward.gameObject.SetActive(true);
+        UpdateScore(-400);
+
+        Time.timeScale = 1f;
 
         mainManager.soundEffectUiTrue.Play();
-    }
-
-
-    //廣告按鈕-繼續
-    public void AdButtonClick_B()
-    {
-        AdsPlatformIntegration.AdBanner_Hide();
-        adsButton_B.gameObject.SetActive(false);
-
-        if (AdsPlatformIntegration.aReward)
-        {
-            AdsPlatformIntegration.aReward = false;
-            Debug.Log("廣告獎勵-第二條命");
-
-            GameData.gameRunning = true;
-            GameData.gameOver = false;
-            gameOverUI.gameObject.SetActive(false);
-            pauseButton.gameObject.SetActive(true);
-
-            timerText.gameObject.SetActive(true);
-            scoreText.gameObject.SetActive(true);
-
-            AdsReward.gameObject.SetActive(true);
-            UpdateScore(-400);
-
-            Time.timeScale = 1f;
-
-            mainManager.soundEffectUiTrue.Play();
-        }
-        else
-        {
-            adsButton_A.gameObject.SetActive(true);
-            adsButton_B.gameObject.SetActive(false);
-
-            mainManager.soundEffectUiFalse.Play();
-        }
     }
 
 

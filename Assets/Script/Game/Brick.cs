@@ -166,19 +166,19 @@ public class Brick : MonoBehaviour
                 brickColor = new Color(0.01f, 0.2f, 0.5f, 0.001f);   // 近透明
                 break;
             case 1:
-                brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // 半透明淡藍
+                brickColor = new Color(0.5f, 0.5f, 1.0f, 0.30f);    // 半透明淡藍
                 break;
             case 2:
-                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // 半透明淡綠
+                brickColor = new Color(0.5f, 0.9f, 0.5f, 0.35f); // 半透明淡綠
                 break;
             case 3:
-                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // 半透明黃
+                brickColor = new Color(0.8f, 0.8f, 0.4f, 0.40f); // 半透明黃
                 break;
             case 4:
-                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // 半透明橙
+                brickColor = new Color(0.9f, 0.5f, 0.1f, 0.50f); // 半透明橙
                 break;
             case 5:
-                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // 半透明紅
+                brickColor = new Color(0.8f, 0.2f, 0.1f, 0.80f); // 半透明紅
                 break;
             default:
                 brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // 紫色

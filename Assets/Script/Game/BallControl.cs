@@ -2,6 +2,7 @@
 
 public class BallControl : MonoBehaviour
 {
+    [SerializeField] private PaddleControl paddleControl;
     private Vector3 paddleToBallVector;
     private Rigidbody rb;
 
@@ -13,7 +14,7 @@ public class BallControl : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        paddleToBallVector = transform.position - FindObjectOfType<PaddleControl>().transform.position;
+        paddleToBallVector = transform.position - paddleControl.transform.position;
         lineRenderer.gameObject.SetActive(false);
     }
 
@@ -31,7 +32,7 @@ public class BallControl : MonoBehaviour
     //遊戲開始前鎖定位置
     private void LockBallToPaddle()
     {
-        Vector3 paddlePos = FindObjectOfType<PaddleControl>().transform.position;
+        Vector3 paddlePos = paddleControl.transform.position;
         transform.position = paddlePos + paddleToBallVector;
     }
 

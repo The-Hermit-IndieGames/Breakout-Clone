@@ -12,7 +12,7 @@ public class ExtraBall : MonoBehaviour
     [SerializeField] private AudioSource soundEffectBurstBall;
 
     [SerializeField] private Transform blackHole;
-    public float forceStrength = 7.5f; // 作用力的強度
+    [SerializeField] private float forceStrength = 7.5f; // 作用力的強度
 
 
     private void Start()
@@ -34,6 +34,8 @@ public class ExtraBall : MonoBehaviour
         {
             BlackHole();
         }
+
+        CheckAndApplyRandomForce();
     }
 
     //碰撞檢測
@@ -98,6 +100,24 @@ public class ExtraBall : MonoBehaviour
 
         rb.linearVelocity = velocity;
     }
+
+    // 歸零檢測
+    private void CheckAndApplyRandomForce()
+    {
+        // 檢測速度是否低於閾值
+        if (rb.linearVelocity.magnitude < GameData.initialSpeed * 0.1f && GameData.gameRunning)
+        {
+            // 生成隨機方向的力
+            Vector3 randomForce = new Vector3(UnityEngine.Random.Range(-1f, 1f), UnityEngine.Random.Range(-1f, 1f), 0).normalized * GameData.initialSpeed * 0.5f;
+
+            // 對剛體施加力
+            rb.AddForce(randomForce, ForceMode.Impulse);
+
+            // 紀錄隨機力的訊息
+            Debug.Log($"物件接近靜止，施加隨機力：{randomForce}");
+        }
+    }
+
 
     void BurstBall()
     {

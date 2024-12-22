@@ -88,19 +88,19 @@ public class BrickMake : MonoBehaviour
                     brickColor = new Color(0.1f, 0.1f, 0.1f, 0.001f);   // ªñ³z©ú
                     break;
                 case 1:
-                    brickColor = new Color(0.5f, 0.5f, 0.9f, 0.05f);    // ¥b³z©ú²HÂÅ
+                    brickColor = new Color(0.5f, 0.5f, 1.0f, 0.30f);    // ¥b³z©ú²HÂÅ
                     break;
                 case 2:
-                    brickColor = new Color(0.5f, 0.9f, 0.5f, 0.1f); // ¥b³z©ú²Hºñ
+                    brickColor = new Color(0.5f, 0.9f, 0.5f, 0.35f); // ¥b³z©ú²Hºñ
                     break;
                 case 3:
-                    brickColor = new Color(0.8f, 0.8f, 0.4f, 0.2f); // ¥b³z©ú¶À
+                    brickColor = new Color(0.8f, 0.8f, 0.4f, 0.40f); // ¥b³z©ú¶À
                     break;
                 case 4:
-                    brickColor = new Color(0.9f, 0.5f, 0.1f, 0.4f); // ¥b³z©ú¾í
+                    brickColor = new Color(0.9f, 0.5f, 0.1f, 0.50f); // ¥b³z©ú¾í
                     break;
                 case 5:
-                    brickColor = new Color(0.8f, 0.2f, 0.1f, 0.8f); // ¥b³z©ú¬õ
+                    brickColor = new Color(0.8f, 0.2f, 0.1f, 0.80f); // ¥b³z©ú¬õ
                     break;
                 default:
                     brickColor = new Color(0.3f, 0f, 0.3f, 1.0f);   // µµ¦â

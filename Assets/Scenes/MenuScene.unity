@@ -13782,6 +13782,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86c947f8a00a16a4e9438802115a7167, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  testMode: 1
+  freeMode: 0
   jsonDefaultLevels: {fileID: 4900000, guid: df429e7f57af27a4b9069eb750dafc1a, type: 3}
   levelConfigFilesOnGUI: []
   clearDataFilesOnGUI: []
