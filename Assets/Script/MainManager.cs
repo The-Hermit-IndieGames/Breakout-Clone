@@ -403,10 +403,7 @@ public class MainManager : MonoBehaviour
             {
                 if (levelConfigFiles[i].name == clearDataFiles[j].name)
                 {
-                    if (levelConfigFiles[i].version != clearDataFiles[j].version)
-                    {
-                        UpdateVersionClearData(i, j);
-                    }
+                    UpdateVersionClearData(i, j);
 
                     break;
                 }

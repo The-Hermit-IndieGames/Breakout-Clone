@@ -34,6 +34,7 @@ public class MakingManager : MonoBehaviour
         public float menuX;
         public float menuY;
         public int menuStyle;
+        public bool hidden;
         public List<BricksData> bricksData;
         public InitialItem initialItem;
     }
@@ -486,6 +487,7 @@ public class MakingManager : MonoBehaviour
         nextIdText.text = nowLevelsData.nextLevelID;
         inputCoordinateX.text = nowLevelsData.menuX.ToString();
         inputCoordinateY.text = nowLevelsData.menuY.ToString();
+        hiddenLevelToggle.isOn = nowLevelsData.hidden;
 
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
         initialItemToggle[0].isOn = nowLevelsData.initialItem.addBall;
@@ -563,6 +565,16 @@ public class MakingManager : MonoBehaviour
 
         SaveLevelToRoot();
         UpDataMapLevel();
+    }
+
+    [SerializeField] private Toggle hiddenLevelToggle;
+
+    //關卡配置板塊-隱藏關卡
+    public void MapHiddenLevel()
+    {
+        nowLevelsData.hidden = hiddenLevelToggle.isOn;
+
+        SaveLevelToRoot();
     }
 
 

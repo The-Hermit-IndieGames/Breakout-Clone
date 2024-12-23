@@ -174,6 +174,16 @@ public class MainUIManager : MonoBehaviour
                     buttonScript.levelName = levelConfig.levelName;
 
                     buttonScript.usable = MainManager.CheckPreconditionById();
+
+                    //若資料為空(新關卡)
+                    if (MainManager.nowClearLevel == null)
+                    {
+                        MainManager.nowClearLevel = new MainManager.ClearLevel();
+                        MainManager.nowClearLevel.levelID = MainManager.nowLevelId;
+                        MainManager.nowClearLevel.clear = false;
+                        MainManager.nowClearLevel.clearData = new MainManager.ClearData();
+                        MainManager.nowClearLevel.clearData.medalLevel = 0;
+                    }
                     buttonScript.clear = MainManager.nowClearLevel.clear;
                     buttonScript.medalLevel = MainManager.nowClearLevel.clearData.medalLevel;
                 }
@@ -213,26 +223,43 @@ public class MainUIManager : MonoBehaviour
         previewNameText.text = MainManager.nowLevelData.levelName;
         previewBrickAmountText.text = brickAmount.ToString();
 
-        //將時間格式化為分：秒
-        int minutes = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time / 60);
-        int seconds = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time % 60);
-        string timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
-        string timerAndSpeedString = (timerString + "   <size=24>x " + MainManager.nowClearLevel.clearData.speed + " Speed Modifier</size>");
-        int score = MainManager.nowClearLevel.clearData.score;
+        //將時間格式化為分：秒，顯示時間
+        if (MainManager.nowClearLevel.clearData.time != 0)
+        {
+            int minutes = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time / 60);
+            int seconds = Mathf.FloorToInt(MainManager.nowClearLevel.clearData.time % 60);
+            string timerString = string.Format("{0:00}:{1:00}", minutes, seconds);
+            string timerAndSpeedString = (timerString + "   <size=24>x " + MainManager.nowClearLevel.clearData.speed + " Speed Modifier</size>");
+            previewTimerAndSpeedText.text = timerAndSpeedString;
+        }
+        else
+        {
+            string timerString = "N/A";
+            string timerAndSpeedString = (timerString + "   <size=24>x " + MainManager.nowClearLevel.clearData.speed + " Speed Modifier</size>");
+            previewTimerAndSpeedText.text = timerAndSpeedString;
+        }
 
-        previewScoreText.text = score.ToString();
-        previewTimerAndSpeedText.text = timerAndSpeedString;
+        //顯示分數
+        if (MainManager.nowClearLevel.clearData.score != 0)
+        {
+            int score = MainManager.nowClearLevel.clearData.score;
+            previewScoreText.text = score.ToString();
+        }
+        else
+        {
+            previewScoreText.text = "N/A";
+        }
 
         //初始道具
-        if (MainManager.nowLevelData.initialItem.addBall == true)       { previewInitialItems[0].SetActive(true); }
+        if (MainManager.nowLevelData.initialItem.addBall == true) { previewInitialItems[0].SetActive(true); }
         else { previewInitialItems[0].SetActive(false); }
-        if (MainManager.nowLevelData.initialItem.longPaddle == true)    { previewInitialItems[1].SetActive(true); }
+        if (MainManager.nowLevelData.initialItem.longPaddle == true) { previewInitialItems[1].SetActive(true); }
         else { previewInitialItems[1].SetActive(false); }
-        if (MainManager.nowLevelData.initialItem.burstBall == true)     { previewInitialItems[2].SetActive(true); }
+        if (MainManager.nowLevelData.initialItem.burstBall == true) { previewInitialItems[2].SetActive(true); }
         else { previewInitialItems[2].SetActive(false); }
-        if (MainManager.nowLevelData.initialItem.blackHole == true)     { previewInitialItems[3].SetActive(true); }
+        if (MainManager.nowLevelData.initialItem.blackHole == true) { previewInitialItems[3].SetActive(true); }
         else { previewInitialItems[3].SetActive(false); }
-        if (MainManager.nowLevelData.initialItem.burstPaddle == true)   { previewInitialItems[4].SetActive(true); }
+        if (MainManager.nowLevelData.initialItem.burstPaddle == true) { previewInitialItems[4].SetActive(true); }
         else { previewInitialItems[4].SetActive(false); }
 
     }
