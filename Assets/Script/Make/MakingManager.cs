@@ -28,7 +28,7 @@ public class MakingManager : MonoBehaviour
         //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
         public string levelID;
         public string levelName;
-        public string[] preLevelID;
+        public List<string> preLevelID;
         public string nextLevelID;
         public string gameType;
         public float menuX;
@@ -297,18 +297,25 @@ public class MakingManager : MonoBehaviour
     {
         UpdateLevelsJson();
 
-        // 轉換為JSON字符串
-        string rootLevelsDataJson = JsonUtility.ToJson(rootLevelsData, true);
+        if (rootLevelsData.levelConfig.Count > 0)
+        {
+            // 轉換為JSON字符串
+            string rootLevelsDataJson = JsonUtility.ToJson(rootLevelsData, true);
 
-        // 確保目錄存在
-        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
-        Directory.CreateDirectory(directoryPath);
+            // 確保目錄存在
+            string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "CustomLevels");
+            Directory.CreateDirectory(directoryPath);
 
-        // 寫入 JSON 到檔案
-        string filePath = Path.Combine(directoryPath, rootLevelsData.name + ".json");
-        File.WriteAllText(filePath, rootLevelsDataJson);
+            // 寫入 JSON 到檔案
+            string filePath = Path.Combine(directoryPath, rootLevelsData.name + ".json");
+            File.WriteAllText(filePath, rootLevelsDataJson);
 
-        Debug.Log("關卡配置已保存到 " + filePath);
+            Debug.Log("關卡配置已保存到 " + filePath);
+        }
+        else
+        {
+            Debug.LogWarning("當前可用關卡數為零，匯出失敗");
+        }
     }
 
 
@@ -325,6 +332,11 @@ public class MakingManager : MonoBehaviour
                 rootLevelsData = JsonUtility.FromJson<Root>(jsonContent);
 
                 LoadJsonToMap();
+                if (rootLevelsData.levelConfig.Count > 0)
+                {
+                    levelBlock.SetActive(true);
+                    bricksBlock.SetActive(true);
+                }
                 Debug.Log("Successfully loaded JSON file: " + jsonContent);
             }
             else
@@ -421,13 +433,18 @@ public class MakingManager : MonoBehaviour
 
     public GameObject nowButton;
 
-    public TMP_InputField inputNowLevelName;
-    public TMP_InputField inputPrerequisitesLevel;
-    private string prerequisitesLevel;
+    [SerializeField] private TMP_InputField inputNowLevelName;
+    [SerializeField] private TMP_InputField inputPrerequisitesLevel;
 
-    //Map-新增關卡
+    [SerializeField] private GameObject levelBlock;
+    [SerializeField] private GameObject bricksBlock;
+
+    //Map-新增關卡 (*bug 新增後未立即設置 now level)
     public void MapAddLevel()
     {
+        levelBlock.SetActive(true);
+        bricksBlock.SetActive(true);
+
         Vector2 buttonPosition = new Vector2(0, 10);
         GameObject button = Instantiate(buttonPrefab, buttonPosition, Quaternion.identity, buttonsMap);
         buttonInMap.Add(button);
@@ -449,8 +466,7 @@ public class MakingManager : MonoBehaviour
             buttonScript.levelID = nowLevelsData.levelID;
         }
 
-        LoadRootToLevel(nowLevelsData.levelID);
-        UpDataMapLevel();
+        MapLoadLevel(nowLevelsData.levelID);
     }
 
     private string GenerateID(int id)
@@ -488,6 +504,8 @@ public class MakingManager : MonoBehaviour
         inputCoordinateX.text = nowLevelsData.menuX.ToString();
         inputCoordinateY.text = nowLevelsData.menuY.ToString();
         hiddenLevelToggle.isOn = nowLevelsData.hidden;
+        typeDropdown.value = nowLevelsData.menuStyle;
+        UpdateDropdownOptions();
 
         tempBricksText.text = ("Temp\n " + bricksDataList.Count + "\nBricks");
         initialItemToggle[0].isOn = nowLevelsData.initialItem.addBall;
@@ -554,8 +572,15 @@ public class MakingManager : MonoBehaviour
         nowButton = buttonInMap[0];
         nowLevelsData = rootLevelsData.levelConfig[0];
         rootLevelsData.levelConfig.RemoveAll(config => config.levelID == id);
+        UpDataMapLevel();
 
         nextAction = null;
+
+        if (rootLevelsData.levelConfig.Count == 0)
+        {
+            levelBlock.SetActive(false);
+            bricksBlock.SetActive(false);
+        }
     }
 
     //關卡配置板塊-輸入關卡名稱
@@ -577,11 +602,14 @@ public class MakingManager : MonoBehaviour
         SaveLevelToRoot();
     }
 
+    [SerializeField] private TMP_Dropdown typeDropdown;
 
     //關卡配置板塊-按鈕樣式
     public void MapButtonType()
     {
+        nowLevelsData.menuStyle = typeDropdown.value;
 
+        SaveLevelToRoot();
     }
 
     //關卡配置板塊-輸入座標
@@ -624,28 +652,109 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    //關卡配置板塊-前置關卡-輸入---------------------------
-    public void PrerequisitesInput()
-    {
+    //關卡配置板塊-前置關卡--------------------------------------
+    [SerializeField] private TMP_InputField inputPrerequisites;
 
-    }
 
     //關卡配置板塊-前置關卡-加入
     public void PrerequisitesAdd()
     {
+        // 獲取輸入框中的字串
+        string inputText = inputPrerequisites.text;
 
+        // 檢查是否符合 ID 格式（ID_****）或為純數值
+        if (IsValidID(inputText) || IsValidNumericID(inputText))
+        {
+            // 提取數值部分
+            int numericID = ExtractNumericID(inputText);
+
+            // 檢查數值是否小於 rootLevelsData.idCounter
+            if (numericID < rootLevelsData.idCounter)
+            {
+                // 如果 preLevelID 為 null，則初始化
+                if (nowLevelsData.preLevelID == null)
+                {
+                    nowLevelsData.preLevelID = new List<string>();
+                }
+
+                // 生成標準化 ID
+                string finalID = inputText.StartsWith("ID_") ? inputText : $"ID_{numericID:D4}";
+
+                // 檢查是否已存在
+                if (!nowLevelsData.preLevelID.Contains(finalID))
+                {
+                    nowLevelsData.preLevelID.Add(finalID);
+                    nowLevelsData.preLevelID.Sort(); // 排序列表
+                    Debug.Log($"成功添加前置關卡 ID: {finalID}");
+
+                    UpdateDropdownOptions();
+                }
+                else
+                {
+                    Debug.LogWarning("該 ID 已存在，未重複添加。");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("輸入的數值超出範圍！必須小於 idCounter。");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("輸入的格式不正確！請使用格式：ID_**** 或純數值。");
+        }
     }
 
-    //關卡配置板塊-前置關卡-選擇
-    public void PrerequisitesDropdown()
+    private bool IsValidID(string id)
     {
+        // 使用正則表達式檢查 ID 格式
+        return System.Text.RegularExpressions.Regex.IsMatch(id, "^ID_\\d{4}$");
+    }
 
+    private bool IsValidNumericID(string id)
+    {
+        // 檢查是否為純數值
+        return int.TryParse(id, out _);
+    }
+
+    private int ExtractNumericID(string id)
+    {
+        // 如果是 ID_**** 格式，提取數值部分
+        if (id.StartsWith("ID_") && id.Length == 7)
+        {
+            return int.Parse(id.Substring(3));
+        }
+        // 如果是純數值，直接轉換
+        return int.Parse(id);
+    }
+
+    //刪除選單
+    [SerializeField] private TMP_Dropdown preDeleteDropdown;
+
+    // 更新 TMP_Dropdown 的選單內容
+    public void UpdateDropdownOptions()
+    {
+        preDeleteDropdown.ClearOptions();
+        if (nowLevelsData.preLevelID != null && nowLevelsData.preLevelID.Count > 0)
+        {
+            preDeleteDropdown.AddOptions(nowLevelsData.preLevelID);
+        }
     }
 
     //關卡配置板塊-前置關卡-刪除
     public void PrerequisitesDelete()
     {
+        if (nowLevelsData.preLevelID != null && nowLevelsData.preLevelID.Count > 0)
+        {
+            int selectedIndex = preDeleteDropdown.value;
+            if (selectedIndex >= 0 && selectedIndex < nowLevelsData.preLevelID.Count)
+            {
+                nowLevelsData.preLevelID.RemoveAt(selectedIndex);
+                Debug.Log("成功刪除前置關卡: " + selectedIndex);
 
+                UpdateDropdownOptions();
+            }
+        }
     }
 
 

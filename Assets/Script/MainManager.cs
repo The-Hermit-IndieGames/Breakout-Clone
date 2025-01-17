@@ -75,7 +75,7 @@ public class MainManager : MonoBehaviour
         //單一關卡資料: 關卡名稱、前置關卡ID、遊戲模式(Normal、?、?)、選關按鈕座標(x、y)、選關按鈕風格、磚塊列表(BricksData)
         public string levelID;
         public string levelName;
-        public string[] preLevelID;
+        public List<string> preLevelID;
         public string nextLevelID;
         public string gameType;
         public float menuX;
@@ -518,7 +518,7 @@ public class MainManager : MonoBehaviour
     public static bool CheckPreconditionById()
     {
         int preNumber = 0;
-        for (int i = 0; i < nowLevelData.preLevelID.Length; i++)
+        for (int i = 0; i < nowLevelData.preLevelID.Count; i++)
         {
             foreach (var clearLevel in nowClearDataFile.clearLevel)
             {
@@ -529,7 +529,7 @@ public class MainManager : MonoBehaviour
             }
         }
 
-        if (preNumber == nowLevelData.preLevelID.Length)
+        if (preNumber == nowLevelData.preLevelID.Count)
         {
             return true;
         }
