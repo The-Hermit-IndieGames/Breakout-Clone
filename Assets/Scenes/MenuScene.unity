@@ -13762,7 +13762,6 @@ GameObject:
   m_Component:
   - component: {fileID: 646651009}
   - component: {fileID: 646651008}
-  - component: {fileID: 646651010}
   m_Layer: 0
   m_Name: MainManager
   m_TagString: DontDestroy
@@ -13784,9 +13783,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testMode: 0
   freeMode: 1
-  jsonDefaultLevels: {fileID: 4900000, guid: df429e7f57af27a4b9069eb750dafc1a, type: 3}
+  jsonDefaultLevels:
+  - {fileID: 4900000, guid: df429e7f57af27a4b9069eb750dafc1a, type: 3}
   levelConfigFilesOnGUI: []
   clearDataFilesOnGUI: []
+  tempClearDataFilesOnGUI: []
   settingFileOnGUI:
     bgmId: 0
     gameMusic: 0
@@ -13796,6 +13797,8 @@ MonoBehaviour:
     effectsVFX: 0
     backgroundVFX: 0
     gameSpeedModifier: 0
+  DefaultFilesCount: 0
+  LevelFilesCount: 0
   soundEffectUiTrue: {fileID: 1048340494}
   soundEffectUiFalse: {fileID: 448111742}
   soundEffectUiPage: {fileID: 556183991}
@@ -13824,27 +13827,6 @@ Transform:
   - {fileID: 241167762}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &646651010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646651007}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25eb8e1d37cc82f46bb181e4b76ab5f0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  testModeOnUi: 0
-  adsInitializerUnity: {fileID: 195036417}
-  bannerAdManager: {fileID: 195036416}
-  interstitialAdManager: {fileID: 195036415}
-  rewardedAdManager: {fileID: 195036414}
-  levelPlayInitialization: {fileID: 313149690}
-  levelPlayBannerAd: {fileID: 313149689}
-  levelPlayInterstitialAd: {fileID: 313149691}
-  levelPlayRewardedAd: {fileID: 313149688}
 --- !u!1 &674604060
 GameObject:
   m_ObjectHideFlags: 0

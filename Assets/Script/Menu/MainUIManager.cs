@@ -43,9 +43,6 @@ public class MainUIManager : MonoBehaviour
     {
         // 等待1秒，所有物件加載完成後執行的代碼
         yield return new WaitForSeconds(1);
-
-        AdsPlatformIntegration.AdBanner_Show();
-        AdsPlatformIntegration.AdInterstitial_Show();
     }
 
 
@@ -140,7 +137,7 @@ public class MainUIManager : MonoBehaviour
     private void LoadJsonToMap()
     {
         var rootLevelsData = MainManager.levelConfigFiles[MainManager.nowFileId];
-        MainManager.FindClearDataFileById();
+        MainManager.nowClearDataFile = MainManager.clearDataFiles[MainManager.nowFileId];
 
         if (rootLevelsData != null)
         {

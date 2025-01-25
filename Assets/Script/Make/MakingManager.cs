@@ -20,6 +20,7 @@ public class MakingManager : MonoBehaviour
         public string description;
         public List<LevelConfig> levelConfig;
         public int idCounter;
+        public bool isDefault;
     }
 
     [Serializable]

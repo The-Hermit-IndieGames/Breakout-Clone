@@ -67,6 +67,7 @@ public class MainManager : MonoBehaviour
         public string description;
         public List<LevelConfig> levelConfig;
         public int idCounter;
+        public bool isDefault;
     }
 
     [Serializable]
@@ -125,15 +126,20 @@ public class MainManager : MonoBehaviour
     public static bool FreeMode => instance.freeMode; // 全局可用的靜態屬性
 
     //檔案
-    [SerializeField] private TextAsset jsonDefaultLevels;
+    [SerializeField] private List<TextAsset> jsonDefaultLevels;
     public static Root[] levelConfigFiles;
     [SerializeField] private Root[] levelConfigFilesOnGUI;          //DeBug - 用於GUI預覽
 
     public static ClearDataRoot[] clearDataFiles;
     [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;   //DeBug - 用於GUI預覽
+    [SerializeField] private List<ClearDataRoot> tempClearDataFilesOnGUI;          //DeBug - 用於GUI預覽
 
     public static SettingRoot settingFile;
     [SerializeField] private SettingRoot settingFileOnGUI;          //DeBug - 用於GUI預覽
+
+    //統計檔案數
+    [SerializeField] private int DefaultFilesCount;
+    [SerializeField] private int LevelFilesCount;
 
     //檔案ID (用於星圖生成)
     public static int nowFileId;
@@ -158,22 +164,31 @@ public class MainManager : MonoBehaviour
 
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.json");
 
-        // i = 0  =>  預設關卡
-        levelConfigFiles = new Root[jsonFiles.Length + 1];
+        DefaultFilesCount = jsonDefaultLevels.Count;
+        LevelFilesCount = jsonFiles.Length;
 
-        try
+        // i = 預設關卡 + 自訂關卡
+        levelConfigFiles = new Root[DefaultFilesCount + LevelFilesCount];
+
+        // 預設關卡
+        for (int i = 0; i < DefaultFilesCount; i++)
         {
-            Root levelConfig = JsonUtility.FromJson<Root>(jsonDefaultLevels.text);
-            levelConfigFiles[0] = levelConfig;
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to parse JSON file at jsonDefaultLevels : {e.Message}");
+            try
+            {
+                Root levelConfig = JsonUtility.FromJson<Root>(jsonDefaultLevels[i].text);
+                levelConfigFiles[i] = levelConfig;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"無法解析 JSON 文件 {jsonDefaultLevels[i]}: {e.Message}");
+            }
+
         }
 
-        for (int i = 1; i <= jsonFiles.Length; i++)
+        // 自訂關卡
+        for (int i = (DefaultFilesCount); i < (DefaultFilesCount + LevelFilesCount); i++)
         {
-            string jsonContent = File.ReadAllText(jsonFiles[i - 1]);
+            string jsonContent = File.ReadAllText(jsonFiles[i - DefaultFilesCount]);
 
             try
             {
@@ -182,7 +197,7 @@ public class MainManager : MonoBehaviour
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to parse JSON file at {jsonFiles[i - 1]}: {e.Message}");
+                Debug.LogError($"無法解析 JSON 文件 {jsonFiles[i - DefaultFilesCount]}: {e.Message}");
             }
         }
 
@@ -192,10 +207,12 @@ public class MainManager : MonoBehaviour
         levelConfigFilesOnGUI = levelConfigFiles;
     }
 
+
     // 讀檔用(過關資料) [需加密]
     public void LoadClearDataFiles()
     {
         Debug.Log("讀取過關資料...");
+        string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData");
         string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
 
         if (!Directory.Exists(directoryPath))
@@ -204,73 +221,83 @@ public class MainManager : MonoBehaviour
             Directory.CreateDirectory(directoryPath);
         }
 
+        string[] defaultJsonFiles = Directory.GetFiles(defaultDirectoryPath, "*.ejson");
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.ejson");
 
-        // i = 0  =>  預設關卡
-        clearDataFiles = new ClearDataRoot[jsonFiles.Length + 1];
+        // i = 預設關卡 + 自訂關卡
+        clearDataFiles = new ClearDataRoot[DefaultFilesCount + LevelFilesCount];
 
-        try
-        {
-            // 預設關卡存放於 PlayerData/ClearLevelData.json
-            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-            string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
-            string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
-            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
-            clearDataFiles[0] = defaultClearDataRoot;
-        }
-        catch (DirectoryNotFoundException)
-        {
-            Debug.LogWarning("異常: 未找到目錄");
+        // 暫存讀取的檔案
+        List<ClearDataRoot> tempClearDataFiles = new List<ClearDataRoot> { };
+        tempClearDataFilesOnGUI = tempClearDataFiles;
 
-            Debug.Log("建立目錄 " + "PlayerData");
-            string folderPath = Path.Combine(Application.persistentDataPath, "PlayerData");
-            Directory.CreateDirectory(folderPath);
-            CreateClearDataFile("ClearLevelData");
-
-            // 重新讀取
-            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-            string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
-            string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
-            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
-            clearDataFiles[0] = defaultClearDataRoot;
-        }
-        catch (FileNotFoundException)
+        // 預設關卡
+        foreach (var defaultJsonFile in defaultJsonFiles)
         {
-            Debug.LogWarning("異常: 未找到文件");
-            CreateClearDataFile("ClearLevelData");
-
-            // 重新讀取
-            string defaultDirectoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-            string encryptedDefaultClearJson = File.ReadAllText(defaultDirectoryPath);
-            string defaultClearJson = EncryptionUtility.DecryptString(encryptedDefaultClearJson);
-            ClearDataRoot defaultClearDataRoot = JsonUtility.FromJson<ClearDataRoot>(defaultClearJson);
-            clearDataFiles[0] = defaultClearDataRoot;
-        }
-        finally
-        {
-            Debug.Log("已解析預設關卡紀錄");
-        }
-
-        for (int i = 1; i <= jsonFiles.Length; i++)
-        {
-            string encryptedJsonContent = File.ReadAllText(jsonFiles[i - 1]);
+            string encryptedJsonContent = File.ReadAllText(defaultJsonFile);
             string jsonContent = EncryptionUtility.DecryptString(encryptedJsonContent);
 
             try
             {
                 ClearDataRoot clearDataRoot = JsonUtility.FromJson<ClearDataRoot>(jsonContent);
-                clearDataFiles[i] = clearDataRoot;
+                tempClearDataFiles.Add(clearDataRoot);
+                Debug.Log($"取得通關資訊(預設關卡): {clearDataRoot.name}");
             }
             catch (Exception e)
             {
-                Debug.LogError($"Failed to parse JSON file at {jsonFiles[i - 1]}: {e.Message}");
+                Debug.LogError($"無法解析 JSON 文件 {defaultJsonFile}: {e.Message}");
             }
         }
 
-        Debug.Log($"已載入 {clearDataFiles.Length} 項過關資料檔案");
+        // 自訂關卡
+        foreach (var jsonFile in jsonFiles)
+        {
+            string encryptedJsonContent = File.ReadAllText(jsonFile);
+            string jsonContent = EncryptionUtility.DecryptString(encryptedJsonContent);
+
+            try
+            {
+                ClearDataRoot clearDataRoot = JsonUtility.FromJson<ClearDataRoot>(jsonContent);
+                tempClearDataFiles.Add(clearDataRoot);
+                Debug.Log($"取得通關資訊(自訂關卡): {clearDataRoot.name}");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"無法解析 JSON 文件 {jsonFile}: {e.Message}");
+            }
+        }
+
+        Debug.Log($"已載入 {tempClearDataFiles.Count} 項過關資料檔案");
 
         // 該項僅用於開發預覽
+        tempClearDataFilesOnGUI = tempClearDataFiles;
+        SortingClearDataFiles(tempClearDataFiles);
         clearDataFilesOnGUI = clearDataFiles;
+    }
+
+    // 排序過關資料
+    public void SortingClearDataFiles(List<ClearDataRoot> tempClearDataFiles)
+    {
+        // 按照 LevelConfigFiles 對 ClearDataFiles 進行排序，並補齊缺失項
+        for (int i = 0; i < levelConfigFiles.Length; i++)
+        {
+            bool haveClearData = false;
+            for (int j = 0; j < tempClearDataFiles.Count; j++)
+            {
+                //tempClearDataFiles
+                if (levelConfigFiles[i].name == tempClearDataFiles[j].name)
+                {
+                    clearDataFiles[i] = tempClearDataFiles[j];
+                    haveClearData = true;
+                    break;
+                }
+            }
+
+            if (!haveClearData)
+            {
+                CreateClearDataFile(i);
+            }
+        }
     }
 
     //讀檔用(設定檔)
@@ -346,77 +373,40 @@ public class MainManager : MonoBehaviour
     }
 
     // 建立 ClearData 檔案 [需加密]
-    private void CreateClearDataFile(string fileName)
+    private void CreateClearDataFile(int fileID)
     {
-        Debug.Log("建立文件 " + "ClearLevelData.ejson");
+        Debug.Log($"建立文件 ClearLevelData_{levelConfigFiles[fileID].name}.ejson");
         var newClearDataRoot = new ClearDataRoot();
+        newClearDataRoot.name = levelConfigFiles[fileID].name;
+        clearDataFiles[fileID] = newClearDataRoot;
 
-        // 檔案路徑
-        string exportFileName;
-        if (fileName == "ClearLevelData")
-        {
-            // 預設關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-            newClearDataRoot.name = levelConfigFiles[0].name;
-        }
-        else
-        {
-            // 其他關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + fileName + ".ejson");
-            newClearDataRoot.name = fileName;
-        }
-
-        // 將Root轉換為JSON字符串
-        string newClearDataJson = JsonUtility.ToJson(newClearDataRoot, true);
-
-        // 將 JSON 字串加密並寫入檔案
-        string encryptedClearDataJson = EncryptionUtility.EncryptString(newClearDataJson);
-        File.WriteAllText(exportFileName, encryptedClearDataJson);
+        SaveClearDataById(fileID);
     }
 
     //比對所有 ClearData 及 LevelConfig
     private void CompareAllClearData()
     {
-        //比對"存在"
-        for (int i = 1; i < levelConfigFiles.Length; i++)
-        {
-            bool haveClearData = false;
-            for (int j = 1; j < clearDataFiles.Length; j++)
-            {
-                if (levelConfigFiles[i].name == clearDataFiles[j].name)
-                {
-                    haveClearData = true;
-                    break;
-                }
-            }
-
-            if (!haveClearData)
-            {
-                CreateClearDataFile(levelConfigFiles[i].name);
-            }
-        }
-
         //比對"版本"
         for (int i = 0; i < levelConfigFiles.Length; i++)
         {
-            for (int j = 0; j < clearDataFiles.Length; j++)
+            if (levelConfigFiles[i].version == clearDataFiles[i].version)
             {
-                if (levelConfigFiles[i].name == clearDataFiles[j].name)
-                {
-                    UpdateVersionClearData(i, j);
-
-                    break;
-                }
+                Debug.Log($"{levelConfigFiles[i].name} 版本未變更，無須更新");
+            }
+            else
+            {
+                Debug.Log($"{levelConfigFiles[i].name} 版本號不同，需要更新");
+                UpdateVersionClearData(i);
             }
         }
     }
 
     // 比對單一 ClearData 版本 [需加密]
-    private void UpdateVersionClearData(int levelID, int clearID)
+    private void UpdateVersionClearData(int fileID)
     {
-        clearDataFiles[clearID].version = levelConfigFiles[levelID].version;
-        var levelConfig = levelConfigFiles[levelID].levelConfig;
-        var clearLevel = clearDataFiles[clearID].clearLevel;
+        clearDataFiles[fileID].version = levelConfigFiles[fileID].version;
+        var levelConfig = levelConfigFiles[fileID].levelConfig;
+        var clearLevel = clearDataFiles[fileID].clearLevel;
 
         foreach (var level in levelConfig)
         {
@@ -439,35 +429,11 @@ public class MainManager : MonoBehaviour
                 newClearData.medalLevel = 0;
                 newClearLevel.clearData = newClearData;
 
-                clearDataFiles[clearID].clearLevel.Add(newClearLevel);
+                clearDataFiles[fileID].clearLevel.Add(newClearLevel);
             }
         }
 
-        // 轉換為JSON字符串
-        string clearDataFilesJson = JsonUtility.ToJson(clearDataFiles[clearID], true);
-
-        // 確保目錄存在
-        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
-        Directory.CreateDirectory(directoryPath);
-
-        // 檔案路徑
-        string exportFileName;
-        if (clearID == 0)
-        {
-            // 預設關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-        }
-        else
-        {
-            // 其他關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + clearDataFiles[clearID].name + ".ejson");
-        }
-
-        // 加密並寫入 JSON 到檔案
-        string encryptedClearDataFilesJson = EncryptionUtility.EncryptString(clearDataFilesJson);
-        File.WriteAllText(exportFileName, encryptedClearDataFilesJson);
-
-        Debug.Log("通關資訊版本已更新並保存到 " + exportFileName);
+        SaveClearDataById(fileID);
     }
 
     //以 nowLevelId 尋找關卡
@@ -479,26 +445,6 @@ public class MainManager : MonoBehaviour
             {
                 MainManager.nowLevelData = levelConfig;
             }
-        }
-    }
-
-    //以 nowFileId 尋找過關檔案
-    public static void FindClearDataFileById()
-    {
-        bool check = false;
-        foreach (var clearDataFile in MainManager.clearDataFiles)
-        {
-            if (clearDataFile.name == MainManager.levelConfigFiles[MainManager.nowFileId].name)
-            {
-                MainManager.nowClearDataFile = clearDataFile;
-                check = true;
-                break;
-            }
-        }
-
-        if (check == false)
-        {
-            Debug.LogWarning("找不到該檔案!");
         }
     }
 
@@ -539,6 +485,46 @@ public class MainManager : MonoBehaviour
         }
     }
 
+    //以 fileID 進行存檔
+    public static void SaveClearDataById(int fileID)
+    {
+        // 預設、自訂關卡路徑
+        string exportFilePath;
+        if (levelConfigFiles[fileID].isDefault)
+        {
+            // 預設關卡
+            exportFilePath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData_" + levelConfigFiles[fileID].name + ".ejson");
+        }
+        else
+        {
+            // 其他關卡
+            exportFilePath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + levelConfigFiles[fileID].name + ".ejson");
+        }
+
+        // 確保目錄存在
+        string directoryPath = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData");
+        Directory.CreateDirectory(directoryPath);
+
+        // 存檔
+        string clearDataFilesJson = JsonUtility.ToJson(clearDataFiles[fileID], true);
+        string encryptedClearDataFilesJson = EncryptionUtility.EncryptString(clearDataFilesJson);
+        File.WriteAllText(exportFilePath, encryptedClearDataFilesJson);
+
+        // 重新讀檔
+        try
+        {
+            string encryptedJsonContent = File.ReadAllText(exportFilePath);
+            string jsonContent = EncryptionUtility.DecryptString(encryptedJsonContent);
+            ClearDataRoot clearDataRoot = JsonUtility.FromJson<ClearDataRoot>(jsonContent);
+            clearDataFiles[fileID] = clearDataRoot;
+            Debug.Log($"通關資訊版本已更新並重新讀檔成功: {clearDataRoot.name}");
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"無法解析 JSON 文件 {exportFilePath}: {e.Message}");
+        }
+    }
+
     // 以 nowLevelId 保存當前關卡 [需加密]
     public static void SaveCurrentLevelById(int medalLevel, int score, int time, float speed)
     {
@@ -561,25 +547,7 @@ public class MainManager : MonoBehaviour
             nowClearLevel.clearData = newClearData;
         }
 
-        // 檔案路徑
-        string exportFileName;
-        if (nowFileId == 0)
-        {
-            // 預設關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearLevelData.ejson");
-        }
-        else
-        {
-            // 其他關卡
-            exportFileName = Path.Combine(Application.persistentDataPath, "PlayerData", "ClearData", "ClearLevelData_" + nowClearDataFile.name + ".ejson");
-        }
-
-        // 將Root轉換為JSON字符串
-        string newClearDataJson = JsonUtility.ToJson(nowClearDataFile, true);
-
-        // 加密並寫入 JSON 字串到檔案
-        string encryptedClearDataJson = EncryptionUtility.EncryptString(newClearDataJson);
-        File.WriteAllText(exportFileName, encryptedClearDataJson);
+        SaveClearDataById(nowFileId);
     }
 
     //以 nowLevelId 尋找下一關
@@ -635,8 +603,6 @@ public class MainManager : MonoBehaviour
         FindClearLevelById();
     }
 
-
-
     //音訊
     public AudioSource soundEffectUiTrue;
     public AudioSource soundEffectUiFalse;
@@ -662,13 +628,10 @@ public class MainManager : MonoBehaviour
             Destroy(gameObject); // 防止重複的實例
         }
 
-        //檔案
-        jsonDefaultLevels = Resources.Load<TextAsset>("Data/DefaultLevels");
-
         //新版
+        LoadSettingFile();
         LoadLevelConfigFiles();
         LoadClearDataFiles();
-        LoadSettingFile();
         CompareAllClearData();
 
 
