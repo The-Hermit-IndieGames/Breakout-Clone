@@ -1,0 +1,219 @@
+{
+    "name": "Constellation of Guidance",
+    "maker": "The Hermit",
+    "version": "TEST_0",
+    "description": "",
+    "levelConfig": [
+        {
+            "levelID": "ID_0000",
+            "levelName": "Zero",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 0.0,
+            "menuY": 0.0,
+            "menuStyle": 0,
+            "hidden": true,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": false,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0001",
+            "levelName": "Launch",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 0.0,
+            "menuY": 700.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": false,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0002",
+            "levelName": "Bounce",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 432.0,
+            "menuY": 566.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": false,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0003",
+            "levelName": "Extend",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 700.0,
+            "menuY": 216.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": true,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0004",
+            "levelName": "Split",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 700.0,
+            "menuY": -216.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": true,
+                "longPaddle": false,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0005",
+            "levelName": "Blast",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 432.0,
+            "menuY": -566.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": false,
+                "burstBall": true,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0006",
+            "levelName": "Vibrant",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": 0.0,
+            "menuY": -700.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": true,
+                "longPaddle": true,
+                "burstBall": true,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0007",
+            "levelName": "Sweep",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": -432.0,
+            "menuY": -566.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": true,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": true
+            }
+        },
+        {
+            "levelID": "ID_0008",
+            "levelName": "BlackHole",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": -700.0,
+            "menuY": -216.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": true,
+                "longPaddle": false,
+                "burstBall": false,
+                "blackHole": true,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0009",
+            "levelName": "Pierce",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": -700.0,
+            "menuY": 216.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": true,
+                "burstBall": true,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        },
+        {
+            "levelID": "ID_0010",
+            "levelName": "Maze",
+            "preLevelID": [],
+            "nextLevelID": "",
+            "gameType": "Normal",
+            "menuX": -432.0,
+            "menuY": 566.0,
+            "menuStyle": 0,
+            "hidden": false,
+            "bricksData": [],
+            "initialItem": {
+                "addBall": false,
+                "longPaddle": true,
+                "burstBall": false,
+                "blackHole": false,
+                "burstPaddle": false
+            }
+        }
+    ],
+    "idCounter": 11,
+    "isDefault": false
+}

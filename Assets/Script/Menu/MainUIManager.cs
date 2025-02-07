@@ -184,6 +184,12 @@ public class MainUIManager : MonoBehaviour
                     buttonScript.clear = MainManager.nowClearLevel.clear;
                     buttonScript.medalLevel = MainManager.nowClearLevel.clearData.medalLevel;
                 }
+
+                // 被隱藏的關卡
+                if(levelConfig.hidden == true && MainManager.nowClearLevel.clear == false)
+                {
+                    button.SetActive(false);
+                }
             }
         }
     }
