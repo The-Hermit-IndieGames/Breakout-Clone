@@ -125,14 +125,16 @@ public class MainManager : MonoBehaviour
     [SerializeField] private bool freeMode;
     public static bool FreeMode => instance.freeMode; // 全局可用的靜態屬性
 
+    [SerializeField] private bool adON = false;
+    public static bool AdON => instance.adON; // 全局可用的靜態屬性
+
     //檔案
     [SerializeField] private List<TextAsset> jsonDefaultLevels;
     public static Root[] levelConfigFiles;
     [SerializeField] private Root[] levelConfigFilesOnGUI;          //DeBug - 用於GUI預覽
 
-    public static ClearDataRoot[] clearDataFiles;
-    [SerializeField] private ClearDataRoot[] clearDataFilesOnGUI;   //DeBug - 用於GUI預覽
-    [SerializeField] private List<ClearDataRoot> tempClearDataFilesOnGUI;          //DeBug - 用於GUI預覽
+    public static List<ClearDataRoot> clearDataFiles;
+    [SerializeField] private List<ClearDataRoot> clearDataFilesOnGUI;   //DeBug - 用於GUI預覽
 
     public static SettingRoot settingFile;
     [SerializeField] private SettingRoot settingFileOnGUI;          //DeBug - 用於GUI預覽
@@ -224,12 +226,9 @@ public class MainManager : MonoBehaviour
         string[] defaultJsonFiles = Directory.GetFiles(defaultDirectoryPath, "*.ejson");
         string[] jsonFiles = Directory.GetFiles(directoryPath, "*.ejson");
 
-        // i = 預設關卡 + 自訂關卡
-        clearDataFiles = new ClearDataRoot[DefaultFilesCount + LevelFilesCount];
-
         // 暫存讀取的檔案
-        List<ClearDataRoot> tempClearDataFiles = new List<ClearDataRoot> { };
-        tempClearDataFilesOnGUI = tempClearDataFiles;
+        List<ClearDataRoot> tempClearDataFiles = new List<ClearDataRoot> {};
+        clearDataFiles = tempClearDataFiles;
 
         // 預設關卡
         foreach (var defaultJsonFile in defaultJsonFiles)
@@ -269,25 +268,29 @@ public class MainManager : MonoBehaviour
 
         Debug.Log($"已載入 {tempClearDataFiles.Count} 項過關資料檔案");
 
+        while (tempClearDataFiles.Count < DefaultFilesCount + LevelFilesCount)
+        {
+            clearDataFiles.Add(new ClearDataRoot());
+            Debug.Log("clearDataFiles.Count = " + clearDataFiles.Count);
+        }
+        SortingClearDataFiles();
+
         // 該項僅用於開發預覽
-        tempClearDataFilesOnGUI = tempClearDataFiles;
-        SortingClearDataFiles(tempClearDataFiles);
         clearDataFilesOnGUI = clearDataFiles;
     }
 
     // 排序過關資料
-    public void SortingClearDataFiles(List<ClearDataRoot> tempClearDataFiles)
+    public void SortingClearDataFiles()
     {
         // 按照 LevelConfigFiles 對 ClearDataFiles 進行排序，並補齊缺失項
         for (int i = 0; i < levelConfigFiles.Length; i++)
         {
             bool haveClearData = false;
-            for (int j = 0; j < tempClearDataFiles.Count; j++)
+            for (int j = 0; j < clearDataFiles.Count; j++)
             {
-                //tempClearDataFiles
-                if (levelConfigFiles[i].name == tempClearDataFiles[j].name)
+                if (levelConfigFiles[i].name == clearDataFiles[j].name)
                 {
-                    clearDataFiles[i] = tempClearDataFiles[j];
+                    clearDataFiles[i] = clearDataFiles[j];
                     haveClearData = true;
                     break;
                 }
@@ -509,20 +512,7 @@ public class MainManager : MonoBehaviour
         string clearDataFilesJson = JsonUtility.ToJson(clearDataFiles[fileID], true);
         string encryptedClearDataFilesJson = EncryptionUtility.EncryptString(clearDataFilesJson);
         File.WriteAllText(exportFilePath, encryptedClearDataFilesJson);
-
-        // 重新讀檔
-        try
-        {
-            string encryptedJsonContent = File.ReadAllText(exportFilePath);
-            string jsonContent = EncryptionUtility.DecryptString(encryptedJsonContent);
-            ClearDataRoot clearDataRoot = JsonUtility.FromJson<ClearDataRoot>(jsonContent);
-            clearDataFiles[fileID] = clearDataRoot;
-            Debug.Log($"通關資訊版本已更新並重新讀檔成功: {clearDataRoot.name}");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"無法解析 JSON 文件 {exportFilePath}: {e.Message}");
-        }
+        Debug.Log($"通關資訊版本已更新");
     }
 
     // 以 nowLevelId 保存當前關卡 [需加密]
@@ -547,6 +537,14 @@ public class MainManager : MonoBehaviour
             nowClearLevel.clearData = newClearData;
         }
 
+        for (int indexer = 0; indexer < clearDataFiles.Count; indexer++)
+        {
+            if (clearDataFiles[nowFileId].clearLevel[indexer].levelID == nowLevelId)
+            {
+                Debug.Log("nowClearLevel = " + nowClearLevel);
+                clearDataFiles[nowFileId].clearLevel[indexer] = nowClearLevel;
+            }
+        }
         SaveClearDataById(nowFileId);
     }
 
@@ -554,7 +552,7 @@ public class MainManager : MonoBehaviour
     public static void FindNextLevelById()
     {
         string nextLevelId = null;
-        if (nowLevelData.nextLevelID == null)
+        if (nowLevelData.nextLevelID == null || nowLevelData.nextLevelID == "")
         {
             int nextID = -1;
             for (int i = 0; i < MainManager.levelConfigFiles[MainManager.nowFileId].levelConfig.Count; i++)

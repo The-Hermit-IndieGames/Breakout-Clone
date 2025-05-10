@@ -22,6 +22,11 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     void Awake()
     {
+        if (!MainManager.AdON)
+        {
+            return;
+        }
+
         testMode = testModeOnUi;
 
 #if UNITY_ANDROID
@@ -49,6 +54,11 @@ public class AdsPlatformIntegration : MonoBehaviour
     //總集成: 顯示與隱藏
     public static void AdBanner_Show()
     {
+        if (!MainManager.AdON)
+        {
+            return;
+        }
+
         var adsPlatformIntegration = GameObject.Find("MainManager").GetComponent<AdsPlatformIntegration>();
 
 #if UNITY_ANDROID
@@ -69,6 +79,10 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     public static void AdBanner_Hide()
     {
+        if (!MainManager.AdON)
+        {
+            return;
+        }
 
         var adsPlatformIntegration = GameObject.Find("MainManager").GetComponent<AdsPlatformIntegration>();
 
@@ -90,6 +104,10 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     public static void AdInterstitial_Show()
     {
+        if (!MainManager.AdON)
+        {
+            return;
+        }
 
         var adsPlatformIntegration = GameObject.Find("MainManager").GetComponent<AdsPlatformIntegration>();
 
@@ -111,6 +129,10 @@ public class AdsPlatformIntegration : MonoBehaviour
 
     public static void AdRewarded_Show()
     {
+        if (!MainManager.AdON)
+        {
+            return;
+        }
 
         var adsPlatformIntegration = GameObject.Find("MainManager").GetComponent<AdsPlatformIntegration>();
 

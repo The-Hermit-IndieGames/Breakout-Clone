@@ -13783,11 +13783,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   testMode: 0
   freeMode: 1
+  adON: 0
   jsonDefaultLevels:
-  - {fileID: 4900000, guid: df429e7f57af27a4b9069eb750dafc1a, type: 3}
+  - {fileID: 4900000, guid: b6b10944360887d458fe97d81525b3eb, type: 3}
   levelConfigFilesOnGUI: []
   clearDataFilesOnGUI: []
-  tempClearDataFilesOnGUI: []
   settingFileOnGUI:
     bgmId: 0
     gameMusic: 0

@@ -59,7 +59,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI scoreText;                               // 主記分板
     [SerializeField] private TextMeshProUGUI timerText;                               // 主計時器
-    [SerializeField] private TextMeshProUGUI infoText;                                // 提示
 
     [SerializeField] private GameObject pauseUI;                    // 暫停畫面UI
     [SerializeField] private TextMeshProUGUI pauseTextName;
@@ -156,6 +155,8 @@ public class GameManager : MonoBehaviour
         mainManager = GameObject.Find("MainManager").GetComponent<MainManager>();
         GameData.levelName = MainManager.nowLevelData.levelName;
 
+        Debug.Log("載入關卡: " + GameData.levelName);
+
         //初始速度，速度上限，每次碰撞後的速度提升因子
         GameData.initialSpeed = MainManager.settingFile.gameSpeedModifier * 15f;
         GameData.maxSpeed = MainManager.settingFile.gameSpeedModifier * 30f;
@@ -241,7 +242,6 @@ public class GameManager : MonoBehaviour
     void GenerateBricks()
     {
         //初始道具
-        Debug.LogWarning("初始道具");
         if (MainManager.nowLevelData.initialItem.addBall == true)
         { maxTotalScore += 200; initialItem[0].SetActive(true); }
         if (MainManager.nowLevelData.initialItem.longPaddle == true)
@@ -630,6 +630,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        MainManager.nowClearLevel.levelID = MainManager.nowLevelId;
         MainManager.SaveCurrentLevelById(nowMedalLevel, GameData.score, (int)GameData.saveTime, MainManager.settingFile.gameSpeedModifier);
 
         soundEffectGameCleared.Play();
@@ -639,6 +640,15 @@ public class GameManager : MonoBehaviour
     }
 
     //道具======================================================================================================================
+
+    [SerializeField] private GameObject itemTime_2;
+    [SerializeField] private TextMeshProUGUI itemTime_2text;
+    [SerializeField] private GameObject itemTime_3;
+    [SerializeField] private TextMeshProUGUI itemTime_3text;
+    [SerializeField] private GameObject itemTime_4;
+    [SerializeField] private TextMeshProUGUI itemTime_4text;
+    [SerializeField] private GameObject giveItemTime_5;
+    [SerializeField] private TextMeshProUGUI giveItemTime_5text;
 
     //道具計時器
     IEnumerator ItemsTimer()
@@ -683,7 +693,10 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            infoText.text = ("道具: 延長/爆炸/黑洞 剩餘 " + GameData.timerLongPaddle + " / " + GameData.timerBurstBall + " / " + GameData.timerBlackHole + " 秒\n" + "防卡關道具發放 累積 " + GameData.noBreakTimer + "/30 秒");
+            itemTime_2text.text = GameData.timerLongPaddle.ToString();
+            itemTime_3text.text = GameData.timerBurstBall.ToString();
+            itemTime_4text.text = GameData.timerBlackHole.ToString();
+            giveItemTime_5text.text = (GameData.noBreakTimer + "/30");
 
             yield return new WaitForSeconds(1.0f);
         }
@@ -730,6 +743,7 @@ public class GameManager : MonoBehaviour
     {
         paddle.gameObject.SetActive(false);
         longPaddle.gameObject.SetActive(true);
+        itemTime_2.SetActive(true);
         GameData.boundaryX = 18f;
     }
 
@@ -737,6 +751,7 @@ public class GameManager : MonoBehaviour
     {
         longPaddle.gameObject.SetActive(false);
         paddle.gameObject.SetActive(true);
+        itemTime_2.SetActive(false);
         GameData.boundaryX = 21f;
     }
 
@@ -745,11 +760,13 @@ public class GameManager : MonoBehaviour
     void ItemBurstBall()
     {
         GameData.burstBall = true;
+        itemTime_3.SetActive(true);
     }
 
     void ItemBurstBallOFF()
     {
         GameData.burstBall = false;
+        itemTime_3.SetActive(false);
     }
 
 
@@ -758,12 +775,14 @@ public class GameManager : MonoBehaviour
     {
         GameData.blackHole = true;
         blackHole.gameObject.SetActive(true);
+        itemTime_4.SetActive(true);
     }
 
     void ItemBlackHoleOFF()
     {
         GameData.blackHole = false;
         blackHole.gameObject.SetActive(false);
+        itemTime_4.SetActive(false);
     }
 
 
