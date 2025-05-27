@@ -72,10 +72,10 @@ MonoBehaviour:
     - line: '|   - logo: {fileID: 10404, guid: 0000000000000000f000000000000000,
         type: 0}'
     - line: '|     duration: 2'
-    - line: '|   - logo: {fileID: 21300000, guid: aa5a0c1e7df7cff4b9ce987839a48c0b,
+    - line: '|   - logo: {fileID: 21300000, guid: fb058013b50b73d4cb5281b8bee7b1f2,
         type: 3}'
     - line: '|     duration: 2'
-    - line: '|   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: aa5a0c1e7df7cff4b9ce987839a48c0b,
+    - line: '|   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: fb058013b50b73d4cb5281b8bee7b1f2,
         type: 3}'
     - line: '|   m_HolographicTrackingLossScreen: {instanceID: 0}'
     - line: '|   defaultScreenWidth: 1920'
@@ -794,7 +794,8 @@ MonoBehaviour:
     - line: '|     Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED'
     - line: '|   additionalCompilerArguments: {}'
     - line: '|   platformArchitecture: {}'
-    - line: '|   scriptingBackend: {}'
+    - line: '|   scriptingBackend:'
+    - line: '|     Standalone: 1'
     - line: '|   il2cppCompilerConfiguration: {}'
     - line: '|   il2cppCodeGeneration: {}'
     - line: '|   il2cppStacktraceInformation: {}'
@@ -933,9 +934,9 @@ MonoBehaviour:
       type: {class: WindowsPlatformSettings, ns: UnityEditor.WindowsStandalone, asm: UnityEditor.WindowsStandalone.Extensions}
       data:
         m_Development: 0
-        m_ConnectProfiler: 0
-        m_BuildWithDeepProfilingSupport: 0
-        m_AllowDebugging: 0
+        m_ConnectProfiler: 1
+        m_BuildWithDeepProfilingSupport: 1
+        m_AllowDebugging: 1
         m_WaitForManagedDebugger: 0
         m_ManagedDebuggerFixedPort: 0
         m_ExplicitNullChecks: 0

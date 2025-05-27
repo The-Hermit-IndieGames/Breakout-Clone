@@ -112,7 +112,7 @@ public class MakingManager : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         // 檢查滑鼠按鍵點擊事件
         if (Input.GetMouseButtonDown(0)) // 左鍵

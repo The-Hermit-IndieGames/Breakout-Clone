@@ -18,7 +18,7 @@ public class BallControl : MonoBehaviour
         lineRenderer.gameObject.SetActive(false);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         //[遊戲開始前檢測]
         if (!GameData.gameStarted && startingStage <= 1)

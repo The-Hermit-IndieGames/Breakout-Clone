@@ -8,7 +8,7 @@ public class PaddleControl : MonoBehaviour
 
 
     //移動控制
-    private void Update()
+    private void FixedUpdate()
     {
         //只允許在遊戲運行時移動，否則返回
         if (GameData.gameRunning && !GameData.gameOver)

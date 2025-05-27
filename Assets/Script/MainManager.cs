@@ -626,6 +626,11 @@ public class MainManager : MonoBehaviour
             Destroy(gameObject); // 防止重複的實例
         }
 
+        //渲染效能
+        Application.targetFrameRate = 60;
+        QualitySettings.vSyncCount = 0;
+
+
         //新版
         LoadSettingFile();
         LoadLevelConfigFiles();

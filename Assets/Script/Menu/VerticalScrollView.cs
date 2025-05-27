@@ -22,7 +22,7 @@ public class NewBehaviourScript : MonoBehaviour
         contentStartPos = content.anchoredPosition;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         HandleScroll();
     }

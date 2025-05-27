@@ -42,7 +42,7 @@ public class DragStarMap : MonoBehaviour
         CalculateBounds();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Input.GetMouseButtonDown(0))
         {

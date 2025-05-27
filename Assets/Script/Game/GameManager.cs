@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
         debugPaddle.SetActive(debugPaddleToggle.isOn);
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (GameData.gameStarted)
         {
